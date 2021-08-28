@@ -1,0 +1,18 @@
+{
+  "name": "@ldkit/sparql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "source": "src/index.ts",
+  "type": "module",
+  "snowpack:source": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Karel Klíma",
+  "license": "ISC",
+  "dependencies": {
+    "@tpluscode/rdf-string": "^0.2.24",
+    "@tpluscode/sparql-builder": "^0.3.15"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "extends": "@ldkit/config/tsconfig.json",
+  "include": [
+    "src",
+  ],
+  "references": [{
+    "path": "../engine"
+  },
+  {
+    "path": "../namespaces"
+  },
+  {
+    "path": "../rdf"
+  }]
+}

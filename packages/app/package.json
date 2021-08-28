@@ -1,0 +1,25 @@
+{
+  "name": "@ldkit/app",
+  "version": "1.0.0",
+  "author": "Karel Klima",
+  "license": "MIT",
+  "private": "true",
+  "scripts": {
+    "start": "parcel src/index.html"
+  },
+  "dependencies": {
+    "@ldkit/core": "*",
+    "@ldkit/engine": "*",
+    "@ldkit/namespaces": "*",
+    "@ldkit/rdf": "*",
+    "@types/react": "^17.0.19",
+    "@types/react-dom": "^17.0.9",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "rxjs": "^7.3.0"
+  },
+  "devDependencies": {
+    "parcel": "^2.0.0-rc.0",
+    "prettier": "^2.3.2"
+  }
+}

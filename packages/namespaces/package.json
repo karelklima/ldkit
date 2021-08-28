@@ -1,0 +1,15 @@
+{
+  "name": "@ldkit/namespaces",
+  "version": "1.0.0",
+  "description": "Linked Data Kit Namespaces",
+  "main": "dist/index.js",
+  "source": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Karel Klíma",
+  "license": "MIT",
+  "dependencies": {},
+  "peerDependencies": {}
+}

@@ -1,0 +1,11 @@
+{
+  "extends": "@ldkit/config/tsconfig.json",
+  "include": [
+    "src"
+  ],
+  "compilerOptions": {
+    "noEmit": true,
+    "declaration": true
+  },
+  "references": []
+}

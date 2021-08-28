@@ -1,0 +1,15 @@
+{
+  "name": "@ldkit/config",
+  "version": "1.0.0",
+  "files": [
+    ".prettierrc.json",
+    "tsconfig.json"
+  ],
+  "author": "Karel Klima",
+  "license": "MIT",
+  "private": "true",
+  "devDependencies": {
+    "prettier": "^2.3.2"
+  },
+  "dependencies": {}
+}
