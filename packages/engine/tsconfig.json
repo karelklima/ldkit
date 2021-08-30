@@ -4,4 +4,7 @@
     "outDir": "dist",
     "rootDir": "src",
   },
+  "references": [{
+    "path": "../rdf"
+  }]
 }
