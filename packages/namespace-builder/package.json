@@ -1,0 +1,14 @@
+{
+  "name": "@ldkit/namespace-builder",
+  "version": "1.0.0",
+  "description": "Linked Data Kit Namespace Builder",
+  "main": "cli.js",
+  "cli": "cli.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Karel Klíma",
+  "license": "MIT",
+  "dependencies": {},
+  "peerDependencies": {}
+}
