@@ -3,10 +3,10 @@ import { map, switchMap } from "rxjs/operators";
 import type { Graph } from "@ldkit/rdf";
 import { bindingsQuery, quadsQuery } from "@ldkit/engine";
 import type { EngineContext } from "@ldkit/engine";
-import type { Iri } from "../schema/iri";
-import type { Schema, SchemaPrototype } from "../schema/schema";
-import type { SchemaInterface } from "../schema/interface";
-import { expandSchema } from "../schema/utils";
+import type { Schema, SchemaPrototype, SchemaInterface } from "@ldkit/schema";
+import { expandSchema } from "@ldkit/schema";
+
+import type { Iri } from "./iri";
 import {
   findIrisQuery,
   findQuery,
@@ -14,7 +14,7 @@ import {
 } from "./query-builder";
 import { createProxy } from "./proxy";
 
-class Access<S extends SchemaPrototype, I = SchemaInterface<S>> {
+class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
   private readonly schema: Schema;
   private readonly context?: EngineContext;
 
@@ -77,7 +77,7 @@ class Access<S extends SchemaPrototype, I = SchemaInterface<S>> {
   }
 }
 
-export const createAccess = <T extends SchemaPrototype>(
+export const createResource = <T extends SchemaPrototype>(
   spec: T,
   context?: EngineContext
-) => new Access(spec, context);
+) => new Resource(spec, context);

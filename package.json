@@ -5,15 +5,11 @@
   "private": "true",
   "scripts": {
     "start": "npm -w @ldkit/app start",
-    "test:projectReferences": "workspaces-to-typescript-project-references --check",
-    "update:projectReferences": "workspaces-to-typescript-project-references"
+    "test": "npm -w @ldkit/tests test"
   },
   "author": "Karel Klíma",
   "license": "MIT",
   "workspaces": [
     "packages/*"
-  ],
-  "devDependencies": {
-    "@monorepo-utils/workspaces-to-typescript-project-references": "^2.6.2"
-  }
+  ]
 }

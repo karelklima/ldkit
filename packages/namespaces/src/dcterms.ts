@@ -1,6 +1,6 @@
-import { namespaceFactory } from "./namespace-factory";
+import { createNamespace } from "./namespace";
 
-export default namespaceFactory({
+export default createNamespace({
   iri: "http://purl.org/dc/terms/",
   prefix: "dcterms:",
   terms: [

@@ -1,7 +1,13 @@
-import type { Iri } from "../schema/iri";
-import type { Schema } from "../schema/schema";
-import { getSchemaProperties } from "../schema/utils";
-import { $CONTEXT, $ID, $META, $OPTIONAL, $TYPE } from "../schema/keys";
+import type { Iri } from "./iri";
+import type { Schema } from "@ldkit/schema";
+import {
+  getSchemaProperties,
+  $CONTEXT,
+  $ID,
+  $META,
+  $OPTIONAL,
+  $TYPE,
+} from "@ldkit/schema";
 import { $, CONSTRUCT, SELECT } from "@ldkit/sparql";
 import { Quad, variable, namedNode, quad } from "@ldkit/rdf";
 

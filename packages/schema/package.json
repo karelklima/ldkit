@@ -1,0 +1,14 @@
+{
+  "name": "@ldkit/schema",
+  "version": "1.0.0",
+  "description": "Linked Data Kit Schema",
+  "main": "dist/index.js",
+  "source": "src/index.ts",
+  "type": "module",
+  "author": "Karel Klíma",
+  "license": "MIT",
+  "peerDependencies": {
+    "@ldkit/keys": "*",
+    "@ldkit/namespaces": "*"
+  }
+}

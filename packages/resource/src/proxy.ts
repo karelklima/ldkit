@@ -1,6 +1,6 @@
-import type { Iri } from "../schema/iri";
-import type { Property, Schema } from "../schema/schema";
-import { $ARRAY, $CONTEXT, $ID, $META, $TYPE } from "../schema/keys";
+import type { Iri } from "./iri";
+import type { Property, Schema } from "@ldkit/schema";
+import { $ARRAY, $CONTEXT, $ID, $META, $TYPE } from "@ldkit/schema";
 import { fromRdf, Literal, Graph, NamedNode } from "@ldkit/rdf";
 
 type EntityData = {

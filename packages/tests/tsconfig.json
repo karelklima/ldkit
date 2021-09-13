@@ -1,10 +1,10 @@
 {
-  "extends": "@ldkit/config/tsconfig.json",
-  "include": ["src/**/*"],
+  //"extends": "@ldkit/config/tsconfig.json",
   "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "test",
+    "noEmit": true,
   },
+  "include": ["./test/**/*"],
   "references": [{
     "path": "../engine"
   },

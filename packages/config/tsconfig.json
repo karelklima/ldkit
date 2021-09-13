@@ -8,7 +8,7 @@
     "jsx": "preserve",
     "skipLibCheck": true,
     "typeRoots": [
-      "node_modules/@types"
+      "../../node_modules/@types"
     ],
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,

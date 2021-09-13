@@ -1,16 +1,17 @@
-export type NamespacePrototype = {
-  iri: string
-  prefix: string
-  terms: readonly string[]
-}
+type NamespacePrototype = {
+  iri: string;
+  prefix: string;
+  terms: readonly string[];
+};
 
-type NamespacePrefix<Namespace extends NamespacePrototype> = Namespace['prefix']
+type NamespacePrefix<Namespace extends NamespacePrototype> =
+  Namespace["prefix"];
 
 type NamespaceObject<Namespace extends NamespacePrototype> = {
-  [Term in Namespace['terms'][number]]: `${NamespacePrefix<Namespace>}${Term}`
-}
+  [Term in Namespace["terms"][number]]: `${NamespacePrefix<Namespace>}${Term}`;
+};
 
-export const namespaceFactory = <
+export const createNamespace = <
   N extends NamespacePrototype,
   // I = NamespaceItems<N>,
   // P = NamespacePrefix<N>,
@@ -23,8 +24,8 @@ export const namespaceFactory = <
     //  `${namespaceSpec.prefix}:${f}` as `${string & P}${string & X}`,
     namespaceSpec.terms.reduce((acc, term) => {
       //acc[term] = `${namespaceSpec.prefix}${term}`
-      acc[term] = `${namespaceSpec.iri}${term}`
-      return acc
+      acc[term] = `${namespaceSpec.iri}${term}`;
+      return acc;
     }, {} as any),
     { $$namespace: namespaceSpec }
-  ) as O
+  ) as O;

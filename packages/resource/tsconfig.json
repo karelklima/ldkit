@@ -1,24 +1,17 @@
 {
   "extends": "@ldkit/config/tsconfig.json",
-  "include": ["src/**/*"],
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "src",
   },
   "references": [{
     "path": "../engine"
-  },
-  {
-    "path": "../keys"
   },
   {
     "path": "../namespaces"
   },
   {
     "path": "../rdf"
-  },
-  {
-    "path": "../resource"
   },
   {
     "path": "../schema"

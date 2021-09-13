@@ -1,26 +1,19 @@
 {
-  "name": "@ldkit/core",
+  "name": "@ldkit/tests",
   "version": "1.0.0",
-  "description": "Linked Data Kit Core",
+  "description": "",
   "main": "src/index.js",
   "type": "module",
-  "snowpack:source": "src/index.ts",
   "scripts": {
-    "test": "jest"
+    "test": "jest --verbose"
   },
   "author": "Karel Klíma",
   "license": "MIT",
   "jest": {
     "preset": "ts-jest",
-    "moduleDirectories": [
-      "src",
-      "node_modules"
-    ],
-    "transformIgnorePatterns": [
-      "node_modules"
-    ],
     "moduleNameMapper": {
-      "@rdf-esm/(.*)": "@rdfjs/$1"
+      "@rdf-esm/(.*)": "@rdfjs/$1",
+      "@ldkit/(.*)": "<rootDir>/../$1/src/index.ts"
     }
   },
   "peerDependencies": {

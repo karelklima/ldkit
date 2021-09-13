@@ -1,0 +1,11 @@
+{
+  "name": "@ldkit/keys",
+  "version": "1.0.0",
+  "description": "Linked Data Kit Keys",
+  "main": "dist/index.js",
+  "source": "src/index.ts",
+  "type": "module",
+  "author": "Karel Klíma",
+  "license": "MIT",
+  "peerDependencies": {}
+}

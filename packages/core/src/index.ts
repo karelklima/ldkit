@@ -1,5 +1,7 @@
-export type { SchemaInterface } from "./schema/interface";
+export type { SchemaInterface } from "@ldkit/schema";
 
-export * from "./schema/keys";
+export * from "@ldkit/keys";
 
-export { createAccess } from "./access/access";
+export { createResource } from "@ldkit/resource";
+
+export { createNamespace } from "@ldkit/namespaces";

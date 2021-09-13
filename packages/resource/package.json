@@ -1,0 +1,17 @@
+{
+  "name": "@ldkit/resource",
+  "version": "1.0.0",
+  "description": "Linked Data Kit Data Source",
+  "main": "dist/index.js",
+  "source": "src/index.ts",
+  "type": "module",
+  "author": "Karel Klíma",
+  "license": "MIT",
+  "peerDependencies": {
+    "@ldkit/engine": "*",
+    "@ldkit/namespaces": "*",
+    "@ldkit/rdf": "*",
+    "@ldkit/schema": "*",
+    "@ldkit/sparql": "*"
+  }
+}
