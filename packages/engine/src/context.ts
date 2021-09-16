@@ -2,20 +2,33 @@ import type { IDataSource } from "@comunica/bus-rdf-resolve-quad-pattern";
 
 export type DataSources = IDataSource | IDataSource[];
 
+export type FetchType = (
+  resource: RequestInfo,
+  init?: RequestInit
+) => Promise<Response>;
+
 export type EngineContext = {
   sources: IDataSource[];
+  fetch?: FetchType;
 };
 
 let defaultContext: EngineContext | undefined = undefined;
 
-export const createContext = (sources: DataSources): EngineContext => {
+export const createContext = (
+  sources: DataSources,
+  fetch?: FetchType
+): EngineContext => {
   return {
     sources: Array.isArray(sources) ? sources : [sources],
+    fetch,
   };
 };
 
-export const createDefaultContext = (sources: DataSources) => {
-  defaultContext = createContext(sources);
+export const createDefaultContext = (
+  sources: DataSources,
+  fetch?: FetchType
+) => {
+  defaultContext = createContext(sources, fetch);
 };
 
 export const resolveContext = (context?: EngineContext) => {

@@ -11,8 +11,8 @@
   "author": "Karel Klíma",
   "license": "MIT",
   "dependencies": {
-    "@comunica/actor-init-sparql": "^1.21.3",
-    "@comunica/bus-rdf-resolve-quad-pattern": "^1.21.1"
+    "@comunica/actor-init-sparql": "^1.22.0",
+    "@comunica/bus-rdf-resolve-quad-pattern": "^1.22.0"
   },
   "peerDependencies": {
     "@ldkit/rdf": "*",

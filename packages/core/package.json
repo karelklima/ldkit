@@ -2,9 +2,9 @@
   "name": "@ldkit/core",
   "version": "1.0.0",
   "description": "Linked Data Kit Core",
-  "main": "src/index.js",
+  "main": "dist/index.js",
+  "source": "src/index.ts",
   "type": "module",
-  "snowpack:source": "src/index.ts",
   "scripts": {
     "test": "jest"
   },
