@@ -1,18 +1,15 @@
 import React from "react";
 import { render } from "react-dom";
 
-import { main } from "./test";
+import { App } from "./components/App";
+
+// import { main } from "./test-todo";
 
 render(
-  <React.StrictMode>"Whoa"</React.StrictMode>,
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
   document.getElementById("app")
 );
 
-main();
-
-console.log("WHOOOOOOOA");
-
-/*if (import.meta.hot) {
-  import.meta.hot.accept();
-}
-*/
+// main();

@@ -1,1 +1,1 @@
-export { createResource } from "./resource";
+export { createResource, Resource } from "./resource";

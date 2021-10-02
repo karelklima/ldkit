@@ -2,165 +2,39 @@ import { $ID, $TYPE, $META, $OPTIONAL, $CONTEXT, $ARRAY } from "@ldkit/keys";
 import { createResource } from "@ldkit/core";
 import type { SchemaInterface } from "@ldkit/core";
 import { createNamespace } from "@ldkit/namespaces";
-import { dcterms, xsd } from "@ldkit/namespaces";
+import { dcterms, xsd, schema } from "@ldkit/namespaces";
 
 import { namedNode } from "@ldkit/rdf";
 
 import { createDefaultContext } from "@ldkit/engine";
 
-// import { SparqlEndpointFetcher } from "fetch-sparql-endpoint";
+import { Store } from "n3";
+import { lastValueFrom } from "rxjs";
 
-export const main = () => {
-  console.log(dcterms.Agent);
-  console.log(dcterms.bibliographicCitation);
-  console.log(namedNode("node"));
-  console.log(namedNode("another node"));
-  //console.log(namedNode("third node"));
+export const main = async () => {
+  const TodoSchema = {
+    [$TYPE]: schema.Thing,
+    name: schema.name,
+  } as const;
 
-  const customFetch = (resource: RequestInfo, init?: RequestInit) => {
-    console.log("CUSTOM FETCH FETCHING");
-    const headers = init?.headers as Headers;
-    const ct = (init?.headers as Headers).get("Content-type");
-    console.log(ct);
-    if (ct === "application/x-www-form-urlencoded") {
-      headers.set(
-        "Content-type",
-        "application/x-www-form-urlencoded; charset=UTF-8"
-      );
-    }
-    return fetch(resource, init);
-  };
+  const store = new Store();
 
-  createDefaultContext(
-    {
-      type: "sparql",
-      value:
-        "https://xn--slovnk-test-scb.mvcr.gov.cz/modelujeme/sluzby/db-server/repositories/assembly-line",
-    },
-    customFetch
+  const context = createDefaultContext(store);
+
+  const todos = createResource(TodoSchema);
+
+  const result = await lastValueFrom(
+    todos.insert("https://1234", { name: "whoa" })
   );
 
-  console.log("default context created");
+  console.log(result);
 
-  const pp = createNamespace({
-    iri: "https://slovník.gov.cz/datový/pracovní-prostor/pojem/",
-    prefix: "d-sgov-pracovní-prostor-pojem:",
-    terms: [
-      "metadatový-kontext",
-      "slovníkový-kontext",
-      "odkazuje-na-kontext",
-      "vychází-z-verze",
-      "používá-pojmy-ze-slovníku",
-    ],
-  } as const);
+  const all = await lastValueFrom(todos.find());
 
-  const pd = createNamespace({
-    iri: "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/",
-    prefix: "a-sgov-popis-dat-pojem:",
-    terms: [
-      "uživatel",
-      "má-křestní-jméno",
-      "má-příjmení",
-      "má-uživatelské-jméno",
-      "má-autora",
-      "má-datum-a-čas-poslední-modifikace",
-      "má-datum-a-čas-vytvoření",
-      "má-posledního-editora",
-      "používá-pojmy-ze-slovníku",
-    ],
-  } as const);
+  for (const item of all) {
+    console.log(item.name);
+  }
 
-  const tp = createNamespace({
-    iri: "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/",
-    prefix: "termit-pojem:",
-    terms: ["používá-pojmy-ze-slovníku"],
-  } as const);
-
-  const DctermsBase = {
-    title: dcterms.title,
-  } as const;
-
-  const Vocabulary = {
-    [$TYPE]: pp["slovníkový-kontext"],
-    vocabulary: pp["vychází-z-verze"],
-    dependencies: {
-      [$ID]: tp["používá-pojmy-ze-slovníku"],
-      [$META]: [$ARRAY, $OPTIONAL],
-    },
-  } as const;
-
-  const User = {
-    [$TYPE]: pd.uživatel,
-    firstName: pd["má-křestní-jméno"],
-    lastName: {
-      [$ID]: pd["má-příjmení"],
-      [$META]: [$OPTIONAL],
-    },
-    email: pd["má-uživatelské-jméno"],
-  } as const;
-
-  const Workspace = {
-    ...DctermsBase,
-    [$TYPE]: pp["metadatový-kontext"],
-    /*owner: {
-      [$ID]: pd["má-autora"],
-      [$CONTEXT]: User,
-    },
-    /*created: {
-      [$ID]: pd["má-datum-a-čas-vytvoření"],
-      [$TYPE]: xsd.dateTime,
-    },
-    lastEditor: {
-      [$ID]: pd["má-posledního-editora"],
-      [$META]: [$OPTIONAL],
-      [$CONTEXT]: User,
-    },
-    lastModified: {
-      [$ID]: pd["má-datum-a-čas-poslední-modifikace"],
-      [$TYPE]: xsd.dateTime,
-      [$META]: [$OPTIONAL],
-    },
-    vocabularies: {
-      [$ID]: pp["odkazuje-na-kontext"],
-      [$CONTEXT]: Vocabulary,
-      [$META]: [$ARRAY, $OPTIONAL],
-    },*/
-  } as const;
-
-  const WorkspaceVocabularies = {
-    [$TYPE]: pp["metadatový-kontext"],
-    vocabularies: {
-      [$ID]: pp["odkazuje-na-kontext"],
-      [$CONTEXT]: Vocabulary,
-      [$META]: [$ARRAY, $OPTIONAL],
-    },
-  } as const;
-
-  //type fff = ff<typeof Workspace['lastEditor']>
-
-  type UserInterface = SchemaInterface<typeof User>;
-
-  type Interface = SchemaInterface<typeof Workspace>;
-
-  const workspaces = createResource(Workspace);
-
-  workspaces.find().subscribe((data: any) => {
-    console.log("DATA");
-    console.log(data);
-    console.log(data.length);
-    data.map((row: any) => {
-      //console.log(row)
-      console.log("");
-      console.log("WORKSPACE");
-      console.log(row.title);
-      console.log(row.owner.email);
-      console.log(row.created);
-      console.log(row.lastEditor?.email);
-      console.log(row.lastModified);
-      console.log("VOCABULARIES");
-      //row.vocabularies.map((vocabulary) => console.log(vocabulary.vocabulary))
-    });
-  });
   /*
   const workspaceVocabularies = createAccess(WorkspaceVocabularies);
 

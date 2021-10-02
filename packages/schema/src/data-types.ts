@@ -38,3 +38,5 @@ const SupportedDataTypesPrototype = {
 };
 
 export type SupportedDataTypes = typeof SupportedDataTypesPrototype;
+
+export type SupportedNativeTypes = SupportedDataTypes[keyof SupportedDataTypes];

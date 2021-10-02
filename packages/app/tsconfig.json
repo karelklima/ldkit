@@ -4,7 +4,12 @@
     "src",
   ],
   "references": [{
+    "path": "../core"
+  },{
     "path": "../engine"
+  },
+  {
+    "path": "../keys"
   },
   {
     "path": "../namespaces"

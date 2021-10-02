@@ -13,6 +13,11 @@ const proxyHandler = {
   get: (target: EntityData, propertyAlias: string): any => {
     const targetSchema = target.schema;
     const targetObject = target.graph[target.pointer];
+
+    if (propertyAlias === $ID) {
+      return target.pointer;
+    }
+
     if (!targetSchema[propertyAlias]) {
       throw new Error(
         `Unknown property ${propertyAlias} in schema of ${targetSchema[$TYPE]}`

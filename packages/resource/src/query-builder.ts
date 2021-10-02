@@ -11,6 +11,14 @@ import {
 import { $, CONSTRUCT, SELECT } from "@ldkit/sparql";
 import { Quad, variable, namedNode, quad } from "@ldkit/rdf";
 
+export class QueryBuilder {
+  private readonly schema: Schema;
+
+  constructor(schema: Schema) {
+    this.schema = schema;
+  }
+}
+
 export const getObjectByIriQuery = (iri: Iri, schema: Schema) => {
   const properties = getSchemaProperties(schema);
   const variables = Object.keys(properties);
@@ -113,4 +121,15 @@ export const findQuery = (schema: Schema) => {
     .WHERE`{ ${getPartialSelectQuery(schema)} }
     ${getConditionsFromSchema(schema, "res", true)}`.build();
   return query;
+};
+
+export const insertQuery = (quads: Quad[]) => {
+  const query = $`INSERT DATA { ${quads} }`.toString();
+  return query;
+};
+
+export const deleteQuery = (iri: Iri) => {
+  return $`DELETE { ${namedNode(iri)} ?p ?o } WHERE { ${namedNode(
+    iri
+  )} ?p ?o}`.toString();
 };

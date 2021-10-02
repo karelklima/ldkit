@@ -1,5 +1,5 @@
 import type { SupportedDataTypes } from "./data-types";
-import { $ARRAY, $CONTEXT, $META, $OPTIONAL, $TYPE } from "./keys";
+import { $ARRAY, $CONTEXT, $META, $OPTIONAL, $TYPE, $ID } from "./keys";
 import type { SchemaPrototype, PropertyPrototype } from "./schema";
 
 type ReadonlyArrayValues<T> = T extends Readonly<Array<infer R>> ? R : never;
@@ -56,4 +56,4 @@ export type SchemaInterface<T extends SchemaPrototype> = Omit<
       : never;
   },
   typeof $TYPE
->;
+> & { [$ID]: string };

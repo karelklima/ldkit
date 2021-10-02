@@ -8,12 +8,19 @@
     "start": "parcel src/index.html"
   },
   "dependencies": {
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
     "@ldkit/core": "*",
     "@ldkit/engine": "*",
+    "@ldkit/keys": "*",
     "@ldkit/namespaces": "*",
     "@ldkit/rdf": "*",
+    "@mui/icons-material": "^5.0.1",
+    "@mui/material": "^5.0.2",
     "@types/react": "^17.0.19",
     "@types/react-dom": "^17.0.9",
+    "n3": "^1.11.1",
+    "observable-hooks": "^4.0.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "rxjs": "^7.3.0"
