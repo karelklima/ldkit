@@ -18,7 +18,6 @@
   },
   "peerDependencies": {
     "@ldkit/engine": "*",
-    "@ldkit/keys": "*",
     "@ldkit/namespaces": "*",
     "@ldkit/rdf": "*",
     "@ldkit/resource": "*",

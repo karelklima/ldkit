@@ -1,13 +1,18 @@
+import React, { useState, useCallback } from "react";
 import { useObservable, useObservableState } from "observable-hooks";
 import type { Observable } from "rxjs";
-import React, { useState, useCallback } from "react";
-import { Todos, TodosInterface } from "../store";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemButton from "@mui/material/ListItemButton";
-import Checkbox from "@mui/material/Checkbox";
+import styled from "@emotion/styled";
+
+import { Todos, TodoInterface } from "../store";
+import {
+  Button,
+  Group,
+  InvisibleButton,
+  Row,
+  RowAction,
+  RowContent,
+} from "./UI";
+import { CheckedIcon, CircleIcon, RemoveIcon } from "./Icons";
 
 const useResource = <T extends any>(
   observableInit: () => Observable<T>,
@@ -17,30 +22,47 @@ const useResource = <T extends any>(
   return useObservableState(o$, defaultState);
 };
 
-type ItemProps = { item: TodosInterface };
+const List = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+`;
+
+const Done = styled.span`
+  color: #aaa;
+  text-decoration: line-through;
+`;
+
+type ItemProps = { item: TodoInterface };
 
 const Item: React.FC<ItemProps> = ({ item }) => {
-  const [checked, setChecked] = useState(false);
+  const handleDeleteClicked = useCallback(() => {
+    Todos.delete(item);
+  }, [item]);
 
-  const handleChecked = useCallback(() => {
-    setChecked(true);
-    Todos.delete(item["@id"]);
-  }, [item, setChecked]);
+  const handleCheckboxClicked = useCallback(() => {
+    Todos.update({
+      "@id": item["@id"],
+      done: !item.done,
+    });
+  }, [item]);
 
   return (
-    <ListItem>
-      <ListItemButton role={undefined} onClick={handleChecked} dense>
-        <ListItemIcon>
-          <Checkbox
-            edge="start"
-            checked={checked}
-            tabIndex={-1}
-            disableRipple
-          />
-        </ListItemIcon>
-        <ListItemText primary={item.description} />
-      </ListItemButton>
-    </ListItem>
+    <Row>
+      <Button onClick={handleCheckboxClicked}>
+        {item.done ? <CheckedIcon /> : <CircleIcon />}
+      </Button>
+      <RowContent>
+        {item.done ? <Done>{item.description}</Done> : item.description}
+      </RowContent>
+      {item.done ? (
+        <Button onClick={handleDeleteClicked}>
+          <RemoveIcon />
+        </Button>
+      ) : (
+        <InvisibleButton />
+      )}
+    </Row>
   );
 };
 

@@ -1,26 +1,30 @@
-import { $ID, $TYPE, $META, $OPTIONAL, $CONTEXT, $ARRAY } from "@ldkit/keys";
 import { createResource } from "@ldkit/core";
 import type { SchemaInterface } from "@ldkit/core";
-import { createNamespace } from "@ldkit/namespaces";
-import { dcterms, xsd, schema } from "@ldkit/namespaces";
-
-import { namedNode } from "@ldkit/rdf";
-
+import { xsd, createNamespace } from "@ldkit/namespaces";
 import { createDefaultContext } from "@ldkit/engine";
 
 import { Store } from "n3";
-import { lastValueFrom } from "rxjs";
+
+const t = createNamespace({
+  iri: "https://todos/",
+  prefix: "t:",
+  terms: ["Todo", "description", "done"],
+} as const);
 
 const TodoSchema = {
-  [$TYPE]: schema.Thing,
-  description: schema.description,
+  "@type": t.Todo,
+  description: t.description,
+  done: {
+    "@id": t.done,
+    "@type": xsd.boolean,
+  },
 } as const;
 
 export const store = new Store();
 
 createDefaultContext(store);
 
-export type TodosInterface = SchemaInterface<typeof TodoSchema>;
+export type TodoInterface = SchemaInterface<typeof TodoSchema>;
 
 export const Todos = createResource(TodoSchema);
 

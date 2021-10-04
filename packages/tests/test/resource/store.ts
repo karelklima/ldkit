@@ -1,5 +1,4 @@
 import { rdf, schema } from "@ldkit/namespaces";
-import { $CONTEXT, $ID, $TYPE } from "@ldkit/keys";
 
 import {
   Store,
@@ -60,15 +59,15 @@ addMovie("2001", "2001: A Space Odyssey", "StanleyKubrick");
 console.log("SIZE", store.size);
 
 export const DirectorSchema = {
-  [$TYPE]: schema.Person,
+  "@type": schema.Person,
   name: schema.name,
 } as const;
 
 export const MovieSchema = {
-  [$TYPE]: schema.Movie,
+  "@type": schema.Movie,
   name: schema.name,
   director: {
-    [$ID]: schema.director,
-    [$CONTEXT]: DirectorSchema,
+    "@id": schema.director,
+    "@context": DirectorSchema,
   },
 } as const;

@@ -1,68 +1,94 @@
-import React, { useState, useRef, useCallback } from "react";
-import Fab from "@mui/material/Fab";
-import AddIcon from "@mui/icons-material/Add";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import TextField from "@mui/material/TextField";
-import DialogActions from "@mui/material/DialogActions";
-import Button from "@mui/material/Button";
+import React, { useState, useRef, useCallback, KeyboardEvent } from "react";
+import styled from "@emotion/styled";
 
 import { Todos, getRandomId, store } from "../store";
+import {
+  Button,
+  InvisibleButton,
+  MootButton,
+  Row,
+  RowAction,
+  RowContent,
+} from "./UI";
+
+import { AddIcon, CircleIcon } from "./Icons";
+
+const AddArea = styled.div`
+  flex: 1;
+`;
+
+const AddInput = styled.input`
+  font-size: 18px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  outline: none;
+  width: 100%;
+  margin: -3px;
+  padding: 3px;
+`;
 
 export const Add: React.FC = () => {
   const [isOpen, setOpen] = useState(false);
-  const inputRef = useRef<HTMLInputElement>();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleBlur = () => {
     setOpen(false);
   };
 
-  const handleAdd = useCallback(() => {
-    const value = inputRef.current?.value;
-    console.log(value);
-    if (!value) {
-      return;
-    }
-    const id = getRandomId();
-    Todos.insert(id, { description: value });
-    setOpen(false);
-  }, [inputRef, setOpen]);
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLInputElement>) => {
+      const inputValue = inputRef.current?.value;
+      if (
+        event.key === "Escape" ||
+        (event.key === "Backspace" && !inputValue)
+      ) {
+        if (inputRef.current) {
+          inputRef.current.value = "";
+        }
+        setOpen(false);
+      } else if (event.key === "Enter" && inputValue) {
+        Todos.insert({
+          "@id": getRandomId(),
+          description: inputValue,
+          done: false,
+        });
+        inputRef.current.value = "";
+      }
+    },
+    [inputRef, setOpen]
+  );
+
+  if (isOpen) {
+    return (
+      <Row>
+        <MootButton>
+          <CircleIcon />
+        </MootButton>
+        <RowContent>
+          <AddInput
+            type="text"
+            autoFocus
+            ref={inputRef}
+            onKeyDown={handleKeyDown}
+            onBlur={handleBlur}
+          />
+        </RowContent>
+        <InvisibleButton />
+      </Row>
+    );
+  }
 
   return (
-    <>
-      <Fab
-        color="primary"
-        aria-label="add"
-        sx={{ position: "absolute", bottom: 16, right: 16 }}
-        onClick={handleClickOpen}
-      >
-        <AddIcon />
-      </Fab>
-      <Dialog open={isOpen} onClose={handleClose}>
-        <DialogTitle>To do...</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            autoComplete="off"
-            margin="dense"
-            id="name"
-            label="New TODO item"
-            type="email"
-            fullWidth
-            variant="filled"
-            inputRef={inputRef}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleAdd}>Add</Button>
-        </DialogActions>
-      </Dialog>
-    </>
+    <AddArea onClick={handleClickOpen}>
+      <Row>
+        <Button>
+          <AddIcon />
+        </Button>
+      </Row>
+    </AddArea>
   );
 };

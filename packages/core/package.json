@@ -10,32 +10,9 @@
   },
   "author": "Karel Klíma",
   "license": "MIT",
-  "jest": {
-    "preset": "ts-jest",
-    "moduleDirectories": [
-      "src",
-      "node_modules"
-    ],
-    "transformIgnorePatterns": [
-      "node_modules"
-    ],
-    "moduleNameMapper": {
-      "@rdf-esm/(.*)": "@rdfjs/$1"
-    }
-  },
   "peerDependencies": {
-    "@ldkit/engine": "*",
-    "@ldkit/keys": "*",
     "@ldkit/namespaces": "*",
-    "@ldkit/rdf": "*",
     "@ldkit/resource": "*",
-    "@ldkit/schema": "*",
-    "@ldkit/sparql": "*"
-  },
-  "devDependencies": {
-    "@types/jest": "^27.0.1",
-    "jest": "^27.1.0",
-    "n3": "^1.11.1",
-    "ts-jest": "^27.0.5"
+    "@ldkit/schema": "*"
   }
 }

@@ -1,4 +1,3 @@
-import { $ID, $TYPE, $META, $OPTIONAL, $CONTEXT, $ARRAY } from "@ldkit/keys";
 import { createResource } from "@ldkit/core";
 import type { SchemaInterface } from "@ldkit/core";
 import { createNamespace } from "@ldkit/namespaces";
@@ -13,9 +12,17 @@ import { lastValueFrom } from "rxjs";
 
 export const main = async () => {
   const TodoSchema = {
-    [$TYPE]: schema.Thing,
+    "@type": schema.Thing,
     name: schema.name,
+    description: {
+      "@id": schema.description,
+      "@type": xsd.string,
+      "@meta": "@optional",
+    },
   } as const;
+
+  type t = SchemaInterface<typeof TodoSchema>;
+  const g: t = {} as unknown as t;
 
   const store = new Store();
 
@@ -24,7 +31,7 @@ export const main = async () => {
   const todos = createResource(TodoSchema);
 
   const result = await lastValueFrom(
-    todos.insert("https://1234", { name: "whoa" })
+    todos.insert({ "@id": "https://1234", name: "whoa", description: "whoa" })
   );
 
   console.log(result);

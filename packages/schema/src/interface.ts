@@ -1,34 +1,37 @@
 import type { SupportedDataTypes } from "./data-types";
-import { $ARRAY, $CONTEXT, $META, $OPTIONAL, $TYPE, $ID } from "./keys";
 import type { SchemaPrototype, PropertyPrototype } from "./schema";
 
 type ReadonlyArrayValues<T> = T extends Readonly<Array<infer R>> ? R : never;
 
 type HasMetaValue<MetaType, ValueType> =
-  ValueType extends ReadonlyArrayValues<MetaType> ? true : false;
+  ValueType extends ReadonlyArrayValues<MetaType>
+    ? true
+    : MetaType extends ValueType
+    ? true
+    : false;
 
 type IsOptional<Property extends PropertyPrototype> = HasMetaValue<
-  Property[typeof $META],
-  typeof $OPTIONAL
+  Property["@meta"],
+  "@optional"
 >;
 
 type IsArray<Property extends PropertyPrototype> = HasMetaValue<
-  Property[typeof $META],
-  typeof $ARRAY
+  Property["@meta"],
+  "@array"
 >;
 
 type ValidPropertyDefinition = PropertyPrototype | string;
 
 type ConvertPropertyType<T extends PropertyPrototype> = T extends {
-  [$CONTEXT]: SchemaPrototype;
+  "@context": SchemaPrototype;
 }
   ? // embedded schema
-    SchemaInterface<T[typeof $CONTEXT]>
+    SchemaInterface<T["@context"]>
   : // type specified
-  T extends { [$TYPE]: any }
-  ? T[typeof $TYPE] extends keyof SupportedDataTypes
+  T extends { "@type": any }
+  ? T["@type"] extends keyof SupportedDataTypes
     ? // type is built-int
-      SupportedDataTypes[T[typeof $TYPE]]
+      SupportedDataTypes[T["@type"]]
     : // type is invalid
       never
   : // no type -> defaults to string
@@ -49,11 +52,21 @@ type ConvertPropertyObject<T extends PropertyPrototype> =
 type ConvertProperty<T extends ValidPropertyDefinition> =
   T extends PropertyPrototype ? ConvertPropertyObject<T> : string;
 
+export type SchemaInterfaceIdentity = {
+  "@id": string;
+};
+
+export type SchemaInterfaceType = {
+  "@type": string[];
+};
+
 export type SchemaInterface<T extends SchemaPrototype> = Omit<
   {
     [X in keyof T]: T[X] extends ValidPropertyDefinition
       ? ConvertProperty<T[X]>
       : never;
   },
-  typeof $TYPE
-> & { [$ID]: string };
+  "@type" | "@id"
+> &
+  SchemaInterfaceIdentity &
+  SchemaInterfaceType;

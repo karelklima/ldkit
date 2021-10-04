@@ -5,7 +5,8 @@
   "private": "true",
   "scripts": {
     "start": "npm -w @ldkit/app start",
-    "test": "npm -w @ldkit/tests test"
+    "test": "npm -w @ldkit/tests test",
+    "rimraf-node-modules": "rimraf node_modules"
   },
   "author": "Karel Klíma",
   "license": "MIT",

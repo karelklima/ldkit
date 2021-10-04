@@ -8,7 +8,5 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Karel Klíma",
-  "license": "MIT",
-  "dependencies": {},
-  "peerDependencies": {}
+  "license": "MIT"
 }

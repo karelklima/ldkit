@@ -5,16 +5,11 @@
   "main": "dist/index.js",
   "source": "src/index.ts",
   "type": "module",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "Karel Klíma",
   "license": "MIT",
-  "dependencies": {
+  "peerDependencies": {
+    "@types/rdf-js": "^4.0.2",
     "rdf-data-factory": "^1.1.0",
     "rdf-literal": "^1.3.0"
-  },
-  "devDependencies": {
-    "@types/rdf-js": "^4.0.2"
   }
 }

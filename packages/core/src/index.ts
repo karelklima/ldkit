@@ -1,7 +1,5 @@
 export type { SchemaInterface } from "@ldkit/schema";
 
-export * from "@ldkit/keys";
-
 export type { Resource } from "@ldkit/resource";
 export { createResource } from "@ldkit/resource";
 

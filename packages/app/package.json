@@ -12,11 +12,8 @@
     "@emotion/styled": "^11.3.0",
     "@ldkit/core": "*",
     "@ldkit/engine": "*",
-    "@ldkit/keys": "*",
     "@ldkit/namespaces": "*",
     "@ldkit/rdf": "*",
-    "@mui/icons-material": "^5.0.1",
-    "@mui/material": "^5.0.2",
     "@types/react": "^17.0.19",
     "@types/react-dom": "^17.0.9",
     "n3": "^1.11.1",
@@ -26,7 +23,6 @@
     "rxjs": "^7.3.0"
   },
   "devDependencies": {
-    "parcel": "^2.0.0-rc.0",
-    "prettier": "^2.3.2"
+    "parcel": "^2.0.0-rc.0"
   }
 }

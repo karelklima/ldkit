@@ -1,4 +1,8 @@
-export type { SchemaInterface } from "./interface";
+export type {
+  SchemaInterface,
+  SchemaInterfaceIdentity,
+  SchemaInterfaceType,
+} from "./interface";
 
 import type {
   Schema,
@@ -7,7 +11,5 @@ import type {
   PropertyPrototype,
 } from "./schema";
 export { Schema, SchemaPrototype, Property, PropertyPrototype };
-
-export * from "./keys";
 
 export { expandSchema, getSchemaProperties } from "./utils";

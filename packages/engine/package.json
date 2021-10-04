@@ -5,16 +5,11 @@
   "main": "dist/index.js",
   "source": "src/index.ts",
   "type": "module",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "Karel Klíma",
   "license": "MIT",
-  "dependencies": {
-    "@comunica/actor-init-sparql": "^1.22.0",
-    "@comunica/bus-rdf-resolve-quad-pattern": "^1.22.0"
-  },
   "peerDependencies": {
+    "@comunica/actor-init-sparql": "^1.22.0",
+    "@comunica/bus-rdf-resolve-quad-pattern": "^1.22.0",
     "@ldkit/rdf": "*",
     "rxjs": "^7.3.0"
   }

@@ -1,33 +1,32 @@
-import { $ID, $META, $OPTIONAL, $TYPE } from "@ldkit/keys";
 import { Schema, expandSchema, getSchemaProperties } from "@ldkit/schema";
 import { schema, xsd } from "@ldkit/namespaces";
 
 const User = {
-  [$TYPE]: schema.Person,
+  "@type": schema.Person,
   firstName: schema.givenName,
   lastName: {
-    [$ID]: schema.familyName,
-    [$META]: [$OPTIONAL],
+    "@id": schema.familyName,
+    "@meta": ["@optional"],
   },
   email: schema.email,
 } as const;
 
 const UserSchema: Schema = {
-  [$TYPE]: [schema.Person],
+  "@type": [schema.Person],
   firstName: {
-    [$ID]: schema.givenName,
-    [$TYPE]: xsd.string,
-    [$META]: [],
+    "@id": schema.givenName,
+    "@type": xsd.string,
+    "@meta": [],
   },
   lastName: {
-    [$ID]: schema.familyName,
-    [$TYPE]: xsd.string,
-    [$META]: [$OPTIONAL],
+    "@id": schema.familyName,
+    "@type": xsd.string,
+    "@meta": ["@optional"],
   },
   email: {
-    [$ID]: schema.email,
-    [$TYPE]: xsd.string,
-    [$META]: [],
+    "@id": schema.email,
+    "@type": xsd.string,
+    "@meta": [],
   },
 };
 

@@ -1,5 +1,4 @@
 import { xsd } from "@ldkit/namespaces";
-import { $CONTEXT, $ID, $META, $TYPE } from "./keys";
 import type {
   Property,
   PropertyPrototype,
@@ -17,24 +16,25 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
   ) => {
     if (typeof stringOrProperty === "string") {
       return {
-        [$ID]: stringOrProperty,
-        [$TYPE]: xsd.string,
-        [$META]: [],
+        "@id": stringOrProperty,
+        "@type": xsd.string,
+        "@meta": [],
       };
     }
     const baseProperty: Property = {
-      [$ID]: "",
-      [$TYPE]: xsd.string,
-      [$META]: [],
+      "@id": "",
+      "@type": xsd.string,
+      "@meta": [],
     };
 
     return Object.keys(stringOrProperty).reduce((acc, key) => {
-      if (key === $META) {
+      if (key === "@meta") {
         acc[key] = expandArray(stringOrProperty[key]!);
-      } else if (key === $CONTEXT) {
+      } else if (key === "@context") {
         acc[key] = expandSchema(stringOrProperty[key]!);
-      } else if (key === $ID || key === $TYPE) {
-        // ID, TYPE
+      } else if (key === "@id") {
+        acc[key] = stringOrProperty[key]!;
+      } else if (key === "@type") {
         acc[key] = stringOrProperty[key]!;
       }
       return acc;
@@ -42,11 +42,11 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
   };
 
   const baseSchema: Schema = {
-    [$TYPE]: [],
+    "@type": [],
   };
 
   return Object.keys(schemaPrototype).reduce((acc, key) => {
-    if (key === $TYPE) {
+    if (key === "@type") {
       acc[key] = expandArray(schemaPrototype[key]);
     } else {
       acc[key] = expandSchemaProperty(
@@ -58,6 +58,6 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
 };
 
 export const getSchemaProperties = (schema: Schema) => {
-  const { [$TYPE]: ommitedType, ...properties } = schema;
+  const { "@type": ommitedType, ...properties } = schema;
   return properties as Record<string, Property>;
 };

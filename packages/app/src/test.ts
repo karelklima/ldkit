@@ -1,4 +1,4 @@
-import { $ID, $TYPE, $META, $OPTIONAL, $CONTEXT, $ARRAY } from "@ldkit/keys";
+// import { $ID, $TYPE, $META, $OPTIONAL, $CONTEXT, $ARRAY } from "@ldkit/keys";
 import { createResource } from "@ldkit/core";
 import type { SchemaInterface } from "@ldkit/core";
 import { createNamespace } from "@ldkit/namespaces";
@@ -81,27 +81,27 @@ export const main = () => {
   } as const;
 
   const Vocabulary = {
-    [$TYPE]: pp["slovníkový-kontext"],
+    "@type": pp["slovníkový-kontext"],
     vocabulary: pp["vychází-z-verze"],
     dependencies: {
-      [$ID]: tp["používá-pojmy-ze-slovníku"],
-      [$META]: [$ARRAY, $OPTIONAL],
+      "@id": tp["používá-pojmy-ze-slovníku"],
+      "@meta": ["@array", "@optional"],
     },
   } as const;
 
   const User = {
-    [$TYPE]: pd.uživatel,
+    "@type": pd.uživatel,
     firstName: pd["má-křestní-jméno"],
     lastName: {
-      [$ID]: pd["má-příjmení"],
-      [$META]: [$OPTIONAL],
+      "@id": pd["má-příjmení"],
+      "@meta": "@optional",
     },
     email: pd["má-uživatelské-jméno"],
   } as const;
 
   const Workspace = {
     ...DctermsBase,
-    [$TYPE]: pp["metadatový-kontext"],
+    "@type": pp["metadatový-kontext"],
     /*owner: {
       [$ID]: pd["má-autora"],
       [$CONTEXT]: User,
@@ -128,17 +128,21 @@ export const main = () => {
   } as const;
 
   const WorkspaceVocabularies = {
-    [$TYPE]: pp["metadatový-kontext"],
+    "@type": pp["metadatový-kontext"],
     vocabularies: {
-      [$ID]: pp["odkazuje-na-kontext"],
-      [$CONTEXT]: Vocabulary,
-      [$META]: [$ARRAY, $OPTIONAL],
+      "@id": pp["odkazuje-na-kontext"],
+      "@context": Vocabulary,
+      "@meta": ["@array", "@optional"],
     },
   } as const;
+
+  type g = typeof WorkspaceVocabularies;
 
   //type fff = ff<typeof Workspace['lastEditor']>
 
   type UserInterface = SchemaInterface<typeof User>;
+  type x = UserInterface["@type"];
+  const g: UserInterface = {} as unknown as UserInterface;
 
   type Interface = SchemaInterface<typeof Workspace>;
 

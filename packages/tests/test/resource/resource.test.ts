@@ -1,7 +1,3 @@
-//import { $ID, $META, $OPTIONAL, $TYPE } from 'schema/keys'
-//import { expandSchema, getSchemaProperties } from 'schema/utils'
-//import { schema, xsd } from 'namespaces'
-//import { Schema } from 'schema/schema'
 import { createResource } from "@ldkit/resource";
 import { createContext } from "@ldkit/engine";
 

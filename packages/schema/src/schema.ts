@@ -1,27 +1,34 @@
-import { $ARRAY, $CONTEXT, $ID, $LAZY, $META, $OPTIONAL, $TYPE } from "./keys";
+import type { SupportedDataTypes } from "./data-types";
 
-type Meta = typeof $OPTIONAL | typeof $ARRAY | typeof $LAZY;
+type Meta = "@optional" | "@array" | "@lazy";
+
+type PropertyType = keyof SupportedDataTypes;
 
 export type PropertyPrototype = {
-  [$ID]: string;
-  [$TYPE]?: string;
-  [$META]?: Meta | readonly Meta[];
-  [$CONTEXT]?: SchemaPrototype;
+  "@id": string;
+  "@type"?: PropertyType;
+  "@meta"?: Meta | readonly Meta[];
+  "@context"?: SchemaPrototype;
 };
 
-export type SchemaPrototype = {
-  [key: string]: PropertyPrototype | string | string[];
-  [$TYPE]: string | string[];
+export type SchemaPrototypeProperties = {
+  [key: string]: PropertyPrototype | string | readonly string[];
 };
+
+export type SchemaPrototypeType = {
+  "@type": string | readonly string[];
+};
+
+export type SchemaPrototype = SchemaPrototypeProperties & SchemaPrototypeType;
 
 export type Property = {
-  [$ID]: string;
-  [$TYPE]?: string;
-  [$META]: Meta[];
-  [$CONTEXT]?: Schema;
+  "@id": string;
+  "@type"?: PropertyType;
+  "@meta": Meta[];
+  "@context"?: Schema;
 };
 
 export type Schema = {
   [key: string]: Property | string[];
-  [$TYPE]: string[];
+  "@type": string[];
 };

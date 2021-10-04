@@ -4,26 +4,27 @@
     "rootDir": "test",
     "noEmit": true,
   },
-  "include": ["./test/**/*"],
-  "references": [{
-    "path": "../engine"
-  },
-  {
-    "path": "../keys"
-  },
-  {
-    "path": "../namespaces"
-  },
-  {
-    "path": "../rdf"
-  },
-  {
-    "path": "../resource"
-  },
-  {
-    "path": "../schema"
-  },
-  {
-    "path": "../sparql"
-  }]
+  "include": [
+    "./test/**/*"
+  ],
+  "references": [
+    {
+      "path": "../engine"
+    },
+    {
+      "path": "../namespaces"
+    },
+    {
+      "path": "../rdf"
+    },
+    {
+      "path": "../resource"
+    },
+    {
+      "path": "../schema"
+    },
+    {
+      "path": "../sparql"
+    }
+  ]
 }

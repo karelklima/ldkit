@@ -6,8 +6,5 @@
   },
   "references": [{
     "path": "../namespaces"
-  },
-  {
-    "path": "../keys"
   }]
 }
