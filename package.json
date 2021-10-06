@@ -5,7 +5,7 @@
     "start": "npm -w @ldkit/app start",
     "build": "npm -w @ldkit/app run build",
     "build:lib": "npm -w @ldkit/rdf -w  @ldkit/sparql -w @ldkit/engine -w @ldkit/namespaces -w @ldkit/schema -w @ldkit/resource -w @ldkit/core run build",
-    "publish:lib": "npm publish -w @ldkit/rdf -w  @ldkit/sparql -w @ldkit/engine -w @ldkit/namespaces -w @ldkit/schema -w @ldkit/resource -w @ldkit/core",
+    "publish:lib": "npm publish -w @ldkit/rdf -w  @ldkit/sparql -w @ldkit/engine -w @ldkit/namespaces -w @ldkit/schema -w @ldkit/resource -w @ldkit/core --access public",
     "test": "npm -w @ldkit/tests test",
     "rimraf-node-modules": "rimraf node_modules"
   },
