@@ -5,6 +5,7 @@
   "private": "true",
   "scripts": {
     "start": "npm -w @ldkit/app start",
+    "build": "npm -w @ldkit/app run build",
     "test": "npm -w @ldkit/tests test",
     "rimraf-node-modules": "rimraf node_modules"
   },

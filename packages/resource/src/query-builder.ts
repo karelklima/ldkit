@@ -6,7 +6,7 @@ import type {
   SchemaInterfaceType,
 } from "@ldkit/schema";
 import { getSchemaProperties } from "@ldkit/schema";
-import { $, CONSTRUCT, SELECT } from "@ldkit/sparql";
+import { $, CONSTRUCT, SELECT, INSERT, DELETE } from "@ldkit/sparql";
 import { Quad, variable, namedNode, quad, toRdf } from "@ldkit/rdf";
 import { rdf, xsd } from "@ldkit/namespaces";
 
@@ -55,8 +55,7 @@ export class QueryBuilder {
   }
 
   insertDataQuery(quads: Quad[]) {
-    const query = $`INSERT DATA { ${quads} }`.toString();
-    return query;
+    return INSERT.DATA`${quads}`.build();
   }
 
   updateQuery(
@@ -82,13 +81,8 @@ export class QueryBuilder {
       updateQuads.push(quad(namedNode(iri), namedNode(predicate), rdfValue));
     });
 
-    const query = $`DELETE { 
-        ${deleteQuads} }
-      INSERT { 
-        ${updateQuads} }
-      WHERE { 
-        ${deleteQuads} }`;
-    return query.toString();
+    return DELETE`${deleteQuads}`.INSERT`${updateQuads}`
+      .WHERE`${deleteQuads}`.build();
   }
 }
 
@@ -100,9 +94,7 @@ export const getObjectByIriQuery = (iri: Iri, schema: Schema) => {
     quad(namedNode(iri), namedNode(properties[v]["@id"]), variable(v))
   );
 
-  const query = CONSTRUCT`${conditions}`.WHERE`${conditions}`.build();
-
-  return query;
+  return CONSTRUCT`${conditions}`.WHERE`${conditions}`.build();
 };
 
 const getConditionsFromSchema = (

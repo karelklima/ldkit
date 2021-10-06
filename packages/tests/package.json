@@ -5,15 +5,20 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "test": "jest --verbose"
+    "test": "tsc -b && jest"
   },
   "author": "Karel Klíma",
   "license": "MIT",
   "jest": {
     "preset": "ts-jest",
+    "globals": {
+      "ts-jest": {
+        "diagnostics": true
+      }
+    },
     "moduleNameMapper": {
-      "@rdf-esm/(.*)": "@rdfjs/$1",
-      "@ldkit/(.*)": "<rootDir>/../$1/src/index.ts"
+      "^@rdf-esm/(.*)$": "@rdfjs/$1",
+      "^@ldkit/(.*)$": "<rootDir>/../$1/src/index.ts"
     }
   },
   "peerDependencies": {
@@ -28,6 +33,7 @@
     "@types/jest": "^27.0.1",
     "jest": "^27.1.0",
     "n3": "^1.11.1",
-    "ts-jest": "^27.0.5"
+    "ts-jest": "^27.0.5",
+    "tsafe": "^0.8.1"
   }
 }

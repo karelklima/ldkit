@@ -1,8 +1,12 @@
 {
-  //"extends": "@ldkit/config/tsconfig.json",
+  "extends": "@ldkit/config/tsconfig.json",
   "compilerOptions": {
     "rootDir": "test",
     "noEmit": true,
+    "typeRoots": [
+      "../../node_modules/@types"
+    ],
+    "types": ["jest"]
   },
   "include": [
     "./test/**/*"
