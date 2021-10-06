@@ -1,12 +1,20 @@
 {
   "name": "@ldkit/engine",
-  "version": "1.0.0",
-  "description": "",
-  "main": "dist/index.js",
-  "source": "src/index.ts",
-  "type": "module",
-  "author": "Karel Klíma",
+  "version": "0.0.1",
+  "description": "Linked Data Kit Engine",
+  "author": "Karel Klima <karelklima@gmail.com>",
   "license": "MIT",
+  "type": "module",
+  "source": "src/index.ts",
+  "main": "dist/main.js",
+  "types": "dist/types.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "parcel build src/index.ts --no-scope-hoist"
+  },
   "peerDependencies": {
     "@comunica/actor-init-sparql": "^1.22.0",
     "@comunica/bus-rdf-resolve-quad-pattern": "^1.22.0",

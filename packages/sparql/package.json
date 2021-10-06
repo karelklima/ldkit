@@ -1,16 +1,20 @@
 {
   "name": "@ldkit/sparql",
-  "version": "1.0.0",
-  "description": "",
-  "main": "dist/index.js",
-  "source": "src/index.ts",
+  "version": "0.0.1",
+  "description": "Linked Data Kit SPARQL utilities",
+  "author": "Karel Klima <karelklima@gmail.com>",
+  "license": "MIT",
   "type": "module",
-  "snowpack:source": "src/index.ts",
+  "source": "src/index.ts",
+  "main": "dist/main.js",
+  "types": "dist/types.d.ts",
+  "files": [
+    "/dist"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prebuild": "rimraf dist",
+    "build": "parcel build src/index.ts --no-scope-hoist"
   },
-  "author": "Karel Klíma",
-  "license": "ISC",
   "peerDependencies": {
     "@tpluscode/rdf-string": "^0.2.24",
     "@tpluscode/sparql-builder": "^0.3.15"

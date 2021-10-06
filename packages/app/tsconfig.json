@@ -1,10 +1,13 @@
 {
   "extends": "@ldkit/config/tsconfig.json",
   "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": "src"
+    "noEmit": true
   },
+  "include": ["src"],
   "references": [
+    {
+      "path": "../core"
+    },
     {
       "path": "../engine"
     },
@@ -13,12 +16,6 @@
     },
     {
       "path": "../rdf"
-    },
-    {
-      "path": "../schema"
-    },
-    {
-      "path": "../sparql"
     }
   ]
 }

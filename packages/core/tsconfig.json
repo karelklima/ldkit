@@ -6,6 +6,9 @@
   },
   "references": [
     {
+      "path": "../engine"
+    },
+    {
       "path": "../namespaces"
     },
     {

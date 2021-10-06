@@ -1,16 +1,22 @@
 {
   "name": "@ldkit/core",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Linked Data Kit Core",
-  "main": "dist/index.js",
-  "source": "src/index.ts",
-  "type": "module",
-  "scripts": {
-    "test": "jest"
-  },
-  "author": "Karel Klíma",
+  "author": "Karel Klima <karelklima@gmail.com>",
   "license": "MIT",
+  "type": "module",
+  "source": "src/index.ts",
+  "main": "dist/main.js",
+  "types": "dist/types.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "parcel build src/index.ts --no-scope-hoist"
+  },
   "peerDependencies": {
+    "@ldkit/engine": "*",
     "@ldkit/namespaces": "*",
     "@ldkit/resource": "*",
     "@ldkit/schema": "*"

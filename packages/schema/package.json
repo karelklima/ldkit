@@ -1,12 +1,20 @@
 {
   "name": "@ldkit/schema",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Linked Data Kit Schema",
-  "main": "dist/index.js",
-  "source": "src/index.ts",
-  "type": "module",
-  "author": "Karel Klíma",
+  "author": "Karel Klima <karelklima@gmail.com>",
   "license": "MIT",
+  "type": "module",
+  "source": "src/index.ts",
+  "main": "dist/main.js",
+  "types": "dist/types.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "parcel build src/index.ts --no-scope-hoist"
+  },
   "peerDependencies": {
     "@ldkit/namespaces": "*"
   }

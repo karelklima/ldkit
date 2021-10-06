@@ -1,14 +1,13 @@
 {
   "name": "@ldkit/tests",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
-  "main": "src/index.js",
+  "author": "Karel Klima <karelklima@gmail.com>",
+  "license": "MIT",
   "type": "module",
   "scripts": {
-    "test": "tsc -b && jest"
+    "test": "jest"
   },
-  "author": "Karel Klíma",
-  "license": "MIT",
   "jest": {
     "preset": "ts-jest",
     "globals": {
