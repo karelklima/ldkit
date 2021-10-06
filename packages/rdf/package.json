@@ -1,6 +1,6 @@
 {
   "name": "@ldkit/rdf",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Linked Data Kit RDF utilities",
   "author": "Karel Klima <karelklima@gmail.com>",
   "license": "MIT",
@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "parcel build src/index.ts --no-scope-hoist"
+    "build": "parcel build src/index.ts"
   },
   "peerDependencies": {
     "@types/rdf-js": "^4.0.2",

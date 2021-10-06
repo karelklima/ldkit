@@ -1,6 +1,6 @@
 {
   "name": "@ldkit/namespaces",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Linked Data Kit Namespaces",
   "author": "Karel Klima <karelklima@gmail.com>",
   "license": "MIT",
@@ -13,6 +13,6 @@
   ],
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "parcel build src/index.ts --no-scope-hoist"
+    "build": "parcel build src/index.ts"
   }
 }

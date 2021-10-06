@@ -1,6 +1,6 @@
 {
   "name": "@ldkit/namespace-builder",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Linked Data Kit Namespace Builder",
   "main": "cli.js",
   "cli": "cli.ts",
