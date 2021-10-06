@@ -15,7 +15,7 @@ jobs:
         with:
           node-version: 14
       - run: npm ci
-      - run: npm build:lib
+      - run: npm run build:lib
       - run: npm test
 
   publish:
