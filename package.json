@@ -1,7 +1,6 @@
 {
   "name": "@ldkit/monorepo",
   "description": "Linked Data Kit repository",
-  "private": "true",
   "scripts": {
     "start": "npm -w @ldkit/app start",
     "build": "npm -w @ldkit/app run build",

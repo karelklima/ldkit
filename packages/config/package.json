@@ -7,7 +7,6 @@
   ],
   "author": "Karel Klima",
   "license": "MIT",
-  "private": "true",
   "devDependencies": {
     "prettier": "^2.3.2"
   },

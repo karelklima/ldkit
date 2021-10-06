@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "author": "Karel Klima",
   "license": "MIT",
-  "private": "true",
   "scripts": {
     "start": "parcel src/index.html",
     "build": "parcel build src/index.html --no-scope-hoist"
