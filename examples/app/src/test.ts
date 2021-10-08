@@ -102,15 +102,15 @@ export const main = () => {
   const Workspace = {
     ...DctermsBase,
     "@type": pp["metadatový-kontext"],
-    /*owner: {
-      [$ID]: pd["má-autora"],
-      [$CONTEXT]: User,
+    owner: {
+      "@id": pd["má-autora"],
+      "@context": User,
     },
-    /*created: {
-      [$ID]: pd["má-datum-a-čas-vytvoření"],
-      [$TYPE]: xsd.dateTime,
+    created: {
+      "@id": pd["má-datum-a-čas-vytvoření"],
+      "@type": xsd.dateTime,
     },
-    lastEditor: {
+    /*lastEditor: {
       [$ID]: pd["má-posledního-editora"],
       [$META]: [$OPTIONAL],
       [$CONTEXT]: User,
@@ -119,12 +119,12 @@ export const main = () => {
       [$ID]: pd["má-datum-a-čas-poslední-modifikace"],
       [$TYPE]: xsd.dateTime,
       [$META]: [$OPTIONAL],
-    },
-    vocabularies: {
-      [$ID]: pp["odkazuje-na-kontext"],
-      [$CONTEXT]: Vocabulary,
-      [$META]: [$ARRAY, $OPTIONAL],
     },*/
+    vocabularies: {
+      "@id": pp["odkazuje-na-kontext"],
+      "@context": Vocabulary,
+      "@meta": ["@array", "@optional"],
+    },
   } as const;
 
   const WorkspaceVocabularies = {

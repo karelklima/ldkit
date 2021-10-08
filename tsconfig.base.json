@@ -7,9 +7,7 @@
     "esModuleInterop": true,
     "jsx": "preserve",
     "skipLibCheck": true,
-    "typeRoots": [
-      "../../node_modules/@types"
-    ],
+    "typeRoots": ["node_modules/@types"],
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
@@ -18,5 +16,5 @@
     "declaration": true,
     "declarationMap": true,
     "composite": true
-  },
+  }
 }
