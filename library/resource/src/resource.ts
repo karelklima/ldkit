@@ -62,6 +62,7 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
   }
 
   findByIri(iri: Iri) {
+    console.log("whoa");
     return this.findByIris([iri]).pipe(map((result) => result[0]));
   }
 

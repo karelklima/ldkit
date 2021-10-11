@@ -1,12 +1,14 @@
 {
-  "name": "@ldkit/tests",
+  "name": "@ldkit/specs",
   "version": "0.0.2",
   "description": "",
   "author": "Karel Klima <karelklima@gmail.com>",
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "library:watch": "parcel watch src/index.ts",
+    "test:watch": "jest --watch"
   },
   "jest": {
     "preset": "ts-jest",
@@ -17,7 +19,7 @@
     },
     "moduleNameMapper": {
       "^@rdf-esm/(.*)$": "@rdfjs/$1",
-      "^@ldkit/(.*)$": "<rootDir>/../$1/src/index.ts"
+      "^@ldkit/(.*)$": "<rootDir>/../library/$1/src/index.ts"
     }
   },
   "peerDependencies": {

@@ -12,8 +12,9 @@
     "/dist"
   ],
   "scripts": {
-    "prebuild": "rimraf dist",
-    "build": "parcel build src/index.ts"
+    "clean": "rimraf dist",
+    "build": "parcel build src/index.ts",
+    "watch": "parcel watch src/index.ts"
   },
   "peerDependencies": {
     "@ldkit/engine": "*",

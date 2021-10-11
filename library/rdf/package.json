@@ -6,14 +6,15 @@
   "license": "MIT",
   "type": "module",
   "source": "src/index.ts",
-  "main": "dist/main.js",
-  "types": "dist/types.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "/dist"
   ],
   "scripts": {
-    "prebuild": "rimraf dist",
-    "build": "parcel build src/index.ts"
+    "clean": "rimraf dist",
+    "build": "parcel build src/index.ts",
+    "watch": "parcel watch src/index.ts"
   },
   "peerDependencies": {
     "@types/rdf-js": "^4.0.2",

@@ -1,34 +1,28 @@
 {
-  "extends": "@ldkit/config/tsconfig.json",
+  "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "test",
+    "rootDir": "src",
     "noEmit": true,
-    "typeRoots": [
-      "../../node_modules/@types"
-    ],
     "types": ["jest"]
   },
-  "include": [
-    "./test/**/*"
-  ],
   "references": [
     {
-      "path": "../engine"
+      "path": "../library/core"
     },
     {
-      "path": "../namespaces"
+      "path": "../library/engine"
     },
     {
-      "path": "../rdf"
+      "path": "../library/engine"
     },
     {
-      "path": "../resource"
+      "path": "../library/engine"
     },
     {
-      "path": "../schema"
+      "path": "../library/engine"
     },
     {
-      "path": "../sparql"
+      "path": "../library/engine"
     }
   ]
 }

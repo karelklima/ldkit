@@ -1,7 +1,7 @@
 {
-  "extends": "@ldkit/config/tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "src",
-  },
+    "rootDir": "src"
+  }
 }

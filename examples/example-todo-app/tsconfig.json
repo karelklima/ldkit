@@ -1,5 +1,5 @@
 {
-  "extends": "@ldkit/config/tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "noEmit": true
   },
