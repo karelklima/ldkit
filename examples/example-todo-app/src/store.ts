@@ -1,7 +1,10 @@
-import { createResource } from "@ldkit/core";
+import {
+  createResource,
+  createNamespace,
+  createDefaultContext,
+} from "@ldkit/core";
 import type { SchemaInterface } from "@ldkit/core";
-import { xsd, createNamespace } from "@ldkit/namespaces";
-import { createDefaultContext } from "@ldkit/engine";
+import { xsd } from "@ldkit/namespaces";
 
 import { Store } from "n3";
 
@@ -22,7 +25,7 @@ const TodoSchema = {
 
 export const store = new Store();
 
-createDefaultContext(store);
+createDefaultContext({ source: store });
 
 export type TodoInterface = SchemaInterface<typeof TodoSchema>;
 

@@ -10,8 +10,8 @@
   "dependencies": {
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
+    "@ldkit/context": "*",
     "@ldkit/core": "*",
-    "@ldkit/engine": "*",
     "@ldkit/namespaces": "*",
     "@ldkit/rdf": "*",
     "@types/react": "^17.0.19",

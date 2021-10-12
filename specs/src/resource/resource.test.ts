@@ -1,10 +1,10 @@
 import { createResource } from "@ldkit/resource";
-import { createContext } from "@ldkit/engine";
+import { createContext } from "@ldkit/context";
 
 import { DirectorSchema, MovieSchema, store } from "./store";
 
-describe("resource/resource", () => {
-  const context = createContext(store);
+describe("Read Write", () => {
+  const context = createContext({ source: store });
   const directors = createResource(DirectorSchema, context);
   const movies = createResource(MovieSchema, context);
 

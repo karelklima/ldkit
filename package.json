@@ -19,6 +19,7 @@
     "examples/*",
     "library/rdf",
     "library/sparql",
+    "library/context",
     "library/engine",
     "library/namespaces",
     "library/schema",

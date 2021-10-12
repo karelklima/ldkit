@@ -18,7 +18,7 @@
   },
   "peerDependencies": {
     "@comunica/actor-init-sparql": "^1.22.0",
-    "@comunica/bus-rdf-resolve-quad-pattern": "^1.22.0",
+    "@ldkit/context": "*",
     "@ldkit/rdf": "*",
     "rxjs": "^7.3.0"
   }

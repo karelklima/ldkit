@@ -1,11 +1,9 @@
-import { createResource } from "@ldkit/core";
+import { createResource, createDefaultContext } from "@ldkit/core";
 import type { SchemaInterface } from "@ldkit/core";
 import { createNamespace } from "@ldkit/namespaces";
 import { dcterms, xsd, schema } from "@ldkit/namespaces";
 
 import { namedNode } from "@ldkit/rdf";
-
-import { createDefaultContext } from "@ldkit/engine";
 
 import { Store } from "n3";
 import { lastValueFrom } from "rxjs";
@@ -26,7 +24,7 @@ export const main = async () => {
 
   const store = new Store();
 
-  const context = createDefaultContext(store);
+  const context = createDefaultContext({ source: store });
 
   const todos = createResource(TodoSchema);
 

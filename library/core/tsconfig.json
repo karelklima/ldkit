@@ -6,7 +6,7 @@
   },
   "references": [
     {
-      "path": "../engine"
+      "path": "../context"
     },
     {
       "path": "../namespaces"

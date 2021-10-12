@@ -3,7 +3,8 @@ import { BehaviorSubject } from "rxjs";
 
 import type { Graph } from "@ldkit/rdf";
 import { bindingsQuery, quadsQuery, updateQuery } from "@ldkit/engine";
-import type { EngineContext } from "@ldkit/engine";
+import type { Context } from "@ldkit/context";
+import { resolveContext } from "@ldkit/context";
 import type {
   Schema,
   SchemaPrototype,
@@ -30,13 +31,13 @@ import { entityToRdf } from "./utils";
 
 export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
   private readonly schema: Schema;
-  private readonly context?: EngineContext;
+  private readonly context: Context;
   private readonly queryBuilder: QueryBuilder;
   private readonly $trigger = new BehaviorSubject(null);
 
-  constructor(schema: S, context?: EngineContext) {
+  constructor(schema: S, context?: Context) {
     this.schema = expandSchema(schema);
-    this.context = context;
+    this.context = resolveContext(context);
     this.queryBuilder = new QueryBuilder(this.schema);
   }
 
@@ -151,5 +152,5 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
 
 export const createResource = <T extends SchemaPrototype>(
   spec: T,
-  context?: EngineContext
+  context?: Context
 ) => new Resource(spec, context);

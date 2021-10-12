@@ -17,6 +17,7 @@
     "watch": "parcel watch src/index.ts"
   },
   "peerDependencies": {
+    "@ldkit/context": "*",
     "@ldkit/engine": "*",
     "@ldkit/namespaces": "*",
     "@ldkit/rdf": "*",

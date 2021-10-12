@@ -1,13 +1,13 @@
 {
-  "name": "@ldkit/core",
+  "name": "@ldkit/context",
   "version": "0.0.2",
-  "description": "Linked Data Kit Core",
+  "description": "Linked Data Kit Context",
   "author": "Karel Klima <karelklima@gmail.com>",
   "license": "MIT",
   "type": "module",
   "source": "src/index.ts",
-  "main": "dist/main.js",
-  "types": "dist/types.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "/dist"
   ],
@@ -17,9 +17,7 @@
     "watch": "parcel watch src/index.ts"
   },
   "peerDependencies": {
-    "@ldkit/context": "*",
-    "@ldkit/namespaces": "*",
-    "@ldkit/resource": "*",
-    "@ldkit/schema": "*"
+    "@comunica/bus-rdf-resolve-quad-pattern": "^1.22.0",
+    "@ldkit/rdf": "*"
   }
 }

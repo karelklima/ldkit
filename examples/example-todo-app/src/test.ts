@@ -1,12 +1,10 @@
 // import { $ID, $TYPE, $META, $OPTIONAL, $CONTEXT, $ARRAY } from "@ldkit/keys";
-import { createResource } from "@ldkit/core";
+import { createResource, createDefaultContext } from "@ldkit/core";
 import type { SchemaInterface } from "@ldkit/core";
 import { createNamespace } from "@ldkit/namespaces";
 import { dcterms, xsd } from "@ldkit/namespaces";
 
 import { namedNode } from "@ldkit/rdf";
-
-import { createDefaultContext } from "@ldkit/engine";
 
 // import { SparqlEndpointFetcher } from "fetch-sparql-endpoint";
 
@@ -31,14 +29,14 @@ export const main = () => {
     return fetch(resource, init);
   };
 
-  createDefaultContext(
-    {
+  createDefaultContext({
+    source: {
       type: "sparql",
       value:
         "https://xn--slovnk-test-scb.mvcr.gov.cz/modelujeme/sluzby/db-server/repositories/assembly-line",
     },
-    customFetch
-  );
+    fetch: customFetch,
+  });
 
   console.log("default context created");
 

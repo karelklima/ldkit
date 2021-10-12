@@ -6,16 +6,16 @@
   "include": ["src"],
   "references": [
     {
-      "path": "../core"
+      "path": "../../library/context"
     },
     {
-      "path": "../engine"
+      "path": "../../library/core"
     },
     {
-      "path": "../namespaces"
+      "path": "../../library/namespaces"
     },
     {
-      "path": "../rdf"
+      "path": "../../library/rdf"
     }
   ]
 }
