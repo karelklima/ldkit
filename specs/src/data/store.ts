@@ -1,3 +1,4 @@
+import { Context, createContext } from "@ldkit/context";
 import { rdf, schema } from "@ldkit/namespaces";
 
 import {
@@ -8,7 +9,10 @@ import {
   Quad_Subject,
 } from "n3";
 
-export const store = new Store();
+export const createStoreContext = (context?: Context) =>
+  createContext({ ...context, sources: [new Store()] });
+
+/*export const store = new Store();
 
 const addQuad = (s: Quad_Subject, p: Quad_Predicate, o: Quad_Object) => {
   console.warn("QUAD: ", s.value, p.value, o.value);
@@ -55,19 +59,4 @@ addMovie("Hollywood", "Once Upon a Time in Hollywood", "QuentinTarantino");
 addMovie("FullMetalJacket", "Full Metal Jacket", "StanleyKubrick");
 addMovie("TheShining", "The Shining", "StanleyKubrick");
 addMovie("2001", "2001: A Space Odyssey", "StanleyKubrick");
-
-console.log("SIZE", store.size);
-
-export const DirectorSchema = {
-  "@type": schema.Person,
-  name: schema.name,
-} as const;
-
-export const MovieSchema = {
-  "@type": schema.Movie,
-  name: schema.name,
-  director: {
-    "@id": schema.director,
-    "@context": DirectorSchema,
-  },
-} as const;
+*/

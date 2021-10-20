@@ -33,7 +33,9 @@
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",
+    "@types/lodash": "^4.14.175",
     "jest": "^27.1.0",
+    "lodash": "^4.17.21",
     "n3": "^1.11.1",
     "rxjs": "^7.4.0",
     "ts-jest": "^27.0.5",

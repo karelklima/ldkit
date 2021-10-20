@@ -11,9 +11,7 @@ export type FetchType = (
 ) => Promise<Response>;
 
 type ComunicaContext = {
-  source: IDataSource;
   sources: DataSources;
-  destination: any;
   initialBindings: any;
   queryFormat: any;
   baseIri: string;
@@ -25,7 +23,6 @@ type ComunicaContext = {
   httpIncludeCredentials: boolean;
   httpAuth: string;
   fetch: FetchType;
-  readonly: boolean;
   extensionFunctions: any;
   extensionFunctionsCreator: any;
 };

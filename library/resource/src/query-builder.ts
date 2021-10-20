@@ -23,17 +23,17 @@ export class QueryBuilder {
     this.schemaProperties = getSchemaProperties(this.schema);
   }
 
-  getProperty(key: string) {
+  private getProperty(key: string) {
     return this.schemaProperties[key];
   }
 
-  convertProperty(value: any, property: Property) {
+  private convertProperty(value: any, property: Property) {
     return toRdf(value, {
       datatype: namedNode(property["@type"] || xsd.string),
     });
   }
 
-  entityToRdf(entity: Entity) {
+  private entityToRdf(entity: Entity) {
     const { "@id": iri, "@type": extraTypes, ...properties } = entity;
     const result = new Array<Quad>();
     const types = [...this.schema["@type"], ...(extraTypes || [])];
@@ -49,6 +49,81 @@ export class QueryBuilder {
     }, result);
   }
 
+  private getShape(
+    mainVar = "iri",
+    includeOptional = false,
+    wrapOptional = true
+  ) {
+    const conditions = new Array<Quad | ReturnType<typeof $>>();
+
+    const populateConditionsRecursive = (s: Schema, varPrefix: string) => {
+      const rdfType = s["@type"];
+      const properties = getSchemaProperties(s);
+
+      rdfType.forEach((type) => {
+        conditions.push($`${variable(varPrefix)} a ${namedNode(type)} .`);
+      });
+
+      Object.keys(properties).forEach((prop, index) => {
+        const property = properties[prop];
+        const isOptional = property["@meta"].includes("@optional");
+        if (!includeOptional && isOptional) {
+          return;
+        }
+        if (wrapOptional && isOptional) {
+          conditions.push($`\nOPTIONAL {`);
+        }
+        conditions.push(
+          quad(
+            variable(varPrefix),
+            namedNode(property["@id"]),
+            variable(`${varPrefix}_${index}`)
+          )
+        );
+        if (typeof property["@context"] === "object") {
+          console.error("Populating", property["@context"]);
+          populateConditionsRecursive(
+            property["@context"] as Schema,
+            `${varPrefix}_${index}`
+          );
+        }
+        if (wrapOptional && isOptional) {
+          conditions.push($`\n}\n`);
+        }
+      });
+    };
+
+    populateConditionsRecursive(this.schema, mainVar);
+    return conditions;
+  }
+
+  countQuery() {
+    const quads = this.getShape();
+    return SELECT`(count(?iri) as ?count)`.WHERE`${quads}`.build();
+  }
+
+  getByIrisQuery = (iris: Iri[]) => {
+    const query = CONSTRUCT`${this.getShape("iri", true, false)}`
+      .WHERE`${this.getShape("iri", true, true)} VALUES ?iri { ${iris.map(
+      namedNode
+    )} }`.build();
+
+    console.log(query);
+
+    return query;
+  };
+
+  getIrisQuery() {
+    const conditions = new Array<Quad | ReturnType<typeof $>>();
+    this.schema["@type"].forEach((type) => {
+      conditions.push($`${variable("iri")} a ${namedNode(type)} .`);
+    });
+
+    const query = SELECT`${variable("iri")}`.WHERE`${conditions}`.build();
+
+    return query;
+  }
+
   insertQuery(entity: Entity) {
     const quads = this.entityToRdf(entity);
     return this.insertDataQuery(quads);
@@ -57,6 +132,12 @@ export class QueryBuilder {
   insertDataQuery(quads: Quad[]) {
     return INSERT.DATA`${quads}`.build();
   }
+
+  deleteQuery = (iri: Iri) => {
+    return DELETE`${namedNode(iri)} ?p ?o`.WHERE`${namedNode(
+      iri
+    )} ?p ?o`.build();
+  };
 
   updateQuery(
     entity: SchemaInterfaceIdentity &
@@ -176,10 +257,6 @@ const getPartialSelectQuery = (schema: Schema, offset = 0, limit = 1000) => {
     .LIMIT(limit)
     .build();
 };
-
-/* const getPartialBindQuery = (iris: Iri[]) => {
-  return $`VALUES ?res { ${iris.map(namedNode)} }`
-} */
 
 export const findQuery = (schema: Schema) => {
   const query = CONSTRUCT`${getConditionsFromSchema(schema, "res", false)}`

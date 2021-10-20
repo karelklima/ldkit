@@ -45,10 +45,21 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
     return createProxy(this.schema, graph, pointer) as unknown as I;
   }
 
+  count() {
+    const q = this.queryBuilder.countQuery();
+    console.log(q);
+    return this.$trigger.pipe(
+      switchMap(() => bindingsQuery(q, this.context)),
+      map((bindings) => {
+        return parseInt(bindings[0].get("?count").value);
+      })
+    );
+  }
+
   //exists(entity: Identity) {}
 
   find() {
-    const q = findIrisQuery(this.schema);
+    const q = this.queryBuilder.getIrisQuery();
     console.log(q);
     return this.$trigger.pipe(
       switchMap(() => bindingsQuery(q, this.context)),
@@ -63,12 +74,14 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
   }
 
   findByIri(iri: Iri) {
-    console.log("whoa");
-    return this.findByIris([iri]).pipe(map((result) => result[0]));
+    throw "Not implemented";
+    return this.findByIris([iri]).pipe(
+      map((result) => (result.length > 0 ? result[0] : undefined))
+    );
   }
 
   findByIris(iris: Iri[]) {
-    const q = getObjectByIrisQuery(iris, this.schema);
+    const q = this.queryBuilder.getByIrisQuery(iris);
     return quadsQuery(q, this.context).pipe(
       map((graph) => {
         return iris.reduce((result, iri) => {
@@ -137,7 +150,7 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
     const iri = identity["@id"];
     console.log(`Deleting ${iri} data`);
 
-    const q = deleteQuery(iri);
+    const q = this.queryBuilder.deleteQuery(iri);
 
     console.log(q);
 
