@@ -21,5 +21,9 @@
     "@ldkit/namespaces": "*",
     "@ldkit/resource": "*",
     "@ldkit/schema": "*"
+  },
+  "devDependencies": {
+    "parcel": "^2.0.0",
+    "typescript": "^4.4.4"
   }
 }

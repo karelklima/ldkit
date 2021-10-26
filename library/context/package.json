@@ -19,5 +19,9 @@
   "peerDependencies": {
     "@comunica/bus-rdf-resolve-quad-pattern": "^1.22.0",
     "@ldkit/rdf": "*"
+  },
+  "devDependencies": {
+    "parcel": "^2.0.0",
+    "typescript": "^4.4.4"
   }
 }
