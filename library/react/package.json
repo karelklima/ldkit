@@ -1,0 +1,23 @@
+{
+  "name": "@ldkit/react",
+  "version": "0.0.2",
+  "description": "Linked Data Kit Data React",
+  "author": "Karel Klima <karelklima@gmail.com>",
+  "license": "MIT",
+  "type": "module",
+  "source": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "parcel build src/index.ts",
+    "watch": "parcel watch src/index.ts"
+  },
+  "peerDependencies": {
+    "observable-hooks": "^4.0.5",
+    "rxjs": "^7.3.1"
+  }
+}

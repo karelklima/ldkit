@@ -10,6 +10,8 @@ type EntityData = {
 
 const proxyHandler = {
   get: (target: EntityData, propertyAlias: string): any => {
+    console.warn("PROXY GET", target.pointer, target.graph, propertyAlias);
+
     const targetSchema = target.schema;
     const targetObject = target.graph[target.pointer];
 

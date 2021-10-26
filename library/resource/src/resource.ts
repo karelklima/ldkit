@@ -84,6 +84,7 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
     const q = this.queryBuilder.getByIrisQuery(iris);
     return quadsQuery(q, this.context).pipe(
       map((graph) => {
+        console.warn(graph);
         return iris.reduce((result, iri) => {
           result.push(this.createProxy(graph, iri));
           return result;

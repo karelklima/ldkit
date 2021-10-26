@@ -25,7 +25,9 @@ const TodoSchema = {
 
 export const store = new Store();
 
-createDefaultContext({ source: store });
+createDefaultContext({
+  sources: [store],
+});
 
 export type TodoInterface = SchemaInterface<typeof TodoSchema>;
 
