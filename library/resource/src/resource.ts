@@ -58,6 +58,19 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
 
   //exists(entity: Identity) {}
 
+  query(sparqlConstructQuery: string) {
+    console.log(sparqlConstructQuery);
+    return quadsQuery(sparqlConstructQuery, this.context).pipe(
+      map((graph) => {
+        const iris = Object.keys(graph);
+        return iris.reduce((result, iri) => {
+          result.push(this.createProxy(graph, iri));
+          return result;
+        }, new Array<I>());
+      })
+    );
+  }
+
   find() {
     const q = this.queryBuilder.getIrisQuery();
     console.log(q);

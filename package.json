@@ -6,6 +6,8 @@
     "build:example-todo-app": "npm -w @ldkit/example-todo-app run build",
     "start:example-bulletin-boards": "npm -w @ldkit/example-bulletin-boards start",
     "build:example-bulletin-boards": "npm -w @ldkit/example-bulletin-boards run build",
+    "start:example-custom-query": "npm -w @ldkit/example-custom-query start",
+    "build:example-custom-query": "npm -w @ldkit/example-custom-query run build",
     "clean": "npm -w ./library run clean",
     "prebuild": "npm run clean",
     "build": "npm -w ./library run build",
