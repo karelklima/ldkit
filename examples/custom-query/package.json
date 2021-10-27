@@ -1,6 +1,6 @@
 {
   "name": "@ldkit/example-custom-query",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "author": "Karel Klima",
   "license": "MIT",
   "scripts": {

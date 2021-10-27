@@ -1,6 +1,6 @@
 {
   "name": "@ldkit/rdf",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Linked Data Kit RDF utilities",
   "author": "Karel Klima <karelklima@gmail.com>",
   "license": "MIT",
