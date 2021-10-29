@@ -1,6 +1,6 @@
 {
   "name": "@ldkit/sparql",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Linked Data Kit SPARQL utilities",
   "author": "Karel Klima <karelklima@gmail.com>",
   "license": "MIT",
