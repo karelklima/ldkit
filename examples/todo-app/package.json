@@ -1,6 +1,6 @@
 {
   "name": "@ldkit/example-todo-app",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "author": "Karel Klima",
   "license": "MIT",
   "scripts": {
