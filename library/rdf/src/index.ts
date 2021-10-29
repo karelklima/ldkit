@@ -1,5 +1,5 @@
 import type { NamedNode, Literal, Variable, Quad, Term } from "rdf-js";
-export { NamedNode, Literal, Variable, Quad, Term };
+export type { NamedNode, Literal, Variable, Quad, Term };
 import { fromRdf, toRdf } from "rdf-literal";
 export { fromRdf, toRdf };
 import * as DataFactory from "rdf-data-factory";
