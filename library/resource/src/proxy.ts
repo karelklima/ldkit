@@ -1,11 +1,21 @@
 import type { Iri } from "./iri";
 import type { Property, Schema } from "@ldkit/schema";
-import { fromRdf, Literal, Graph, NamedNode } from "@ldkit/rdf";
+import { fromRdf, Graph, NamedNode, Term } from "@ldkit/rdf";
 
 type EntityData = {
   schema: Schema;
   graph: Graph;
   pointer: Iri;
+};
+
+const resolveTerm = (term: Term) => {
+  if (term.termType === "NamedNode") {
+    return term.value;
+  } else if (term.termType === "Literal") {
+    return fromRdf(term);
+  } else {
+    throw new Error(`Unsupported term type to resolve: ${term.termType}`);
+  }
 };
 
 const proxyHandler = {
@@ -64,14 +74,12 @@ const proxyHandler = {
     }
     if (property["@meta"].includes("@array")) {
       // console.log("ARRAY", proxyValue);
-      return proxyValue.map((item) => fromRdf(item as Literal));
+      return proxyValue.map(resolveTerm);
     } else {
       // console.log("SINGLE", proxyValue);
-      return Array.isArray(proxyValue)
-        ? fromRdf(proxyValue[0] as Literal)
-        : fromRdf(proxyValue);
-      //console.log(val.value)
-      //return fromRdf(val as Literal)
+      return resolveTerm(
+        Array.isArray(proxyValue) ? proxyValue[0] : proxyValue
+      );
     }
   },
 };
