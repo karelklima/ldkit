@@ -20,8 +20,6 @@ const resolveTerm = (term: Term) => {
 
 const proxyHandler = {
   get: (target: EntityData, propertyAlias: string): any => {
-    console.warn("PROXY GET", target.pointer, target.graph, propertyAlias);
-
     const targetSchema = target.schema;
     const targetObject = target.graph[target.pointer];
 
@@ -40,12 +38,10 @@ const proxyHandler = {
     if (property["@context"]) {
       if (property["@meta"].includes("@array")) {
         // We have an array!
-        console.log("ARRAY HIT", propertyAlias);
         if (!proxyValue) {
           return [];
         }
         return proxyValue.map((value) => {
-          console.log(value);
           return new Proxy(
             {
               schema: property["@context"]!,
@@ -57,7 +53,6 @@ const proxyHandler = {
         });
       } else {
         // Single value
-        // console.log("SINGLE HIT", propertyAlias);
         return new Proxy(
           {
             schema: property["@context"]!,
@@ -73,10 +68,8 @@ const proxyHandler = {
       return null;
     }
     if (property["@meta"].includes("@array")) {
-      // console.log("ARRAY", proxyValue);
       return proxyValue.map(resolveTerm);
     } else {
-      // console.log("SINGLE", proxyValue);
       return resolveTerm(
         Array.isArray(proxyValue) ? proxyValue[0] : proxyValue
       );

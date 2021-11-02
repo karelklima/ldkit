@@ -108,8 +108,6 @@ export class QueryBuilder {
       namedNode
     )} }`.build();
 
-    console.log(query);
-
     return query;
   };
 
@@ -229,8 +227,6 @@ export const getObjectByIrisQuery = (iris: Iri[], schema: Schema) => {
     "iri",
     true
   )} VALUES ?iri { ${iris.map(namedNode)} }`.build();
-
-  console.log(query);
 
   return query;
 };
