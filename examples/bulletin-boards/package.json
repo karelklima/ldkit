@@ -1,6 +1,6 @@
 {
   "name": "@ldkit/example-bulletin-boards",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "author": "Karel Klima",
   "license": "MIT",
   "scripts": {

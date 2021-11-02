@@ -1,6 +1,6 @@
 {
   "name": "@ldkit/engine",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Linked Data Kit Engine",
   "author": "Karel Klima <karelklima@gmail.com>",
   "license": "MIT",
