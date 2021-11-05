@@ -1,6 +1,6 @@
 {
   "name": "@ldkit/core",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Linked Data Kit Core",
   "author": "Karel Klima <karelklima@gmail.com>",
   "license": "MIT",
