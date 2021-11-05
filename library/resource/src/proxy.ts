@@ -1,11 +1,15 @@
 import type { Iri } from "./iri";
 import type { Property, Schema } from "@ldkit/schema";
 import { fromRdf, Graph, NamedNode, Term } from "@ldkit/rdf";
+import type { Context } from "@ldkit/context";
+
+const DEFAULT_LANGUAGE = "en";
 
 type EntityData = {
   schema: Schema;
   graph: Graph;
   pointer: Iri;
+  context: Context;
 };
 
 const resolveTerm = (term: Term) => {
@@ -44,8 +48,8 @@ const proxyHandler = {
         return proxyValue.map((value) => {
           return new Proxy(
             {
+              ...target,
               schema: property["@context"]!,
-              graph: target.graph,
               pointer: (value as NamedNode).value,
             },
             proxyHandler
@@ -55,8 +59,8 @@ const proxyHandler = {
         // Single value
         return new Proxy(
           {
+            ...target,
             schema: property["@context"]!,
-            graph: target.graph,
             pointer: (proxyValue[0] as NamedNode).value,
           },
           proxyHandler
@@ -70,18 +74,36 @@ const proxyHandler = {
     if (property["@meta"].includes("@array")) {
       return proxyValue.map(resolveTerm);
     } else {
-      return resolveTerm(
-        Array.isArray(proxyValue) ? proxyValue[0] : proxyValue
+      if (!Array.isArray(proxyValue)) {
+        return resolveTerm(proxyValue);
+      }
+
+      // Multiple terms, but we need to pick only one of them
+
+      const preferredLanguage = target.context.language ?? "en";
+      const match = proxyValue.find(
+        (value) =>
+          value.termType === "Literal" &&
+          value.language &&
+          value.language === preferredLanguage
       );
+      const result = match ?? proxyValue[0];
+      return resolveTerm(result);
     }
   },
 };
 
-export const createProxy = (schema: Schema, graph: Graph, pointer: Iri) => {
+export const createProxy = (
+  schema: Schema,
+  graph: Graph,
+  pointer: Iri,
+  context: Context
+) => {
   const target = {
     schema,
     graph,
     pointer,
+    context,
   };
   return new Proxy(target, proxyHandler);
 };

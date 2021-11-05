@@ -1,0 +1,27 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": ["src"],
+  "references": [
+    {
+      "path": "../../library/context"
+    },
+    {
+      "path": "../../library/core"
+    },
+    {
+      "path": "../../library/namespaces"
+    },
+    {
+      "path": "../../library/rdf"
+    },
+    {
+      "path": "../../library/react"
+    },
+    {
+      "path": "../../library/sparql"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
-import { lucene, lucene_instance, SearchResource } from "./store";
+import { lucene, lucene_instance, SearchResource, popisDat } from "./store";
 import { $ } from "@ldkit/sparql";
 import { namedNode as n } from "@ldkit/rdf";
-import { skos } from "@ldkit/namespaces";
+import { skos, dcterms } from "@ldkit/namespaces";
 
 console.log("CUSTOM SEARCH QUERY USING LUCENE GRAPHDB CONNECTOR");
 
@@ -16,9 +16,11 @@ CONSTRUCT {
           ${n(skos.prefLabel)} ?label ;
           ${n(lucene.snippetText)} ?snippetText ;
           ${n(lucene.snippetField)} ?snippetField ;
-          ${n(lucene.score)} ?score .
+          ${n(lucene.score)} ?score ;
+          ${n(popisDat["je-pojmem-ze-slovníku"])} ?vocabulary ;
+          ${n(dcterms.title)} ?vocabularyTitle .
 } WHERE {
-  SELECT DISTINCT ?entity ?label ?snippetField ?snippetText ?score {
+  SELECT DISTINCT ?entity ?label ?snippetField ?snippetText ?score ?vocabulary ?vocabularyTitle {
     { ?search a ${n(lucene_instance.label_index)} } 
     UNION 
     { ?search a ${n(lucene_instance.defcom_index)} }
@@ -29,6 +31,8 @@ CONSTRUCT {
       ?entity a ${n(skos.Concept)} ;
               ${n(skos.prefLabel)} ?label .
     }
+    ?entity ${n(popisDat["je-pojmem-ze-slovníku"])} ?vocabulary .
+    ?vocabulary ${n(dcterms.title)} ?vocabularyTitle .
     ?entity ${n(lucene.score)} ?initScore ;
             ${n(lucene.snippets)} _:s .
     _:s ${n(lucene.snippetText)} ?snippetText ;
@@ -51,6 +55,13 @@ console.log(query);
 const results = SearchResource.query(query);
 results.subscribe((res) => {
   for (const r of res) {
-    console.log(r.label, r.score, r.snippetField, r.snippetText);
+    console.log(
+      r.label,
+      r.score,
+      r.snippetField,
+      r.snippetText,
+      r.vocabulary,
+      r.vocabularyTitle
+    );
   }
 });

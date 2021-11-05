@@ -1,0 +1,21 @@
+{
+  "name": "@ldkit/example-dbpedia-actors",
+  "version": "0.1.5",
+  "author": "Karel Klima",
+  "license": "MIT",
+  "scripts": {
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html --no-scope-hoist"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
+    "@ldkit/core": "*",
+    "@ldkit/namespaces": "*",
+    "@ldkit/rdf": "*",
+    "@ldkit/react": "*",
+    "@ldkit/sparql": "*",
+    "@mui/material": "^5.0.4",
+    "rxjs": "^7.4.0"
+  }
+}

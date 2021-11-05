@@ -4,7 +4,13 @@ import {
   createDefaultContext,
 } from "@ldkit/core";
 import type { SchemaInterface } from "@ldkit/core";
-import { xsd, skos } from "@ldkit/namespaces";
+import { xsd, skos, dcterms } from "@ldkit/namespaces";
+
+export const popisDat = createNamespace({
+  iri: "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/",
+  prefix: "popisdat:",
+  terms: ["je-pojmem-ze-slovníku"],
+} as const);
 
 export const lucene = createNamespace({
   iri: "http://www.ontotext.com/connectors/lucene#",
@@ -35,6 +41,8 @@ const SearchSchema = {
     "@id": lucene.score,
     "@type": xsd.double,
   },
+  vocabulary: popisDat["je-pojmem-ze-slovníku"],
+  vocabularyTitle: dcterms.title,
 } as const;
 
 const customFetch = (resource: RequestInfo, init?: RequestInit) => {

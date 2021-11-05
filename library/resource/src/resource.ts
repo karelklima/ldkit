@@ -42,7 +42,12 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
   }
 
   private createProxy(graph: Graph, pointer: Iri) {
-    return createProxy(this.schema, graph, pointer) as unknown as I;
+    return createProxy(
+      this.schema,
+      graph,
+      pointer,
+      this.context
+    ) as unknown as I;
   }
 
   count() {
@@ -97,7 +102,6 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
     const q = this.queryBuilder.getByIrisQuery(iris);
     return quadsQuery(q, this.context).pipe(
       map((graph) => {
-        console.warn(graph);
         return iris.reduce((result, iri) => {
           result.push(this.createProxy(graph, iri));
           return result;

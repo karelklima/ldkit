@@ -29,6 +29,7 @@ type ComunicaContext = {
 
 type LibraryContext = {
   graph: string;
+  language: string;
 };
 
 export type Context = Partial<LibraryContext> & Partial<ComunicaContext>;
