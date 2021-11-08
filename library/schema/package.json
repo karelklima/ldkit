@@ -1,6 +1,6 @@
 {
   "name": "@ldkit/schema",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Linked Data Kit Schema",
   "author": "Karel Klima <karelklima@gmail.com>",
   "license": "MIT",
