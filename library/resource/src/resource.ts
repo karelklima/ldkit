@@ -92,7 +92,6 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
   }
 
   findByIri(iri: Iri) {
-    throw "Not implemented";
     return this.findByIris([iri]).pipe(
       map((result) => (result.length > 0 ? result[0] : undefined))
     );
@@ -103,7 +102,10 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
     return quadsQuery(q, this.context).pipe(
       map((graph) => {
         return iris.reduce((result, iri) => {
-          result.push(this.createProxy(graph, iri));
+          // Ignore objects that are not matched
+          if (graph[iri]) {
+            result.push(this.createProxy(graph, iri));
+          }
           return result;
         }, new Array<I>());
       })

@@ -81,7 +81,7 @@ export class QueryBuilder {
           )
         );
         if (typeof property["@context"] === "object") {
-          console.warn("Populating", property["@context"]);
+          // console.warn("Populating", property["@context"]);
           populateConditionsRecursive(
             property["@context"] as Schema,
             `${varPrefix}_${index}`
