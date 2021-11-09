@@ -1,6 +1,6 @@
 {
   "name": "@ldkit/specs",
-  "version": "0.1.7",
+  "version": "0.0.0",
   "description": "",
   "author": "Karel Klima <karelklima@gmail.com>",
   "license": "MIT",
@@ -32,13 +32,13 @@
     "@ldkit/sparql": "*"
   },
   "devDependencies": {
-    "@types/jest": "^27.0.1",
-    "@types/lodash": "^4.14.175",
-    "jest": "^27.1.0",
+    "@types/jest": "^27.0.2",
+    "@types/lodash": "^4.14.176",
+    "jest": "^27.3.1",
     "lodash": "^4.17.21",
-    "n3": "^1.11.1",
+    "n3": "^1.11.2",
     "rxjs": "^7.4.0",
-    "ts-jest": "^27.0.5",
+    "ts-jest": "^27.0.7",
     "tsafe": "^0.8.1"
   }
 }
