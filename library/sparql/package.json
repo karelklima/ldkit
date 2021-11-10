@@ -11,11 +11,6 @@
   "files": [
     "/dist"
   ],
-  "scripts": {
-    "clean": "rimraf dist",
-    "build": "parcel build src/index.ts",
-    "watch": "parcel watch src/index.ts"
-  },
   "peerDependencies": {
     "@tpluscode/rdf-string": "^0.2.24",
     "@tpluscode/sparql-builder": "^0.3.15"

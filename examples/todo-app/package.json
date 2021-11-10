@@ -3,10 +3,7 @@
   "version": "0.0.0",
   "author": "Karel Klima",
   "license": "MIT",
-  "scripts": {
-    "start": "parcel src/index.html",
-    "build": "parcel build src/index.html --no-scope-hoist"
-  },
+  "source": "src/index.html",
   "dependencies": {
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",

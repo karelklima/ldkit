@@ -11,11 +11,6 @@
   "files": [
     "/dist"
   ],
-  "scripts": {
-    "clean": "rimraf dist",
-    "build": "parcel build src/index.ts",
-    "watch": "parcel watch src/index.ts"
-  },
   "peerDependencies": {
     "@types/rdf-js": "^4.0.2",
     "rdf-data-factory": "^1.1.0",

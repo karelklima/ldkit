@@ -3,12 +3,7 @@
   "version": "0.0.0",
   "author": "Karel Klima",
   "license": "MIT",
-  "scripts": {
-    "start": "parcel src/index.html",
-    "watch": "parcel watch src/index.ts",
-    "nodemon": "nodemon dist/index.js",
-    "build": "parcel build src/index.html --no-scope-hoist"
-  },
+  "source": "src/index.html",
   "dependencies": {
     "@ldkit/core": "*",
     "@ldkit/namespaces": "*",

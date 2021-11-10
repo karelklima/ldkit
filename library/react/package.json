@@ -11,14 +11,12 @@
   "files": [
     "/dist"
   ],
-  "scripts": {
-    "clean": "rimraf dist",
-    "build": "parcel build src/index.ts",
-    "watch": "parcel watch src/index.ts"
-  },
   "peerDependencies": {
     "observable-hooks": "^4.0.5",
     "react": "^17.0.2",
     "rxjs": "^7.3.1"
+  },
+  "dependencies": {
+    "@parcel/transformer-react-refresh-wrap": "^2.0.1"
   }
 }

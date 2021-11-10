@@ -10,10 +10,5 @@
   "types": "dist/index.d.ts",
   "files": [
     "/dist"
-  ],
-  "scripts": {
-    "clean": "rimraf dist",
-    "build": "parcel build src/index.ts",
-    "watch": "parcel watch src/index.ts"
-  }
+  ]
 }
