@@ -13,6 +13,9 @@
       "path": "../library/core"
     },
     {
+      "path": "../library/decoder"
+    },
+    {
       "path": "../library/engine"
     },
     {

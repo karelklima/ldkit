@@ -4,7 +4,11 @@ import { fromRdf, toRdf } from "rdf-literal";
 export { fromRdf, toRdf };
 import * as DataFactory from "rdf-data-factory";
 
-export type Graph = Record<string, Record<string, Term[]>>;
+export type Iri = string;
+
+export type Node = Map<Iri, Term[]>;
+
+export type Graph = Map<Iri, Node>;
 
 export const namedNode = <Iri extends string = string>(
   value: Iri
@@ -30,3 +34,17 @@ export const quad = (
 
 export const variable = (value: string): Variable =>
   new DataFactory.Variable(value);
+
+export const quadsToGraph = (quads: Quad[]) => {
+  const graph: Graph = new Map();
+  for (const quad of quads) {
+    const s = quad.subject.value;
+    const p = quad.predicate.value;
+
+    const predicateMap = graph.get(s) || graph.set(s, new Map()).get(s)!;
+    const termArray = predicateMap.get(p) || predicateMap.set(p, []).get(p)!;
+
+    termArray.push(quad.object);
+  }
+  return graph;
+};

@@ -7,14 +7,16 @@ type NamespacePrototype = {
 type NamespacePrefix<Namespace extends NamespacePrototype> =
   Namespace["prefix"];
 
+type NamespaceIri<Namespace extends NamespacePrototype> = Namespace["iri"];
+
 type NamespaceObject<Namespace extends NamespacePrototype> = {
   [Term in Namespace["terms"][number]]: `${NamespacePrefix<Namespace>}${Term}`;
 };
 
 export const createNamespace = <
   N extends NamespacePrototype,
-  // I = NamespaceItems<N>,
-  // P = NamespacePrefix<N>,
+  I = NamespaceIri<N>,
+  P = NamespacePrefix<N>,
   O = NamespaceObject<N>
 >(
   namespaceSpec: N
@@ -27,5 +29,11 @@ export const createNamespace = <
       acc[term] = `${namespaceSpec.iri}${term}`;
       return acc;
     }, {} as any),
-    { $$namespace: namespaceSpec }
-  ) as O;
+    {
+      $prefix: namespaceSpec["prefix"],
+      $iri: namespaceSpec["iri"],
+    }
+  ) as O & {
+    $prefix: P;
+    $iri: I;
+  };

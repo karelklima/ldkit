@@ -9,6 +9,9 @@ export type PropertyPrototype = {
   "@type"?: PropertyType;
   "@meta"?: Meta | readonly Meta[];
   "@context"?: SchemaPrototype;
+  "@optional"?: true;
+  "@array"?: true;
+  "@multilang"?: true;
 };
 
 export type SchemaPrototypeProperties = {
@@ -24,8 +27,11 @@ export type SchemaPrototype = SchemaPrototypeProperties & SchemaPrototypeType;
 export type Property = {
   "@id": string;
   "@type"?: PropertyType;
-  "@meta": Meta[];
+  "@meta"?: Meta[];
   "@context"?: Schema;
+  "@optional"?: true;
+  "@array"?: true;
+  "@multilang"?: true;
 };
 
 export type Schema = {
