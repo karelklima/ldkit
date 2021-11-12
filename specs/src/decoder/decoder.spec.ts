@@ -12,7 +12,7 @@ const evaluate = (
   schema: Schema,
   result: Record<string, any>[],
   context: Context = {}
-) => expect(decodeGraph(turtle, schema, context)).toEqual(result);
+) => expect(decodeGraph(turtle, schema, context)).toStrictEqual(result);
 
 describe("Decoder", () => {
   test("Minimal resource", async () => {
@@ -361,5 +361,93 @@ describe("Decoder", () => {
     ];
 
     evaluate(input, schema, output);
+  });
+
+  test("One resource multiple schemas", async () => {
+    const input = `
+      x:A
+        a ldkit:Resource, x:Item ;
+        x:nested x:A ;
+        x:rootProperty "Root property" ;
+        x:nestedProperty "Nested property" .
+    `;
+
+    const schema = {
+      "@type": [x("Item")],
+      rootProperty: {
+        "@id": x("rootProperty"),
+      },
+      nested: {
+        "@id": x("nested"),
+        "@context": {
+          "@type": [x("Item")],
+          nestedProperty: {
+            "@id": x("nestedProperty"),
+          },
+        },
+      },
+    };
+
+    const output = [
+      {
+        $id: x("A"),
+        $type: [x("Item")],
+        rootProperty: "Root property",
+        nested: {
+          $id: x("A"),
+          $type: [x("Item")],
+          nestedProperty: "Nested property",
+        },
+      },
+    ];
+
+    evaluate(input, schema, output);
+  });
+
+  test("Caching", async () => {
+    const input = `
+      x:A
+        a ldkit:Resource, x:Item ;
+        x:nested x:C .
+      x:B
+        a ldkit:Resource, x:Item ;
+        x:nested x:C .
+      x:C
+        a x:Nested .
+    `;
+
+    const schema = {
+      "@type": [x("Item")],
+      nested: {
+        "@id": x("nested"),
+        "@context": {
+          "@type": [x("Nested")],
+        },
+      },
+    };
+
+    const output = [
+      {
+        $id: x("A"),
+        $type: [x("Item")],
+        nested: {
+          $id: x("C"),
+          $type: [x("Nested")],
+        },
+      },
+      {
+        $id: x("B"),
+        $type: [x("Item")],
+        nested: {
+          $id: x("C"),
+          $type: [x("Nested")],
+        },
+      },
+    ];
+
+    const decoded = decodeGraph(input, schema);
+
+    expect(decoded).toStrictEqual(output);
+    expect(decoded[0].nested).toBe(decoded[1].nested);
   });
 });

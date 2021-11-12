@@ -1,16 +1,16 @@
 import type { Context } from "@ldkit/context";
 import { fromRdf, Graph, Iri, Node, Term } from "@ldkit/rdf";
 import type { Schema, Property } from "@ldkit/schema";
-import { ldkit, rdf, xsd } from "@ldkit/namespaces";
+import { ldkit, rdf } from "@ldkit/namespaces";
 
-const DEFAULT_TYPE = xsd.string;
+type DecodedNode = Record<string, any>;
 
 class Decoder {
   private graph: Graph;
   private schema: Schema;
   private context: Context;
 
-  private cache: Map<Schema, Map<Iri, any>> = new Map();
+  private cache: Map<Schema, Map<Iri, DecodedNode>> = new Map();
 
   private constructor(graph: Graph, schema: Schema, context: Context) {
     this.graph = graph;
@@ -22,8 +22,22 @@ class Decoder {
     return new Decoder(graph, schema, context).decode();
   }
 
+  getCachedNode(nodeIri: Iri, schema: Schema) {
+    if (!this.cache.has(schema)) {
+      this.cache.set(schema, new Map());
+    }
+    return this.cache.get(schema)!.get(nodeIri);
+  }
+
+  setCachedNode(nodeIri: Iri, schema: Schema, decodedNode: DecodedNode) {
+    if (!this.cache.has(schema)) {
+      this.cache.set(schema, new Map());
+    }
+    this.cache.get(schema)!.set(nodeIri, decodedNode);
+  }
+
   decode() {
-    const output: Record<string, any>[] = [];
+    const output: DecodedNode[] = [];
 
     for (const [iri, properties] of this.graph) {
       if (properties.has(rdf.type)) {
@@ -40,7 +54,12 @@ class Decoder {
   }
 
   decodeNode(nodeIri: Iri, schema: Schema) {
-    const output: Record<string, any> = {
+    const cachedNode = this.getCachedNode(nodeIri, schema);
+    if (cachedNode) {
+      return cachedNode;
+    }
+
+    const output: DecodedNode = {
       $id: nodeIri,
     };
 
@@ -66,6 +85,8 @@ class Decoder {
         output[key] = result;
       }
     });
+
+    this.setCachedNode(nodeIri, schema, output);
 
     return output;
   }
@@ -159,7 +180,18 @@ class Decoder {
       }
     }
 
-    // Single return value expected
+    // Single return value expected from this point on
+    if (property["@context"]) {
+      for (const term of terms) {
+        if (term.termType === "NamedNode") {
+          return this.decodeNode(term.value, property["@context"]!);
+        }
+      }
+      throw new Error(
+        `Property "${propertyKey}" data type mismatch - expected a named node for context on resource <${nodeIri}>`
+      );
+    }
+
     const preferredLanguage = this.context.language;
 
     if (preferredLanguage) {
