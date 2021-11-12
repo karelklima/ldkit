@@ -1,24 +1,23 @@
 import type { SupportedDataTypes } from "./data-types";
 import type { SchemaPrototype, PropertyPrototype } from "./schema";
 
-type ReadonlyArrayValues<T> = T extends Readonly<Array<infer R>> ? R : never;
+type IsOptional<Property extends PropertyPrototype> = Property extends {
+  "@optional": true;
+}
+  ? true
+  : false;
 
-type HasMetaValue<MetaType, ValueType> =
-  ValueType extends ReadonlyArrayValues<MetaType>
-    ? true
-    : MetaType extends ValueType
-    ? true
-    : false;
+type IsArray<Property extends PropertyPrototype> = Property extends {
+  "@array": true;
+}
+  ? true
+  : false;
 
-type IsOptional<Property extends PropertyPrototype> = HasMetaValue<
-  Property["@meta"],
-  "@optional"
->;
-
-type IsArray<Property extends PropertyPrototype> = HasMetaValue<
-  Property["@meta"],
-  "@array"
->;
+type IsMultilang<Property extends PropertyPrototype> = Property extends {
+  "@multilang": true;
+}
+  ? true
+  : false;
 
 type ValidPropertyDefinition = PropertyPrototype | string;
 
@@ -46,18 +45,25 @@ type ConvertPropertyArray<T extends PropertyPrototype> = IsArray<T> extends true
   ? ConvertPropertyType<T>[]
   : ConvertPropertyOptional<T>;
 
+type ConvertPropertyMultilang<T extends PropertyPrototype> =
+  IsMultilang<T> extends true
+    ? IsArray<T> extends true
+      ? Record<string, ConvertPropertyType<T>[]>
+      : Record<string, ConvertPropertyType<T>>
+    : ConvertPropertyArray<T>;
+
 type ConvertPropertyObject<T extends PropertyPrototype> =
-  ConvertPropertyArray<T>;
+  ConvertPropertyMultilang<T>;
 
 type ConvertProperty<T extends ValidPropertyDefinition> =
   T extends PropertyPrototype ? ConvertPropertyObject<T> : string;
 
 export type SchemaInterfaceIdentity = {
-  "@id": string;
+  $id: string;
 };
 
 export type SchemaInterfaceType = {
-  "@type": string[];
+  $type: string[];
 };
 
 export type SchemaInterface<T extends SchemaPrototype> = Omit<
@@ -66,7 +72,7 @@ export type SchemaInterface<T extends SchemaPrototype> = Omit<
       ? ConvertProperty<T[X]>
       : never;
   },
-  "@type" | "@id"
+  "@id" | "@type"
 > &
   SchemaInterfaceIdentity &
   SchemaInterfaceType;

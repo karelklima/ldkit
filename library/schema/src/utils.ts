@@ -1,4 +1,5 @@
 import { xsd } from "@ldkit/namespaces";
+import { string } from "yargs";
 import type {
   Property,
   PropertyPrototype,
@@ -18,27 +19,42 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
       return {
         "@id": stringOrProperty,
         "@type": xsd.string,
-        "@meta": [],
       };
     }
-    const baseProperty: Property = {
+
+    const property = stringOrProperty;
+
+    if (!property["@id"]) {
+      throw new Error(`Invalid schema, "@id" key for property missing`);
+    }
+
+    const validKeys = [
+      "@context",
+      "@id",
+      "@type",
+      "@array",
+      "@optional",
+      "@multilang",
+    ] as const;
+
+    const baseProperty: Record<string, any> = {
       "@id": "",
-      "@type": xsd.string,
-      "@meta": [],
     };
 
-    return Object.keys(stringOrProperty).reduce((acc, key) => {
-      if (key === "@meta") {
-        acc[key] = expandArray(stringOrProperty[key]!);
-      } else if (key === "@context") {
-        acc[key] = expandSchema(stringOrProperty[key]!);
-      } else if (key === "@id") {
-        acc[key] = stringOrProperty[key]!;
-      } else if (key === "@type") {
-        acc[key] = stringOrProperty[key]!;
+    const expandedProperty = Object.keys(property).reduce((acc, key) => {
+      if (key === "@context") {
+        acc[key] = expandSchema(property[key]!);
+      } else if (validKeys.includes(key as keyof PropertyPrototype)) {
+        acc[key] = property[key as keyof PropertyPrototype] as any;
       }
       return acc;
     }, baseProperty);
+
+    if (!baseProperty["@type"] && !baseProperty["@context"]) {
+      baseProperty["@type"] = xsd.string;
+    }
+
+    return expandedProperty as Property;
   };
 
   const baseSchema: Schema = {
