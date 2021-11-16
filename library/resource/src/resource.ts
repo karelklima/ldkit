@@ -81,7 +81,6 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
     console.log(q);
     return quadsQuery(q, this.context).pipe(
       map((graph) => {
-        console.warn(graph);
         return this.decode(graph);
       })
     );
