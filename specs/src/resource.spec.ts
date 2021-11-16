@@ -2,54 +2,106 @@ import { find } from "lodash";
 
 import { createResource } from "@ldkit/resource";
 
-import { Director, Movie, createStoreContext } from "../data";
-import { run } from "../utils";
+import {
+  createStore,
+  createStoreContext,
+  run,
+  ttl,
+  x,
+  emptyStore,
+} from "./utils";
 import { take } from "rxjs/operators";
 import { firstValueFrom, lastValueFrom } from "rxjs";
+import type { Store } from "n3";
+import type { Context } from "@ldkit/context";
 
-const createDirector = (id: string, name: string) => ({
-  "@id": id,
+const Director = {
+  "@type": x.Director,
+  name: x.name,
+} as const;
+
+const Movie = {
+  "@type": x.Movie,
+  name: x.name,
+  director: {
+    "@id": x.director,
+    "@context": Director,
+  },
+} as const;
+
+const defaultStoreContent = ttl(`
+  x:StanleyKubrick
+    a x:Director ;
+    x:name "Stanley Kubrick" .
+  x:QuentinTarantino
+    a x:Director ;
+    x:name "Quentin Tarantino" .
+`);
+
+const createDirector = ($id: string, name: string) => ({
+  $id: x[$id],
   name,
 });
 
-const Tarantino = createDirector(
-  "https://QuentinTarantino",
-  "Quentin Tarantino"
-);
-const Kubrick = createDirector("https://StanleyKubrick", "Stanley Kubrick");
+const Tarantino = createDirector("QuentinTarantino", "Quentin Tarantino");
+const Kubrick = createDirector("StanleyKubrick", "Stanley Kubrick");
 
-describe("Resource basics", () => {
-  const context = createStoreContext();
+describe("Resource", () => {
+  const store = createStore();
+  const context = createStoreContext(store);
   const directors = createResource(Director, context);
   const movies = createResource(Movie, context);
 
-  test("insert resources", async () => {
-    const dirs = await run(
-      directors.insert(Tarantino),
-      directors.insert(Kubrick),
-      directors.findByIris([
-        "https://StanleyKubrick",
-        "https://QuentinTarantino",
-      ])
-    );
-    expect(dirs.length).toBe(2);
-    expect(find(dirs, Tarantino)).toBeDefined();
-    expect(find(dirs, Kubrick)).toBeDefined();
+  const assertStore = (turtle: string) =>
+    expect(store.getQuads(null, null, null, null)).toEqual(ttl(turtle));
+
+  beforeEach(async () => {
+    await emptyStore(store);
+    store.addQuads(defaultStoreContent);
   });
 
-  test("count resources", async () => {
-    const count = await run(directors.count());
+  test("Insert multiple resources", async () => {
+    await emptyStore(store);
+    await run(directors.insert(Kubrick), directors.insert(Tarantino));
+
+    assertStore(`
+      x:StanleyKubrick
+        a x:Director ;
+        x:name "Stanley Kubrick" .
+      x:QuentinTarantino
+        a x:Director ;
+        x:name "Quentin Tarantino" .
+    `);
+  });
+
+  test("Count resources", async () => {
+    const count = await run(
+      directors.insert(Kubrick),
+      directors.insert(Tarantino),
+      directors.count()
+    );
     expect(count).toBe(2);
   });
 
-  test("list all resources", async () => {
+  test("List all resources", async () => {
+    const content = ttl(`
+      x:StanleyKubrick
+        a schema:Person ;
+        schema:name "Stanley Kubrick" .
+      x:QuentinTarantino
+        a schema:Person ;
+        schema:name "Quentin Tarantino" .
+    `);
+    store.addQuads(content);
+
     const dirs = await run(directors.find());
+
     expect(dirs.length).toBe(2);
     expect(find(dirs, Tarantino)).toBeDefined();
     expect(find(dirs, Kubrick)).toBeDefined();
   });
 
-  test("update a resource", (done) => {
+  test.skip("update a resource", (done) => {
     /* directors
       .findByIri(Tarantino["@id"])
       .pipe(take(1))
@@ -58,7 +110,7 @@ describe("Resource basics", () => {
         done();
       }); */
 
-    const promise = firstValueFrom(directors.findByIris([Tarantino["@id"]]));
+    const promise = firstValueFrom(directors.findByIris([Tarantino.$id]));
     console.warn(promise);
     promise
       .then((val) => {
@@ -83,7 +135,7 @@ describe("Resource basics", () => {
   test.skip("delete a resource", async () => {
     const dir = await run(
       directors.delete(Tarantino),
-      directors.findByIri(Tarantino["@id"])
+      directors.findByIri(Tarantino.$id)
     );
     expect(dir).toBeUndefined();
     const count = await run(directors.count());

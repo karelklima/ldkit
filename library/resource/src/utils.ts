@@ -1,7 +1,5 @@
-import type { SchemaInterface } from "@ldkit/schema";
 import type { Schema, Property } from "@ldkit/schema";
-import { namedNode, quad, toRdf, Quad } from "@ldkit/rdf";
-import type { Iri } from "./iri";
+import { namedNode, quad, toRdf, Quad, Iri } from "@ldkit/rdf";
 import { rdf, xsd } from "@ldkit/namespaces";
 
 const convertProperty = (value: any, property: Property) => {

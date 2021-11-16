@@ -13,6 +13,7 @@
   ],
   "peerDependencies": {
     "@ldkit/context": "*",
+    "@ldkit/decoder": "*",
     "@ldkit/engine": "*",
     "@ldkit/namespaces": "*",
     "@ldkit/rdf": "*",

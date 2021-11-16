@@ -24,91 +24,91 @@ type ThingType = {
 };
 
 const Thing = {
-  "@type": x("X"),
-  required: x("required"),
+  "@type": x.X,
+  required: x.required,
   optional: {
-    "@id": x("optional"),
+    "@id": x.optional,
     "@optional": true,
   },
   array: {
-    "@id": x("array"),
+    "@id": x.array,
     "@array": true,
   },
   multilang: {
-    "@id": x("multilang"),
+    "@id": x.multilang,
     "@multilang": true,
   },
   multilangArray: {
-    "@id": x("multilangArray"),
+    "@id": x.multilangArray,
     "@multilang": true,
     "@array": true,
   },
   number: {
-    "@id": x("number"),
+    "@id": x.number,
     "@type": xsd.integer,
   },
   boolean: {
-    "@id": x("boolean"),
+    "@id": x.boolean,
     "@type": xsd.boolean,
   },
   date: {
-    "@id": x("date"),
+    "@id": x.date,
     "@type": xsd.date,
   },
   nested: {
-    "@id": x("nested"),
+    "@id": x.nested,
     "@context": {
-      "@type": x("Nested"),
-      nestedValue: x("nestedValue"),
+      "@type": x.Nested,
+      nestedValue: x.nestedValue,
     },
   },
 } as const;
 
 const ThingSchema: Schema = {
-  "@type": [x("X")],
+  "@type": [x.X],
   required: {
-    "@id": x("required"),
+    "@id": x.required,
     "@type": xsd.string,
   },
   optional: {
-    "@id": x("optional"),
+    "@id": x.optional,
     "@type": xsd.string,
     "@optional": true,
   },
   array: {
-    "@id": x("array"),
+    "@id": x.array,
     "@type": xsd.string,
     "@array": true,
   },
   multilang: {
-    "@id": x("multilang"),
+    "@id": x.multilang,
     "@type": xsd.string,
     "@multilang": true,
   },
   multilangArray: {
-    "@id": x("multilangArray"),
+    "@id": x.multilangArray,
     "@type": xsd.string,
     "@multilang": true,
     "@array": true,
   },
   number: {
-    "@id": x("number"),
+    "@id": x.number,
     "@type": xsd.integer,
   },
   boolean: {
-    "@id": x("boolean"),
+    "@id": x.boolean,
     "@type": xsd.boolean,
   },
   date: {
-    "@id": x("date"),
+    "@id": x.date,
     "@type": xsd.date,
   },
   nested: {
-    "@id": x("nested"),
+    "@id": x.nested,
     "@context": {
-      "@type": [x("Nested")],
+      "@type": [x.Nested],
       nestedValue: {
-        "@id": x("nestedValue"),
+        "@id": x.nestedValue,
         "@type": xsd.string,
       },
     },

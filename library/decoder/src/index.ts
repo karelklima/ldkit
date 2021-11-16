@@ -50,6 +50,12 @@ class Decoder {
       }
     }
 
+    if (this.graph.size > 0 && output.length < 1) {
+      throw new Error(
+        `Unable to decode graph - no resources with type <${ldkit.Resource}> found`
+      );
+    }
+
     return output;
   }
 

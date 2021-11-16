@@ -1,4 +1,3 @@
-import type { Iri } from "./iri";
 import type {
   Property,
   Schema,
@@ -7,8 +6,8 @@ import type {
 } from "@ldkit/schema";
 import { getSchemaProperties } from "@ldkit/schema";
 import { $, CONSTRUCT, SELECT, INSERT, DELETE } from "@ldkit/sparql";
-import { Quad, variable, namedNode, quad, toRdf } from "@ldkit/rdf";
-import { rdf, xsd } from "@ldkit/namespaces";
+import { Quad, variable, namedNode, quad, toRdf, Iri } from "@ldkit/rdf";
+import { rdf, xsd, ldkit } from "@ldkit/namespaces";
 
 type Entity = SchemaInterfaceIdentity &
   Partial<SchemaInterfaceType> &
@@ -23,6 +22,14 @@ export class QueryBuilder {
     this.schemaProperties = getSchemaProperties(this.schema);
   }
 
+  private getResourceSignature() {
+    return quad(
+      variable("iri"),
+      namedNode(rdf.type),
+      namedNode(ldkit.Resource)
+    );
+  }
+
   private getProperty(key: string) {
     return this.schemaProperties[key];
   }
@@ -34,7 +41,7 @@ export class QueryBuilder {
   }
 
   private entityToRdf(entity: Entity) {
-    const { "@id": iri, "@type": extraTypes, ...properties } = entity;
+    const { $id: iri, $type: extraTypes, ...properties } = entity;
     const result = new Array<Quad>();
     const types = [...this.schema["@type"], ...(extraTypes || [])];
     types.forEach((type) => {
@@ -66,7 +73,7 @@ export class QueryBuilder {
 
       Object.keys(properties).forEach((prop, index) => {
         const property = properties[prop];
-        const isOptional = property["@meta"].includes("@optional");
+        const isOptional = property["@optional"];
         if (!includeOptional && isOptional) {
           return;
         }
@@ -103,8 +110,11 @@ export class QueryBuilder {
   }
 
   getByIrisQuery = (iris: Iri[]) => {
-    const query = CONSTRUCT`${this.getShape("iri", true, false)}`
-      .WHERE`${this.getShape("iri", true, true)} VALUES ?iri { ${iris.map(
+    const query = CONSTRUCT`${this.getResourceSignature()} ${this.getShape(
+      "iri",
+      true,
+      false
+    )}`.WHERE`${this.getShape("iri", true, true)} VALUES ?iri { ${iris.map(
       namedNode
     )} }`.build();
 
@@ -149,7 +159,7 @@ export class QueryBuilder {
 
     Object.keys(relations).forEach((key, index) => {
       const property = this.getProperty(key);
-      if (property["@meta"].includes("@array")) {
+      if (property["@array"]) {
         throw "Array properties are not supported for update";
       }
       const predicate = this.getProperty(key)["@id"];
@@ -193,7 +203,7 @@ const getConditionsFromSchema = (
 
     Object.keys(properties).forEach((prop, index) => {
       const property = properties[prop];
-      if (wrapOptional && property["@meta"].includes("@optional")) {
+      if (wrapOptional && property["@optional"]) {
         conditions.push($`\nOPTIONAL {`);
       }
       conditions.push(
@@ -210,7 +220,7 @@ const getConditionsFromSchema = (
           `${varPrefix}_${index}`
         );
       }
-      if (wrapOptional && property["@meta"].includes("@optional")) {
+      if (wrapOptional && property["@optional"]) {
         conditions.push($`\n}\n`);
       }
     });

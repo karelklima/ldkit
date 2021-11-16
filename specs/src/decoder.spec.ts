@@ -20,12 +20,12 @@ describe("Decoder", () => {
       x:A a ldkit:Resource, x:Item .
     `;
 
-    const schema = { "@type": [x("Item")] };
+    const schema = { "@type": [x.Item] };
 
     const output = [
       {
-        $id: x("A"),
-        $type: [x("Item")],
+        $id: x.A,
+        $type: [x.Item],
       },
     ];
 
@@ -39,20 +39,20 @@ describe("Decoder", () => {
       x:C a ldkit:Resource, x:Item .
     `;
 
-    const schema = { "@type": [x("Item")] };
+    const schema = { "@type": [x.Item] };
 
     const output = [
       {
-        $id: x("A"),
-        $type: [x("Item")],
+        $id: x.A,
+        $type: [x.Item],
       },
       {
-        $id: x("B"),
-        $type: [x("Item")],
+        $id: x.B,
+        $type: [x.Item],
       },
       {
-        $id: x("C"),
-        $type: [x("Item")],
+        $id: x.C,
+        $type: [x.Item],
       },
     ];
 
@@ -72,37 +72,37 @@ describe("Decoder", () => {
     `;
 
     const schema = {
-      "@type": [x("Item")],
+      "@type": [x.Item],
       string: {
-        "@id": x("string"),
+        "@id": x.string,
         "@type": xsd.string,
       },
       integer: {
-        "@id": x("integer"),
+        "@id": x.integer,
         "@type": xsd.integer,
       },
       decimal: {
-        "@id": x("decimal"),
+        "@id": x.decimal,
         "@type": xsd.decimal,
       },
       double: {
-        "@id": x("double"),
+        "@id": x.double,
         "@type": xsd.double,
       },
       boolean: {
-        "@id": x("boolean"),
+        "@id": x.boolean,
         "@type": xsd.boolean,
       },
       date: {
-        "@id": x("date"),
+        "@id": x.date,
         "@type": xsd.date,
       },
     };
 
     const output = [
       {
-        $id: x("A"),
-        $type: [x("Item")],
+        $id: x.A,
+        $type: [x.Item],
         string: "LDKit",
         integer: -5,
         decimal: -5.0,
@@ -121,9 +121,9 @@ describe("Decoder", () => {
     `;
 
     const schema = {
-      "@type": [x("Item")],
+      "@type": [x.Item],
       required: {
-        "@id": x("required"),
+        "@id": x.required,
       },
     };
 
@@ -136,17 +136,17 @@ describe("Decoder", () => {
     `;
 
     const schema = {
-      "@type": [x("Item")],
+      "@type": [x.Item],
       optional: {
-        "@id": x("optional"),
+        "@id": x.optional,
         "@optional": true as const,
       },
     };
 
     const output = [
       {
-        $id: x("A"),
-        $type: [x("Item")],
+        $id: x.A,
+        $type: [x.Item],
       },
     ];
 
@@ -159,9 +159,9 @@ describe("Decoder", () => {
     `;
 
     const schema = {
-      "@type": [x("Item")],
+      "@type": [x.Item],
       optional: {
-        "@id": x("optional"),
+        "@id": x.optional,
         "@optional": true as const,
         "@array": true as const,
       },
@@ -169,8 +169,8 @@ describe("Decoder", () => {
 
     const output = [
       {
-        $id: x("A"),
-        $type: [x("Item")],
+        $id: x.A,
+        $type: [x.Item],
         optional: [],
       },
     ];
@@ -186,17 +186,17 @@ describe("Decoder", () => {
     `;
 
     const schema = {
-      "@type": [x("Item")],
+      "@type": [x.Item],
       array: {
-        "@id": x("array"),
+        "@id": x.array,
         "@array": true as const,
       },
     };
 
     const output = [
       {
-        $id: x("A"),
-        $type: [x("Item")],
+        $id: x.A,
+        $type: [x.Item],
         array: [1, 2, 3],
       },
     ];
@@ -217,14 +217,14 @@ describe("Decoder", () => {
     `;
 
     const schema = {
-      "@type": [x("Item")],
+      "@type": [x.Item],
       array: {
-        "@id": x("array"),
+        "@id": x.array,
         "@array": true as const,
         "@context": {
-          "@type": [x("SubItem")],
+          "@type": [x.SubItem],
           value: {
-            "@id": x("value"),
+            "@id": x.value,
           },
         },
       },
@@ -232,17 +232,17 @@ describe("Decoder", () => {
 
     const output = [
       {
-        $id: x("A"),
-        $type: [x("Item")],
+        $id: x.A,
+        $type: [x.Item],
         array: [
           {
-            $id: x("B"),
-            $type: [x("SubItem")],
+            $id: x.B,
+            $type: [x.SubItem],
             value: "value B",
           },
           {
-            $id: x("C"),
-            $type: [x("SubItem")],
+            $id: x.C,
+            $type: [x.SubItem],
             value: "value C",
           },
         ],
@@ -260,17 +260,17 @@ describe("Decoder", () => {
     `;
 
     const schema = {
-      "@type": [x("Item")],
+      "@type": [x.Item],
       multilang: {
-        "@id": x("multilang"),
+        "@id": x.multilang,
         "@multilang": true as const,
       },
     };
 
     const output = [
       {
-        $id: x("A"),
-        $type: [x("Item")],
+        $id: x.A,
+        $type: [x.Item],
         multilang: {
           cs: "CS",
           en: "EN",
@@ -290,9 +290,9 @@ describe("Decoder", () => {
     `;
 
     const schema = {
-      "@type": [x("Item")],
+      "@type": [x.Item],
       multilang: {
-        "@id": x("multilang"),
+        "@id": x.multilang,
         "@multilang": true as const,
         "@array": true as const,
       },
@@ -300,8 +300,8 @@ describe("Decoder", () => {
 
     const output = [
       {
-        $id: x("A"),
-        $type: [x("Item")],
+        $id: x.A,
+        $type: [x.Item],
         multilang: {
           cs: ["CS 1", "CS 2", "CS 3"],
           en: ["EN"],
@@ -321,16 +321,16 @@ describe("Decoder", () => {
     `;
 
     const schema = {
-      "@type": [x("Item")],
+      "@type": [x.Item],
       preferredLanguage: {
-        "@id": x("preferredLanguage"),
+        "@id": x.preferredLanguage,
       },
     };
 
     const output = [
       {
-        $id: x("A"),
-        $type: [x("Item")],
+        $id: x.A,
+        $type: [x.Item],
         preferredLanguage: "CS",
       },
     ];
@@ -346,16 +346,16 @@ describe("Decoder", () => {
     `;
 
     const schema = {
-      "@type": [x("Item")],
+      "@type": [x.Item],
       preferredFirst: {
-        "@id": x("preferredFirst"),
+        "@id": x.preferredFirst,
       },
     };
 
     const output = [
       {
-        $id: x("A"),
-        $type: [x("Item")],
+        $id: x.A,
+        $type: [x.Item],
         preferredFirst: "DE",
       },
     ];
@@ -373,16 +373,16 @@ describe("Decoder", () => {
     `;
 
     const schema = {
-      "@type": [x("Item")],
+      "@type": [x.Item],
       rootProperty: {
-        "@id": x("rootProperty"),
+        "@id": x.rootProperty,
       },
       nested: {
-        "@id": x("nested"),
+        "@id": x.nested,
         "@context": {
-          "@type": [x("Item")],
+          "@type": [x.Item],
           nestedProperty: {
-            "@id": x("nestedProperty"),
+            "@id": x.nestedProperty,
           },
         },
       },
@@ -390,12 +390,12 @@ describe("Decoder", () => {
 
     const output = [
       {
-        $id: x("A"),
-        $type: [x("Item")],
+        $id: x.A,
+        $type: [x.Item],
         rootProperty: "Root property",
         nested: {
-          $id: x("A"),
-          $type: [x("Item")],
+          $id: x.A,
+          $type: [x.Item],
           nestedProperty: "Nested property",
         },
       },
@@ -417,30 +417,30 @@ describe("Decoder", () => {
     `;
 
     const schema = {
-      "@type": [x("Item")],
+      "@type": [x.Item],
       nested: {
-        "@id": x("nested"),
+        "@id": x.nested,
         "@context": {
-          "@type": [x("Nested")],
+          "@type": [x.Nested],
         },
       },
     };
 
     const output = [
       {
-        $id: x("A"),
-        $type: [x("Item")],
+        $id: x.A,
+        $type: [x.Item],
         nested: {
-          $id: x("C"),
-          $type: [x("Nested")],
+          $id: x.C,
+          $type: [x.Nested],
         },
       },
       {
-        $id: x("B"),
-        $type: [x("Item")],
+        $id: x.B,
+        $type: [x.Item],
         nested: {
-          $id: x("C"),
-          $type: [x("Nested")],
+          $id: x.C,
+          $type: [x.Nested],
         },
       },
     ];
