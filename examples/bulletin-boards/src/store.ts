@@ -69,7 +69,7 @@ createDefaultContext({
   sources: [
     {
       type: "file",
-      value: "https://ofn.gov.cz/úřední-desky/2021-07-20/příklady/3.jsonld",
+      value: "https://www.mesto-hranice.cz/export/uredni-deska",
     },
   ],
 });
