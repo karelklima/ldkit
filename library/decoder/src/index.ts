@@ -189,7 +189,7 @@ class Decoder {
     // Single return value expected from this point on
     if (property["@context"]) {
       for (const term of terms) {
-        if (term.termType === "NamedNode") {
+        if (term.termType === "NamedNode" || term.termType === "BlankNode") {
           return this.decodeNode(term.value, property["@context"]!);
         }
       }

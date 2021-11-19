@@ -1,5 +1,6 @@
 import React from "react";
 import { Board } from "./Board";
+import { Form } from "./Form";
 
 import {
   CssBaseline,
@@ -9,9 +10,10 @@ import {
   Box,
   Button,
 } from "@mui/material";
+import { BrowserRouter } from "react-router-dom";
 
 export const App = () => (
-  <>
+  <BrowserRouter>
     <CssBaseline />
     <AppBar position="static">
       <Toolbar>
@@ -20,14 +22,9 @@ export const App = () => (
         </Typography>
 
         <Box sx={{ flexGrow: 1 }} />
-        <Button
-          color="inherit"
-          href="https://ofn.gov.cz/úřední-desky/2021-07-20/příklady/3.jsonld"
-        >
-          https://ofn.gov.cz/úřední-desky/2021-07-20/příklady/3.jsonld
-        </Button>
       </Toolbar>
     </AppBar>
+    <Form />
     <Board />
-  </>
+  </BrowserRouter>
 );

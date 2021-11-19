@@ -4,6 +4,7 @@
   "scripts": {
     "example:todo-app": "parcel ./examples/todo-app",
     "example:bulletin-boards": "parcel ./examples/bulletin-boards",
+    "example:bulletin-boards:build": "parcel build ./examples/bulletin-boards",
     "example:custom-query": "parcel ./examples/custom-query",
     "example:dbpedia-actors": "parcel ./examples/dbpedia-actors",
     "clean": "rimraf ./library/*/dist",

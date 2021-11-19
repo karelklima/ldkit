@@ -1,12 +1,6 @@
-import {
-  createResource,
-  createNamespace,
-  createDefaultContext,
-} from "@ldkit/core";
+import { createResource, createNamespace, createContext } from "@ldkit/core";
 import type { SchemaInterface } from "@ldkit/core";
 import { dcterms, schema, xsd } from "@ldkit/namespaces";
-
-import { Store } from "n3";
 
 const time = createNamespace({
   iri: "http://www.w3.org/2006/time#",
@@ -63,19 +57,17 @@ const InformationSchema = {
   },
 } as const;
 
-export const store = new Store();
-
-createDefaultContext({
-  sources: [
-    {
-      type: "file",
-      value: "https://ofn.gov.cz/úřední-desky/2021-07-20/příklady/3.jsonld",
-    },
-  ],
-});
+export const DEFAULT_BOARD_IRI =
+  "https://ofn.gov.cz/úřední-desky/2021-07-20/příklady/3.jsonld";
 
 export type InformationInterface = SchemaInterface<typeof InformationSchema>;
 
-// const x: TodoInterface = {} as unknown as TodoInterface;
-
-export const Infos = createResource(InformationSchema);
+export const createInfosResource = (iri: string) => {
+  const context = createContext({
+    source: {
+      type: "file",
+      value: iri,
+    },
+  });
+  return createResource(InformationSchema, context);
+};

@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useMemo } from "react";
 import styled from "@emotion/styled";
 
 import { useResource } from "@ldkit/react";
 
-import { Infos, InformationInterface } from "../store";
+import {
+  InformationInterface,
+  createInfosResource,
+  DEFAULT_BOARD_IRI,
+} from "../store";
 import {
   TableContainer,
   Table,
@@ -13,8 +17,12 @@ import {
   TableBody,
   Paper,
   IconButton,
+  Alert,
+  Box,
 } from "@mui/material";
 import LinkIcon from "@mui/icons-material/Link";
+import { useSearchParams } from "react-router-dom";
+import { ErrorBoundary } from "react-error-boundary";
 
 const List = styled.div`
   display: flex;
@@ -45,8 +53,19 @@ const Item: React.FC<ItemProps> = ({ item }) => {
   );
 };
 
-export const Board: React.FC = () => {
-  const items = useResource(() => Infos.find(), []);
+const BoardContent: React.FC<{ iri: string }> = ({ iri }) => {
+  console.warn("BOARD CONTENT", iri);
+
+  const resource = useMemo(() => {
+    return createInfosResource(iri);
+  }, [iri]);
+
+  const items = useResource(() => resource.find(), null, [resource]);
+
+  if (!items) {
+    return <Alert severity="info">Načítám desku z URL {iri}</Alert>;
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -59,11 +78,37 @@ export const Board: React.FC = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {items.map((item, index) => (
+          {items!.map((item, index) => (
             <Item item={item} key={index} />
           ))}
         </TableBody>
       </Table>
     </TableContainer>
+  );
+};
+
+const ErrorMessage: React.FC = () => {
+  return (
+    <Alert severity="error">
+      Úřední desku na dané URL se nepodařilo načíst
+    </Alert>
+  );
+};
+
+export const Board: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const iri = searchParams.get("iri");
+
+  console.log("RENDERING BOARD", iri);
+
+  return (
+    <Box marginX={2}>
+      <ErrorBoundary
+        FallbackComponent={ErrorMessage}
+        resetKeys={[searchParams]}
+      >
+        <BoardContent iri={iri || DEFAULT_BOARD_IRI} />
+      </ErrorBoundary>
+    </Box>
   );
 };

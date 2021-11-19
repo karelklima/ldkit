@@ -12,6 +12,7 @@ export type FetchType = (
 
 type ComunicaContext = {
   sources: DataSources;
+  source: IDataSource;
   initialBindings: any;
   queryFormat: any;
   baseIri: string;
