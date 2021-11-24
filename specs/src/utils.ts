@@ -2,7 +2,7 @@ import { concat, lastValueFrom, Observable, take } from "rxjs";
 import { Store, Parser } from "n3";
 
 import { Context, createContext } from "@ldkit/context";
-import type { Quad } from "@ldkit/rdf";
+import { DataFactory, Quad } from "@ldkit/rdf";
 import { quadsToGraph } from "@ldkit/rdf";
 import { ldkit, xsd, schema } from "@ldkit/namespaces";
 
@@ -21,7 +21,21 @@ export const x = new Proxy(
   }
 ) as Record<string, string>;
 
-const parser = new Parser();
+// Helper data factory wrapper compatible with N3
+export const DF = () => {
+  const df = new DataFactory({
+    blankNodePrefix: "b",
+  });
+
+  return {
+    namedNode: df.namedNode.bind(df),
+    blankNode: df.blankNode.bind(df),
+    literal: df.literal.bind(df),
+    variable: df.variable.bind(df),
+    quad: df.quad.bind(df),
+    defaultGraph: df.defaultGraph.bind(df),
+  };
+};
 
 export const ttl = (turtle: string) => {
   const prefixedTurtle = `
@@ -31,7 +45,7 @@ export const ttl = (turtle: string) => {
     @prefix ${schema.$prefix} <${schema.$iri}> .
   
     ${turtle}`;
-  return parser.parse(prefixedTurtle);
+  return new Parser({ factory: DF() }).parse(prefixedTurtle);
 };
 
 export const createGraph = (turtle: string) => {

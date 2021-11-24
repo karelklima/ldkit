@@ -60,7 +60,7 @@ describe("Resource", () => {
     store.addQuads(defaultStoreContent);
   });
 
-  test("Insert multiple resources", async () => {
+  test.skip("Insert multiple resources", async () => {
     await emptyStore(store);
     await run(directors.insert(Kubrick), directors.insert(Tarantino));
 

@@ -1,8 +1,16 @@
-import type { NamedNode, Literal, Variable, Quad, Term } from "rdf-js";
-export type { NamedNode, Literal, Variable, Quad, Term };
+import type {
+  NamedNode,
+  BlankNode,
+  Literal,
+  Variable,
+  Quad,
+  Term,
+} from "rdf-js";
+export type { NamedNode, BlankNode, Literal, Variable, Quad, Term };
 import { fromRdf, toRdf } from "rdf-literal";
 export { fromRdf, toRdf };
 import * as DataFactory from "rdf-data-factory";
+export { DataFactory } from "rdf-data-factory";
 
 export type Iri = string;
 
@@ -13,6 +21,8 @@ export type Graph = Map<Iri, Node>;
 export const namedNode = <Iri extends string = string>(
   value: Iri
 ): NamedNode<Iri> => new DataFactory.NamedNode(value);
+
+export const blankNode = (value: string) => new DataFactory.BlankNode(value);
 
 export const literal = (
   value: string,

@@ -16,6 +16,9 @@
       "path": "../library/decoder"
     },
     {
+      "path": "../library/encoder"
+    },
+    {
       "path": "../library/engine"
     },
     {
