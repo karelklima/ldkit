@@ -393,4 +393,56 @@ describe("Encoder", () => {
 
     evaluate(input, schema, output);
   });
+
+  test("Resource with null values", async () => {
+    const input = {
+      $id: x.A,
+      $type: [x.Item],
+      someProperty: null,
+      anonymousProperty: [
+        {
+          $type: [x.SubSchema],
+          value: null,
+        },
+        {
+          $type: [x.SubSchema],
+          value: null,
+        },
+      ],
+    };
+
+    const schema = {
+      "@type": [x.Item],
+      someProperty: {
+        "@id": x.someProperty,
+      },
+      anonymousProperty: {
+        "@id": x.anonymousProperty,
+        "@array": true as const,
+        "@context": {
+          "@type": [x.SubSchema],
+          value: {
+            "@id": x.value,
+          },
+        },
+      },
+    };
+
+    const output = `
+      x:A
+        a x:Item ;
+        x:someProperty ?v0 ;
+        x:anonymousProperty [
+          a x:SubSchema ;
+          x:value ?v1 
+        ] .
+      x:A
+        x:anonymousProperty [
+          a x:SubSchema ;
+          x:value ?v2 
+        ] .
+    `;
+
+    evaluate(input, schema, output);
+  });
 });

@@ -10,10 +10,17 @@ import {
   x,
   emptyStore,
 } from "./utils";
-import { take } from "rxjs/operators";
 import { firstValueFrom, lastValueFrom } from "rxjs";
-import type { Store } from "n3";
-import type { Context } from "@ldkit/context";
+import { literal, namedNode, quad, variable } from "@ldkit/rdf";
+import { rdf, xsd } from "@ldkit/namespaces";
+
+const Instant = {
+  "@type": x.Instant,
+  date: {
+    "@id": x.inXSDDate,
+    "@type": xsd.date,
+  },
+} as const;
 
 const Director = {
   "@type": x.Director,
@@ -27,6 +34,11 @@ const Movie = {
     "@id": x.director,
     "@context": Director,
   },
+  released: {
+    "@id": x.released,
+    "@context": Instant,
+    "@optional": true,
+  },
 } as const;
 
 const defaultStoreContent = ttl(`
@@ -36,10 +48,23 @@ const defaultStoreContent = ttl(`
   x:QuentinTarantino
     a x:Director ;
     x:name "Quentin Tarantino" .
+  x:FullMetalJacket
+    a x:Movie;
+    x:name "Full Metal Jacket" ;
+    x:director x:StanleyKubrick .
+  x:Shining
+    a x:Movie;
+    x:name "Shining" ;
+    x:director x:StanleyKubrick .
+  x:PulpFiction
+    a x:Movie;
+    x:name "Pulp Fiction" ;
+    x:director x:QuentinTarantino .
 `);
 
 const createDirector = ($id: string, name: string) => ({
   $id: x[$id],
+  $type: [x.Director],
   name,
 });
 
@@ -52,17 +77,68 @@ describe("Resource", () => {
   const directors = createResource(Director, context);
   const movies = createResource(Movie, context);
 
-  const assertStore = (turtle: string) =>
-    expect(store.getQuads(null, null, null, null)).toEqual(ttl(turtle));
+  const assertStore = (turtle: string) => {
+    const storeQuads = store.getQuads(null, null, null, null);
+    const expectedQuads = ttl(turtle);
+    expect(storeQuads).toEqual(expectedQuads);
+  };
 
   beforeEach(async () => {
     await emptyStore(store);
     store.addQuads(defaultStoreContent);
   });
 
-  test.skip("Insert multiple resources", async () => {
+  test("Get many resources", async () => {
+    const result = await run(directors.find());
+
+    expect(result.length).toBe(2);
+    expect(result).toContainEqual(Tarantino);
+    expect(result).toContainEqual(Kubrick);
+  });
+
+  test("Get resource by IRI", async () => {
+    const result = await run(directors.findByIri(Tarantino.$id));
+
+    expect(result).toEqual(Tarantino);
+  });
+
+  test("Get multiple resources by IRI", async () => {
+    const result = await run(
+      directors.findByIris([Tarantino.$id, Kubrick.$id])
+    );
+
+    expect(result).toContainEqual(Tarantino);
+    expect(result).toContainEqual(Kubrick);
+  });
+
+  test("Get resource by string condition", async () => {
+    const condition = `?iri <${x.name}> "Quentin Tarantino" .`;
+    const result = await run(directors.find(condition));
+
+    expect(result.length).toBe(1);
+    expect(result[0]).toEqual(Tarantino);
+  });
+
+  test("Get resource by quad condition", async () => {
+    const condition = quad(
+      variable("iri"),
+      namedNode(x.name),
+      literal("Quentin Tarantino")
+    );
+    const result = await run(directors.find([condition]));
+
+    expect(result.length).toBe(1);
+    expect(result[0]).toEqual(Tarantino);
+  });
+
+  test("Count resources", async () => {
+    const count = await run(directors.count());
+    expect(count).toBe(2);
+  });
+
+  test("Insert multiple resources", async () => {
     await emptyStore(store);
-    await run(directors.insert(Kubrick), directors.insert(Tarantino));
+    await run(directors.insert(Kubrick, Tarantino));
 
     assertStore(`
       x:StanleyKubrick
@@ -74,127 +150,104 @@ describe("Resource", () => {
     `);
   });
 
-  test("Count resources", async () => {
-    const count = await run(
-      directors.insert(Kubrick),
-      directors.insert(Tarantino),
-      directors.count()
+  test("Insert complex resource", async () => {
+    const result = await run(
+      movies.insert({
+        $id: x.IngloriousBasterds,
+        name: "Inglorious Basterds",
+        director: { $id: x.QuentinTarantino },
+        released: { date: new Date("2008-01-01") },
+      }),
+      movies.findByIri(x.IngloriousBasterds)
     );
-    expect(count).toBe(2);
+
+    expect(result?.name).toEqual("Inglorious Basterds");
+    expect(result?.director).toEqual(Tarantino);
+    expect(result?.released?.date).toEqual(new Date("2008-01-01"));
   });
 
-  test("List all resources", async () => {
-    const content = ttl(`
-      x:StanleyKubrick
-        a schema:Person ;
-        schema:name "Stanley Kubrick" .
-      x:QuentinTarantino
-        a schema:Person ;
-        schema:name "Quentin Tarantino" .
-    `);
-    store.addQuads(content);
-
-    const dirs = await run(directors.find());
-
-    expect(dirs.length).toBe(2);
-    expect(find(dirs, Tarantino)).toBeDefined();
-    expect(find(dirs, Kubrick)).toBeDefined();
-  });
-
-  test.skip("update a resource", (done) => {
-    /* directors
-      .findByIri(Tarantino["@id"])
-      .pipe(take(1))
-      .subscribe((d) => {
-        console.log(d?.name);
-        done();
-      }); */
-
-    const promise = firstValueFrom(directors.findByIris([Tarantino.$id]));
-    console.warn(promise);
-    promise
-      .then((val) => {
-        console.log(val[0].name);
-        console.log("JO");
-        done();
-      })
-      .catch((e) => {
-        console.error(e);
-      });
-
-    //const dir = await run(
-    /* directors.update({
-        "@id": Tarantino["@id"],
-        name: "Not Quentin Tarantino",
-      }), */
-    //directors.findByIri(Tarantino["@id"])
-    //);
-    //expect(dir!.name).toEqual("Not Quentin Tarantino");
-  });
-
-  test.skip("delete a resource", async () => {
-    const dir = await run(
-      directors.delete(Tarantino),
-      directors.findByIri(Tarantino.$id)
+  test("Update multiple resources", async () => {
+    const result = await run(
+      directors.update(
+        {
+          $id: Kubrick.$id,
+          name: "Kubrick Stanley",
+        },
+        {
+          $id: Tarantino.$id,
+          name: "Tarantino Quentin",
+        }
+      ),
+      directors.find()
     );
-    expect(dir).toBeUndefined();
-    const count = await run(directors.count());
-    expect(count).toBe(1);
-    await run(directors.insert(Tarantino));
+
+    expect(result).toContainEqual({ ...Tarantino, name: "Tarantino Quentin" });
+    expect(result).toContainEqual({ ...Kubrick, name: "Kubrick Stanley" });
   });
 
-  /* test("check the directors", () => {
-    expect.assertions(1);
-    return run(
-      directors
-        .findByIris(["https://StanleyKubrick", "https://QuentinTarantino"])
-        .pipe(
-          tap((dirs) => {
-            console.warn("TAPPED");
-            expect(dirs.length === 2);
-            console.warn(dirs.length);
-            for (const dir of dirs) {
-              if (dir['@id'] === Tarantino["@id"]) {
-                expect(dir.name).toBe(Tarantino.name)
-              } else if ()
-            }
-          })
+  test.skip("Update nested property in resource", async () => {
+    const result = await run(
+      movies.update({
+        $id: x.PulpFiction,
+        released: {
+          date: new Date("1994-01-01"),
+        },
+      }),
+      movies.findByIri(x.PulpFiction)
+    );
+
+    expect(result!.released?.date).toEqual(new Date("1994-01-01"));
+  });
+
+  test("Delete multiple resources", async () => {
+    const dirs = await run(
+      directors.delete(Tarantino, Kubrick),
+      directors.find()
+    );
+    expect(dirs.length).toBe(0);
+  });
+
+  test("Insert data", async () => {
+    const result = await run(
+      directors.insert({
+        $id: x.ChristopherNolan,
+      }),
+      directors.insertData(
+        quad(
+          namedNode(x.ChristopherNolan),
+          namedNode(x.name),
+          literal("Christopher Nolan")
         )
+      ),
+      directors.findByIri(x.ChristopherNolan)
     );
-  }); */
-
-  /* test("should find an entity and its properties", (done) => {
-    directors.findByIri("https://QuentinTarantino").subscribe((result) => {
-      expect(result.name).toBe("Quentin Tarantino");
-      done();
+    expect(result).toEqual({
+      $id: x.ChristopherNolan,
+      $type: [x.Director],
+      name: "Christopher Nolan",
     });
   });
 
-  test("should list all directors", (done) => {
-    directors.find().subscribe((results) => {
-      expect(results.length).toBe(2);
-      expect(results[0].name).not.toBe(results[1].name);
-      done();
+  test("Delete data", async () => {
+    const result = await run(
+      directors.insert({
+        $id: x.ChristopherNolan,
+        $type: [x.Director, x.CustomType],
+        name: "Christopher Nolan",
+      }),
+      directors.deleteData(
+        quad(
+          namedNode(x.ChristopherNolan),
+          namedNode(rdf.type),
+          namedNode(x.CustomType)
+        )
+      ),
+      directors.findByIri(x.ChristopherNolan)
+    );
+    expect(result).toEqual({
+      $id: x.ChristopherNolan,
+      $type: [x.Director],
+      name: "Christopher Nolan",
     });
   });
-
-  test("should find movie and its director", (done) => {
-    movies.findByIri(`https://2001`).subscribe((result) => {
-      expect(result.name).toBe("2001: A Space Odyssey");
-      expect(result.director.name).toBe("Stanley Kubrick");
-      done();
-    });
-  });
- */
-  /* test('accepts schema prototype as schema interface creates schema interface from schema prototype', () => {
-    const s = expandSchema(User)
-    expect(s).toEqual(UserSchema)
-  })
-
-  test('getSchemaProperties', () => {
-    const properties = getSchemaProperties(UserSchema)
-    const { firstName, lastName, email } = UserSchema
-    const targetProperties = { firstName, lastName, email }
-    expect(properties).toEqual(targetProperties)
-  }) */
 });

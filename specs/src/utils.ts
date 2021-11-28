@@ -2,7 +2,7 @@ import { concat, lastValueFrom, Observable, take } from "rxjs";
 import { Store, Parser } from "n3";
 
 import { Context, createContext } from "@ldkit/context";
-import { DataFactory, Quad } from "@ldkit/rdf";
+import { DataFactory, quad, Quad, Term, variable } from "@ldkit/rdf";
 import { quadsToGraph } from "@ldkit/rdf";
 import { ldkit, xsd, schema } from "@ldkit/namespaces";
 
@@ -37,6 +37,27 @@ export const DF = () => {
   };
 };
 
+const escapePseudoVariables = (turtle: string) => {
+  return turtle.replace(/\?/g, "_:");
+};
+
+const convertPseudoVariable = <T extends Term>(term: T) => {
+  const match = term.value.match(/v[0-9]+/);
+  if (term.termType === "BlankNode" && match) {
+    return variable(match[0]);
+  }
+  return term;
+};
+
+const convertPseudoVariables = (q: Quad) => {
+  return quad(
+    convertPseudoVariable(q.subject),
+    convertPseudoVariable(q.predicate),
+    convertPseudoVariable(q.object),
+    convertPseudoVariable(q.graph)
+  );
+};
+
 export const ttl = (turtle: string) => {
   const prefixedTurtle = `
     @prefix x: <${X_NAMESPACE}> .
@@ -45,7 +66,12 @@ export const ttl = (turtle: string) => {
     @prefix ${schema.$prefix} <${schema.$iri}> .
   
     ${turtle}`;
-  return new Parser({ factory: DF() }).parse(prefixedTurtle);
+
+  const escapedTurtle = escapePseudoVariables(prefixedTurtle);
+  const df = DF();
+  const escapedQuads = new Parser({ factory: df }).parse(escapedTurtle);
+  const quads = escapedQuads.map(convertPseudoVariables);
+  return quads;
 };
 
 export const createGraph = (turtle: string) => {
@@ -53,7 +79,10 @@ export const createGraph = (turtle: string) => {
   return quadsToGraph(quads);
 };
 
-export const createStore = () => new Store();
+export const createStore = () =>
+  new Store(undefined, {
+    factory: DF(),
+  });
 
 export const createStoreContext = (store: Store, context?: Context) =>
   createContext({ ...context, sources: [store] });

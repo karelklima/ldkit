@@ -1,25 +1,22 @@
-import type {
-  Property,
-  Schema,
-  SchemaInterfaceIdentity,
-  SchemaInterfaceType,
-} from "@ldkit/schema";
+import type { Property, Schema } from "@ldkit/schema";
 import { getSchemaProperties } from "@ldkit/schema";
 import { $, CONSTRUCT, SELECT, INSERT, DELETE } from "@ldkit/sparql";
-import { Quad, variable, namedNode, quad, toRdf, Iri } from "@ldkit/rdf";
-import { rdf, xsd, ldkit } from "@ldkit/namespaces";
-
-type Entity = SchemaInterfaceIdentity &
-  Partial<SchemaInterfaceType> &
-  Record<string, any>;
+import { Quad, variable, namedNode, quad, Iri } from "@ldkit/rdf";
+import { rdf, ldkit } from "@ldkit/namespaces";
+import { encode } from "@ldkit/encoder";
+import type { Context } from "@ldkit/context";
+import type { Entity } from "./types";
+import { QueryHelper } from "./query-helper";
 
 export class QueryBuilder {
   private readonly schema: Schema;
   private readonly schemaProperties: Record<string, Property>;
+  private readonly context: Context;
 
-  constructor(schema: Schema) {
+  constructor(schema: Schema, context: Context) {
     this.schema = schema;
     this.schemaProperties = getSchemaProperties(this.schema);
+    this.context = context;
   }
 
   private getResourceSignature() {
@@ -30,30 +27,11 @@ export class QueryBuilder {
     );
   }
 
-  private getProperty(key: string) {
-    return this.schemaProperties[key];
-  }
-
-  private convertProperty(value: any, property: Property) {
-    return toRdf(value, {
-      datatype: namedNode(property["@type"] || xsd.string),
-    });
-  }
-
-  private entityToRdf(entity: Entity) {
-    const { $id: iri, $type: extraTypes, ...properties } = entity;
-    const result = new Array<Quad>();
-    const types = [...this.schema["@type"], ...(extraTypes || [])];
-    types.forEach((type) => {
-      result.push(quad(namedNode(iri), namedNode(rdf.type), namedNode(type)));
-    });
-    return Object.keys(properties).reduce((acc, key) => {
-      const value = properties[key];
-      const property = this.schema[key] as Property;
-      const rdfValue = this.convertProperty(value, property);
-      acc.push(quad(namedNode(iri), namedNode(property["@id"]), rdfValue));
-      return acc;
-    }, result);
+  private entitiesToQuads(entities: Entity[]) {
+    const quadArrays = entities.map((entity) =>
+      encode(entity, this.schema, this.context)
+    );
+    return ([] as Quad[]).concat(...quadArrays);
   }
 
   private getShape(
@@ -61,7 +39,7 @@ export class QueryBuilder {
     includeOptional = false,
     wrapOptional = true
   ) {
-    const conditions = new Array<Quad | ReturnType<typeof $>>();
+    const conditions: (Quad | ReturnType<typeof $>)[] = [];
 
     const populateConditionsRecursive = (s: Schema, varPrefix: string) => {
       const rdfType = s["@type"];
@@ -108,31 +86,43 @@ export class QueryBuilder {
     return SELECT`(count(?iri) as ?count)`.WHERE`${quads}`.build();
   }
 
-  getByIrisQuery = (iris: Iri[]) => {
-    const query = CONSTRUCT`${this.getResourceSignature()} ${this.getShape(
-      "iri",
-      true,
-      false
-    )}`.WHERE`${this.getShape("iri", true, true)} VALUES ?iri { ${iris.map(
-      namedNode
-    )} }`.build();
+  getQuery(where?: string | Quad[], limit = 1000) {
+    const selectSubQuery = SELECT`
+      ${variable("iri")}
+    `.WHERE`
+      ${this.getShape("iri", false)}
+      ${where}
+    `.LIMIT(limit);
 
-    return query;
-  };
-
-  getIrisQuery() {
-    const conditions = new Array<Quad | ReturnType<typeof $>>();
-    this.schema["@type"].forEach((type) => {
-      conditions.push($`${variable("iri")} a ${namedNode(type)} .`);
-    });
-
-    const query = SELECT`${variable("iri")}`.WHERE`${conditions}`.build();
+    const query = CONSTRUCT`
+      ${this.getResourceSignature()}
+      ${this.getShape("iri", true, false)}
+    `.WHERE`
+      ${this.getShape("iri", true, true)}
+      {
+        ${selectSubQuery}
+      }
+    `.build();
 
     return query;
   }
 
-  insertQuery(entity: Entity) {
-    const quads = this.entityToRdf(entity);
+  getByIrisQuery(iris: Iri[]) {
+    const query = CONSTRUCT`
+      ${this.getResourceSignature()}
+      ${this.getShape("iri", true, false)}
+    `.WHERE`
+      ${this.getShape("iri", true, true)}
+      VALUES ?iri {
+        ${iris.map(namedNode)}
+      }
+    `.build();
+
+    return query;
+  }
+
+  insertQuery(entities: Entity[]) {
+    const quads = this.entitiesToQuads(entities);
     return this.insertDataQuery(quads);
   }
 
@@ -140,36 +130,37 @@ export class QueryBuilder {
     return INSERT.DATA`${quads}`.build();
   }
 
-  deleteQuery = (iri: Iri) => {
-    return DELETE`${namedNode(iri)} ?p ?o`.WHERE`${namedNode(
-      iri
-    )} ?p ?o`.build();
+  deleteQuery = (iris: Iri[]) => {
+    return DELETE`
+      ?s ?p ?o
+    `.WHERE`
+      ?s ?p ?o .
+      VALUES ?s { ${iris.map(namedNode)} }
+    `.build();
   };
 
-  updateQuery(
-    entity: SchemaInterfaceIdentity &
-      Partial<SchemaInterfaceType> &
-      Partial<Record<string, any>>
-  ) {
-    const deleteQuads = new Array<Quad>();
-    const updateQuads = new Array<Quad>();
+  deleteDataQuery(quads: Quad[]) {
+    return $`DELETE DATA { ${quads} }`.toString();
+  }
 
-    const { "@id": iri, "@type": types, ...relations } = entity;
+  updateQuery(entities: Entity[]) {
+    const deleteQuads: Quad[] = [];
+    const insertQuads: Quad[] = [];
+    const whereQuads: Quad[] = [];
 
-    Object.keys(relations).forEach((key, index) => {
-      const property = this.getProperty(key);
-      if (property["@array"]) {
-        throw "Array properties are not supported for update";
-      }
-      const predicate = this.getProperty(key)["@id"];
-      const rdfValue = this.convertProperty(relations[key], property);
-      deleteQuads.push(
-        quad(namedNode(iri), namedNode(predicate), variable(`v${index}`))
+    entities.forEach((entity, index) => {
+      const helper = new QueryHelper(
+        entity,
+        this.schema,
+        this.context,
+        1000 * index
       );
-      updateQuads.push(quad(namedNode(iri), namedNode(predicate), rdfValue));
+      deleteQuads.push(...helper.getDeleteQuads());
+      insertQuads.push(...helper.getInsertQuads());
+      whereQuads.push(...helper.getWhereQuads());
     });
 
-    return DELETE`${deleteQuads}`.INSERT`${updateQuads}`
+    return DELETE`${deleteQuads}`.INSERT`${insertQuads}`
       .WHERE`${deleteQuads}`.build();
   }
 }

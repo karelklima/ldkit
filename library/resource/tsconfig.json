@@ -12,6 +12,9 @@
       "path": "../decoder"
     },
     {
+      "path": "../encoder"
+    },
+    {
       "path": "../engine"
     },
     {

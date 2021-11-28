@@ -1,7 +1,7 @@
 import { map, switchMap, tap, share } from "rxjs/operators";
 import { BehaviorSubject } from "rxjs";
 
-import type { Graph, Iri } from "@ldkit/rdf";
+import type { Graph, Iri, Quad } from "@ldkit/rdf";
 import { bindingsQuery, quadsQuery, updateQuery } from "@ldkit/engine";
 import type { Context } from "@ldkit/context";
 import { resolveContext } from "@ldkit/context";
@@ -9,13 +9,18 @@ import type {
   Schema,
   SchemaPrototype,
   SchemaInterface,
-  SchemaInterfaceType,
   SchemaInterfaceIdentity,
 } from "@ldkit/schema";
 import { expandSchema } from "@ldkit/schema";
 import { decode } from "@ldkit/decoder";
 
 import { QueryBuilder } from "./query-builder";
+import type { Entity } from "./types";
+
+export const createResource = <T extends SchemaPrototype>(
+  spec: T,
+  context?: Context
+) => new Resource(spec, context);
 
 export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
   private readonly schema: Schema;
@@ -26,7 +31,7 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
   constructor(schema: S, context?: Context) {
     this.schema = expandSchema(schema);
     this.context = resolveContext(context);
-    this.queryBuilder = new QueryBuilder(this.schema);
+    this.queryBuilder = new QueryBuilder(this.schema, this.context);
   }
 
   private decode(graph: Graph) {
@@ -55,18 +60,14 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
     );
   }
 
-  find() {
-    const q = this.queryBuilder.getIrisQuery();
+  find(where?: string | Quad[], limit?: number) {
+    const q = this.queryBuilder.getQuery(where, limit);
     console.log(q);
     return this.$trigger.pipe(
-      switchMap(() => bindingsQuery(q, this.context)),
-      map((bindings) => {
-        return bindings.reduce((acc, binding) => {
-          acc.push(binding.get("?iri").value);
-          return acc;
-        }, new Array<Iri>());
-      }),
-      switchMap((iris) => this.findByIris(iris))
+      switchMap(() => quadsQuery(q, this.context)),
+      map((graph) => {
+        return this.decode(graph);
+      })
     );
   }
 
@@ -86,18 +87,10 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
     );
   }
 
-  insert(
-    entity: Omit<I, "$type" | "$id"> &
-      Partial<SchemaInterfaceType> &
-      SchemaInterfaceIdentity
-  ) {
-    console.log(`Inserting ${entity.$id} data`);
+  private updateQuery(query: string) {
+    console.log(query);
 
-    const q = this.queryBuilder.insertQuery(entity);
-
-    console.log(q);
-
-    const result = updateQuery(q, this.context).pipe(
+    const result = updateQuery(query, this.context).pipe(
       tap(() => this.$trigger.next(null)),
       share()
     );
@@ -105,39 +98,37 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
     return result;
   }
 
-  update(entity: Partial<Omit<I, "@id">> & SchemaInterfaceIdentity) {
-    console.log(`Updating ${entity.$id} data`);
+  insert(...entities: Entity<I>[]) {
+    const q = this.queryBuilder.insertQuery(entities);
 
-    const q = this.queryBuilder.updateQuery(entity);
-
-    console.log(q);
-
-    const result = updateQuery(q, this.context).pipe(
-      tap(() => this.$trigger.next(null)),
-      share()
-    );
-    result.subscribe();
-    return result;
+    return this.updateQuery(q);
   }
 
-  delete(identity: SchemaInterfaceIdentity) {
-    const iri = identity.$id;
-    console.log(`Deleting ${iri} data`);
+  insertData(...quads: Quad[]) {
+    const q = this.queryBuilder.insertDataQuery(quads);
 
-    const q = this.queryBuilder.deleteQuery(iri);
+    return this.updateQuery(q);
+  }
 
-    console.log(q);
+  update(...entities: Entity<I>[]) {
+    const q = this.queryBuilder.updateQuery(entities);
 
-    const result = updateQuery(q, this.context).pipe(
-      tap(() => this.$trigger.next(null)),
-      share()
-    );
-    result.subscribe();
-    return result;
+    return this.updateQuery(q);
+  }
+
+  delete(...identities: SchemaInterfaceIdentity[] | Iri[]) {
+    const iris = identities.map((identity) => {
+      return typeof identity === "string" ? identity : identity.$id;
+    });
+
+    const q = this.queryBuilder.deleteQuery(iris);
+
+    return this.updateQuery(q);
+  }
+
+  deleteData(...quads: Quad[]) {
+    const q = this.queryBuilder.deleteDataQuery(quads);
+
+    return this.updateQuery(q);
   }
 }
-
-export const createResource = <T extends SchemaPrototype>(
-  spec: T,
-  context?: Context
-) => new Resource(spec, context);

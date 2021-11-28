@@ -66,13 +66,9 @@ export type SchemaInterfaceType = {
   $type: string[];
 };
 
-export type SchemaInterface<T extends SchemaPrototype> = Omit<
-  {
-    [X in keyof T]: T[X] extends ValidPropertyDefinition
-      ? ConvertProperty<T[X]>
-      : never;
-  },
-  "@id" | "@type"
-> &
-  SchemaInterfaceIdentity &
+export type SchemaInterface<T extends SchemaPrototype> = {
+  [X in Exclude<keyof T, "@type">]: T[X] extends ValidPropertyDefinition
+    ? ConvertProperty<T[X]>
+    : never;
+} & SchemaInterfaceIdentity &
   SchemaInterfaceType;

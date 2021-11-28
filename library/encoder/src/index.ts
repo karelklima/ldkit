@@ -10,6 +10,7 @@ import {
   BlankNode,
   DataFactory,
   literal,
+  Variable,
 } from "@ldkit/rdf";
 import type { Schema, Property } from "@ldkit/schema";
 import { ldkit, rdf, xsd } from "@ldkit/namespaces";
@@ -18,8 +19,13 @@ type DecodedNode = Record<string, any>;
 
 type NodeId = NamedNode | BlankNode;
 
-export const encode = (node: DecodedNode, schema: Schema, context: Context) => {
-  return Encoder.encode(node, schema, context);
+export const encode = (
+  node: DecodedNode,
+  schema: Schema,
+  context: Context,
+  variableInitCounter = 0
+) => {
+  return Encoder.encode(node, schema, context, variableInitCounter);
 };
 
 class Encoder {
@@ -29,16 +35,22 @@ class Encoder {
     blankNodePrefix: "b",
   });
 
-  private blankNodeCounter = 0;
+  private variableCounter: number;
 
   private output: Quad[] = [];
 
-  private constructor(context: Context) {
+  private constructor(context: Context, variableInitCounter: number) {
     this.context = context;
+    this.variableCounter = variableInitCounter;
   }
 
-  static encode(node: DecodedNode, schema: Schema, context: Context) {
-    return new Encoder(context).encode(node, schema);
+  static encode(
+    node: DecodedNode,
+    schema: Schema,
+    context: Context,
+    variableInitCounter: number
+  ) {
+    return new Encoder(context, variableInitCounter).encode(node, schema);
   }
 
   encode(node: DecodedNode, schema: Schema) {
@@ -51,7 +63,7 @@ class Encoder {
   push(
     s: NamedNode | BlankNode,
     p: NamedNode,
-    o: NamedNode | BlankNode | Literal
+    o: NamedNode | BlankNode | Literal | Variable
   ) {
     this.output.push(this.df.quad(s, p, o));
   }
@@ -102,6 +114,11 @@ class Encoder {
 
     if (value === null) {
       // TODO
+      this.push(
+        nodeId,
+        propertyId,
+        this.df.variable(`v${this.variableCounter++}`)
+      );
       return;
     }
 
