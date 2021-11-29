@@ -54,16 +54,18 @@ const Item: React.FC<ItemProps> = ({ item }) => {
 };
 
 const BoardContent: React.FC<{ iri: string }> = ({ iri }) => {
-  console.warn("BOARD CONTENT", iri);
+  const resource = useResource((iri) => createInfosResource(iri).find(), [iri]);
 
-  const resource = useMemo(() => {
-    return createInfosResource(iri);
-  }, [iri]);
-
-  const items = useResource(() => resource.find(), null, [resource]);
-
-  if (!items) {
+  if (resource.isLoading) {
     return <Alert severity="info">Načítám desku z URL {iri}</Alert>;
+  }
+
+  if (resource.isError) {
+    return (
+      <Alert severity="error">
+        Úřední desku na dané URL se nepodařilo načíst
+      </Alert>
+    );
   }
 
   return (
@@ -78,7 +80,7 @@ const BoardContent: React.FC<{ iri: string }> = ({ iri }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {items!.map((item, index) => (
+          {resource.data.map((item, index) => (
             <Item item={item} key={index} />
           ))}
         </TableBody>
