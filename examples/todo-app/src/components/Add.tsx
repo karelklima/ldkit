@@ -52,7 +52,7 @@ export const Add: React.FC = () => {
         setOpen(false);
       } else if (event.key === "Enter" && inputValue) {
         Todos.insert({
-          "@id": getRandomId(),
+          $id: getRandomId(),
           description: inputValue,
           done: false,
         });

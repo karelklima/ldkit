@@ -10,6 +10,7 @@
     "@ldkit/core": "*",
     "@ldkit/namespaces": "*",
     "@ldkit/rdf": "*",
+    "@ldkit/react": "*",
     "@types/react": "^17.0.19",
     "@types/react-dom": "^17.0.9",
     "n3": "^1.11.1",

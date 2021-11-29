@@ -1,5 +1,3 @@
-import { find } from "lodash";
-
 import { createResource } from "@ldkit/resource";
 
 import {
@@ -10,7 +8,6 @@ import {
   x,
   emptyStore,
 } from "./utils";
-import { firstValueFrom, lastValueFrom } from "rxjs";
 import { literal, namedNode, quad, variable } from "@ldkit/rdf";
 import { rdf, xsd } from "@ldkit/namespaces";
 

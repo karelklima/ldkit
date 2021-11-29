@@ -3,6 +3,7 @@
   "description": "Linked Data Kit repository",
   "scripts": {
     "example:todo-app": "parcel ./examples/todo-app",
+    "example:todo-app:build": "parcel build ./examples/todo-app --no-scope-hoist",
     "example:bulletin-boards": "parcel ./examples/bulletin-boards",
     "example:bulletin-boards:build": "parcel build ./examples/bulletin-boards --no-scope-hoist",
     "example:custom-query": "parcel ./examples/custom-query",

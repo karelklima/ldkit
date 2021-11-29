@@ -16,6 +16,9 @@
     },
     {
       "path": "../../library/rdf"
+    },
+    {
+      "path": "../../library/react"
     }
   ]
 }

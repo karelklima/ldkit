@@ -1,26 +1,11 @@
-import React, { useState, useCallback } from "react";
-import { useObservable, useObservableState } from "observable-hooks";
-import type { Observable } from "rxjs";
+import React, { useCallback } from "react";
 import styled from "@emotion/styled";
 
-import { Todos, TodoInterface } from "../store";
-import {
-  Button,
-  Group,
-  InvisibleButton,
-  Row,
-  RowAction,
-  RowContent,
-} from "./UI";
-import { CheckedIcon, CircleIcon, RemoveIcon } from "./Icons";
+import { useResource } from "@ldkit/react";
 
-const useResource = <T extends any>(
-  observableInit: () => Observable<T>,
-  defaultState: T
-) => {
-  const o$ = useObservable(observableInit);
-  return useObservableState(o$, defaultState);
-};
+import { Todos, TodoInterface } from "../store";
+import { Button, InvisibleButton, Row, RowContent } from "./UI";
+import { CheckedIcon, CircleIcon, RemoveIcon } from "./Icons";
 
 const List = styled.div`
   display: flex;
@@ -42,7 +27,7 @@ const Item: React.FC<ItemProps> = ({ item }) => {
 
   const handleCheckboxClicked = useCallback(() => {
     Todos.update({
-      "@id": item["@id"],
+      $id: item.$id,
       done: !item.done,
     });
   }, [item]);
@@ -67,10 +52,19 @@ const Item: React.FC<ItemProps> = ({ item }) => {
 };
 
 export const Items: React.FC = () => {
-  const items = useResource(() => Todos.find(), []);
+  const resource = useResource(() => Todos.find());
+
+  if (resource.isLoading) {
+    return <List>Loading...</List>;
+  }
+
+  if (resource.isError) {
+    return <List>Error loading todo list...</List>;
+  }
+
   return (
     <List>
-      {items.map((item, index) => (
+      {resource.data.map((item, index) => (
         <Item item={item} key={index} />
       ))}
     </List>
