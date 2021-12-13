@@ -92,12 +92,6 @@ class Encoder {
   }
 
   encodeNodeType(node: DecodedNode, requiredTypes: Iri[], nodeId: NodeId) {
-    const inputTypes = Array.isArray(node.$type)
-      ? node.$type
-      : node.$type
-      ? [node.$type]
-      : [];
-
     const finalTypes = new Set([...this.getNodeTypes(node), ...requiredTypes]);
 
     finalTypes.forEach((type) => {

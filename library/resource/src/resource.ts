@@ -80,7 +80,8 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
   findByIris(iris: Iri[]) {
     const q = this.queryBuilder.getByIrisQuery(iris);
     console.log(q);
-    return quadsQuery(q, this.context).pipe(
+    return this.$trigger.pipe(
+      switchMap(() => quadsQuery(q, this.context)),
       map((graph) => {
         return this.decode(graph);
       })

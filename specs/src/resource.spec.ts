@@ -247,4 +247,18 @@ describe("Resource", () => {
       name: "Christopher Nolan",
     });
   });
+
+  test("Support for custom types", async () => {
+    const result = await run(
+      movies.insert({
+        $id: x.KillBill,
+        $type: [x.TarantinoMovie],
+        name: "Kill Bill",
+        director: { $id: x.QuentinTarantino },
+      }),
+      movies.findByIri(x.KillBill)
+    );
+
+    expect(result?.$type).toEqual([x.Movie, x.TarantinoMovie]);
+  });
 });

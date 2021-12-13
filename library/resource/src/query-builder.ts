@@ -37,7 +37,8 @@ export class QueryBuilder {
   private getShape(
     mainVar = "iri",
     includeOptional = false,
-    wrapOptional = true
+    wrapOptional = true,
+    setSpecificTypes = true
   ) {
     const conditions: (Quad | ReturnType<typeof $>)[] = [];
 
@@ -45,9 +46,21 @@ export class QueryBuilder {
       const rdfType = s["@type"];
       const properties = getSchemaProperties(s);
 
-      rdfType.forEach((type) => {
-        conditions.push($`${variable(varPrefix)} a ${namedNode(type)} .`);
-      });
+      if (setSpecificTypes) {
+        rdfType.forEach((type) => {
+          conditions.push(
+            quad(variable(varPrefix), namedNode(rdf.type), namedNode(type))
+          );
+        });
+      } else {
+        conditions.push(
+          quad(
+            variable(varPrefix),
+            namedNode(rdf.type),
+            variable(`${varPrefix}_type`)
+          )
+        );
+      }
 
       Object.keys(properties).forEach((prop, index) => {
         const property = properties[prop];
@@ -96,9 +109,9 @@ export class QueryBuilder {
 
     const query = CONSTRUCT`
       ${this.getResourceSignature()}
-      ${this.getShape("iri", true, false)}
+      ${this.getShape("iri", true, false, false)}
     `.WHERE`
-      ${this.getShape("iri", true, true)}
+      ${this.getShape("iri", true, true, false)}
       {
         ${selectSubQuery}
       }
@@ -110,9 +123,9 @@ export class QueryBuilder {
   getByIrisQuery(iris: Iri[]) {
     const query = CONSTRUCT`
       ${this.getResourceSignature()}
-      ${this.getShape("iri", true, false)}
+      ${this.getShape("iri", true, false, false)}
     `.WHERE`
-      ${this.getShape("iri", true, true)}
+      ${this.getShape("iri", true, true, false)}
       VALUES ?iri {
         ${iris.map(namedNode)}
       }
