@@ -27,6 +27,10 @@ export class QueryBuilder {
     );
   }
 
+  private getTypesSignature() {
+    return quad(variable("iri"), namedNode(rdf.type), variable("iri_type"));
+  }
+
   private entitiesToQuads(entities: Entity[]) {
     const quadArrays = entities.map((entity) =>
       encode(entity, this.schema, this.context)
@@ -35,31 +39,23 @@ export class QueryBuilder {
   }
 
   private getShape(
-    mainVar = "iri",
     includeOptional = false,
     wrapOptional = true,
-    setSpecificTypes = true
+    omitRootTypes = false
   ) {
+    const mainVar = "iri";
     const conditions: (Quad | ReturnType<typeof $>)[] = [];
 
     const populateConditionsRecursive = (s: Schema, varPrefix: string) => {
       const rdfType = s["@type"];
       const properties = getSchemaProperties(s);
 
-      if (setSpecificTypes) {
+      if (varPrefix !== "iri" || !omitRootTypes) {
         rdfType.forEach((type) => {
           conditions.push(
             quad(variable(varPrefix), namedNode(rdf.type), namedNode(type))
           );
         });
-      } else {
-        conditions.push(
-          quad(
-            variable(varPrefix),
-            namedNode(rdf.type),
-            variable(`${varPrefix}_type`)
-          )
-        );
       }
 
       Object.keys(properties).forEach((prop, index) => {
@@ -103,15 +99,17 @@ export class QueryBuilder {
     const selectSubQuery = SELECT`
       ${variable("iri")}
     `.WHERE`
-      ${this.getShape("iri", false)}
+      ${this.getShape(false, true)}
       ${where}
     `.LIMIT(limit);
 
     const query = CONSTRUCT`
       ${this.getResourceSignature()}
-      ${this.getShape("iri", true, false, false)}
+      ${this.getTypesSignature()}
+      ${this.getShape(true, false, true)}
     `.WHERE`
-      ${this.getShape("iri", true, true, false)}
+      ${this.getTypesSignature()}
+      ${this.getShape(true, true, true)}
       {
         ${selectSubQuery}
       }
@@ -123,9 +121,11 @@ export class QueryBuilder {
   getByIrisQuery(iris: Iri[]) {
     const query = CONSTRUCT`
       ${this.getResourceSignature()}
-      ${this.getShape("iri", true, false, false)}
+      ${this.getTypesSignature()}
+      ${this.getShape(true, false, true)}
     `.WHERE`
-      ${this.getShape("iri", true, true, false)}
+      ${this.getTypesSignature()}
+      ${this.getShape(true, true, true)}
       VALUES ?iri {
         ${iris.map(namedNode)}
       }
