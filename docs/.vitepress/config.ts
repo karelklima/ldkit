@@ -3,7 +3,6 @@ import { defineConfig } from "vitepress";
 export default defineConfig({
   title: "LDKit",
   description: "Effortlessly build Linked Data apps",
-  base: "/ldkit/",
 
   themeConfig: {
     algolia: {
