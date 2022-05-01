@@ -1,0 +1,1 @@
+import{_ as t,c as o,o as s,a as e}from"./app.bac780e5.js";const m='{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"README.md"}',a={},c=e("p",null,"LDKit",-1),n=e("p",null,"See docs",-1),r=[c,n];function _(d,i,l,p,f,u){return s(),o("div",null,r)}var E=t(a,[["render",_]]);export{m as __pageData,E as default};

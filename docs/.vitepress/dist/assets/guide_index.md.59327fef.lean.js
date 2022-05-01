@@ -1,0 +1,1 @@
+import{_ as e,c as t,o as r,b as a}from"./app.bac780e5.js";const g='{"title":"Introduction","description":"","frontmatter":{},"headers":[],"relativePath":"guide/index.md"}',n={},o=a("",3),s=[o];function i(d,c,p,u,h,l){return r(),t("div",null,s)}var f=e(n,[["render",i]]);export{g as __pageData,f as default};

@@ -17,7 +17,9 @@
     "test:watch": "npm -w ./specs run test:watch",
     "dev": "npm -w ./specs run watch",
     "rimraf-node-modules": "rimraf node_modules",
-    "set-version": "node scripts/set-version.js"
+    "set-version": "node scripts/set-version.js",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs"
   },
   "author": "Karel Klíma",
   "license": "MIT",
@@ -36,6 +38,7 @@
     "parcel": "^2.0.1",
     "rimraf": "^3.0.2",
     "typescript": "^4.4.4",
+    "vitepress": "^0.22.3",
     "yargs": "^17.2.1"
   }
 }
