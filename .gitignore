@@ -3,3 +3,4 @@ dist
 !docs/.vitepress/dist
 .parcel-cache
 tsconfig.tsbuildinfo
+npm

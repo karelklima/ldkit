@@ -1,0 +1,7 @@
+{
+  "importMap": "import_map.json",
+  "tasks": {
+    "test": "deno test --allow-env ./specs",
+    "dnt": "deno run -A ./scripts/dnt.ts"
+  }
+}
