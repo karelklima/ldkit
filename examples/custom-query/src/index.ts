@@ -1,7 +1,7 @@
-import { lucene, lucene_instance, SearchResource, popisDat } from "./store";
-import { $ } from "@ldkit/sparql";
-import { namedNode as n } from "@ldkit/rdf";
-import { skos, dcterms } from "@ldkit/namespaces";
+import { lucene, lucene_instance, SearchResource, popisDat } from "./store.ts";
+import { $ } from "ldkit/sparql";
+import { namedNode as n } from "ldkit/rdf";
+import { skos, dcterms } from "ldkit/namespaces";
 
 console.log("CUSTOM SEARCH QUERY USING LUCENE GRAPHDB CONNECTOR");
 
@@ -54,6 +54,7 @@ console.log(query);
 
 const results = SearchResource.query(query);
 results.subscribe((res) => {
+  console.log("NUMBER OF RESULTS", res.length);
   for (const r of res) {
     console.log(
       r.label,

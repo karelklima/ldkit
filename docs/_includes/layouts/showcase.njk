@@ -1,0 +1,61 @@
+---
+layout: ./base.njk
+page_css: showcase.css
+---
+
+<main class="showcase">
+  <header class="showcase-header">
+    <h1>{{ title }}</h1>
+    {{ description | md | safe }}
+  </header>
+
+  <ul class="showcase-sites">
+    {% for site in sites %}
+    {% if site.img %}
+    <li>
+      <figure class="site">
+        <a href="{{ site.url }}" class="site-image">
+          <img src="{{ site.img }}" alt="Screenshot of the site" width="300" height="200">
+        </a>
+        <figcaption class="site-description">
+          <p>
+            {% if site.code %}
+              <a class="button is-secondary is-small" href="{{ site.code }}">View code</a>
+            {% endif %}
+
+            <a href="{{ site.url }}" class="site-name">
+              {{ site.title }}
+            </a>
+          </p>
+
+          {{ site.description | md | safe }}
+        </figcaption>
+      </figure>
+    </li>
+    {% endif %}
+    {% endfor %}
+  </ul>
+
+  <section class="showcase-more">
+    <h2>More examples</h2>
+
+    <ul>
+      {% for site in sites %}
+      {% if not site.img %}
+      <li class="site-description">
+        <p>
+          <a href="{{ site.url }}" class="site-name">
+            {{ site.title }}
+          </a>
+          {% if site.code %}
+            <a class="button is-secondary is-small" href="{{ site.code }}">View code</a>
+          {% endif %}
+        </p>
+
+        {{ site.description | md | safe }}
+      </li>
+      {% endif %}
+      {% endfor %}
+    </ul>
+  </section>
+</main>

@@ -1,0 +1,6 @@
+layout: layouts/plugins.njk
+title: Plugins
+main_menu: plugins
+description: |
+  **Lume** has a powerful plugin system to extend its functionality with new
+  features and support for more formats.

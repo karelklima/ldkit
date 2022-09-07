@@ -1,15 +1,4 @@
-import type {
-  IDataSource,
-  DataSources,
-  QueryStringContext,
-} from "https://esm.sh/@comunica/types";
-
-export type { IDataSource, DataSources };
-
-export type FetchType = (
-  resource: RequestInfo,
-  init?: RequestInit
-) => Promise<Response>;
+import type { QueryStringContext } from "https://esm.sh/@comunica/types@2.4.0";
 
 export type LibraryContext = Partial<{
   graph: string;
@@ -31,7 +20,7 @@ export const createDefaultContext = (context: Context) => {
 export const resolveContext = (context?: Context) => {
   if (!context && !defaultContext) {
     throw new Error(
-      "No context found. Please create a default context or pass one to createResource function"
+      "No context found. Please create a default context or pass one to createResource function",
     );
   }
   return context || defaultContext!;

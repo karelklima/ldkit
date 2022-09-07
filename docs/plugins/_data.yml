@@ -1,0 +1,27 @@
+layout: layouts/plugin.njk
+main_menu: plugins
+tags_info:
+  data_format:
+    name: Data format
+    background: LemonChiffon
+  html:
+    name: HTML
+    background: tomato
+  images:
+    name: Images
+    background: violet
+  javascript:
+    name: JavaScript
+    background: gold
+  styles:
+    name: Styles
+    background: LightSkyBlue
+  template_engine:
+    name: Template engine
+    background: lightgreen
+  urls:
+    name: URLs
+    background: pink
+  utils:
+    name: Utils
+    background: lightgray

@@ -1,5 +1,4 @@
-import { map, switchMap, tap, share } from "https://esm.sh/rxjs/operators";
-import { BehaviorSubject } from "https://esm.sh/rxjs";
+import { map, switchMap, tap, share, BehaviorSubject } from "../rxjs.ts";
 
 import type { Graph, Iri, Quad } from "../rdf.ts";
 import { bindingsQuery, quadsQuery, updateQuery } from "../engine.ts";

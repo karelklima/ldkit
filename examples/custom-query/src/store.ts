@@ -1,10 +1,10 @@
 import {
+  type SchemaInterface,
   createResource,
   createNamespace,
   createDefaultContext,
-} from "@ldkit/core";
-import type { SchemaInterface } from "@ldkit/core";
-import { xsd, skos, dcterms } from "@ldkit/namespaces";
+} from "ldkit";
+import { xsd, skos, dcterms } from "ldkit/namespaces";
 
 export const popisDat = createNamespace({
   iri: "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/",
@@ -45,7 +45,7 @@ const SearchSchema = {
   vocabularyTitle: dcterms.title,
 } as const;
 
-const customFetch = (resource: RequestInfo, init?: RequestInit) => {
+const customFetch = (input: string | Request | URL, init?: RequestInit) => {
   console.log("CUSTOM FETCH FETCHING");
   const headers = init?.headers as Headers;
   const ct = (init?.headers as Headers).get("Content-type");
@@ -56,15 +56,14 @@ const customFetch = (resource: RequestInfo, init?: RequestInit) => {
       "application/x-www-form-urlencoded; charset=UTF-8"
     );
   }
-  return fetch(resource, init);
+  return fetch(input, init);
 };
 
 createDefaultContext({
   sources: [
     {
       type: "sparql",
-      value:
-        "https://xn--slovnk-7va.gov.cz/prohlizime/sluzby/db-server/repositories/termit",
+      value: "https://xn--slovnk-7va.gov.cz/sparql",
     },
   ],
   fetch: customFetch,

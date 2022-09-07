@@ -1,6 +1,3 @@
-node_modules
-dist
-!docs/.vitepress/dist
-.parcel-cache
-tsconfig.tsbuildinfo
 npm
+docs/_cache
+docs/_site

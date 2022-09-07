@@ -5,8 +5,9 @@ import type {
   Variable,
   Quad,
   Term,
+  Bindings,
 } from "https://esm.sh/rdf-js@4.0.2";
-export type { NamedNode, BlankNode, Literal, Variable, Quad, Term };
+export type { NamedNode, BlankNode, Literal, Variable, Quad, Term, Bindings };
 
 export { fromRdf, toRdf } from "https://esm.sh/rdf-literal@1.3.0";
 

@@ -1,9 +1,9 @@
-import { QueryEngine } from "https://esm.sh/@comunica/query-sparql@2.4.2?bundle";
+import { QueryEngine } from "https://esm.sh/@comunica/query-sparql";
 
 import { from, map, switchMap } from "./rxjs.ts";
 
 import { Context, resolveContext } from "./context.ts";
-import { quadsToGraph } from "./rdf.ts";
+import { type Bindings, type Quad, quadsToGraph } from "./rdf.ts";
 
 const engine = new QueryEngine();
 
@@ -12,13 +12,15 @@ export const booleanQuery = (query: string, context?: Context) =>
 
 export const bindingsQuery = (query: string, context?: Context) =>
   from(engine.queryBindings(query, resolveContext(context))).pipe(
-    switchMap((stream) => from(stream.toArray()))
+    switchMap((stream) =>
+      from((stream as any).toArray() as Promise<Bindings[]>)
+    ),
   );
 
 export const quadsQuery = (query: string, context?: Context) =>
   from(engine.queryQuads(query, resolveContext(context))).pipe(
-    switchMap((stream) => from(stream.toArray())),
-    map((quads) => quadsToGraph(quads))
+    switchMap((stream) => from((stream as any).toArray() as Promise<Quad[]>)),
+    map((quads) => quadsToGraph(quads)),
   );
 
 export const updateQuery = (query: string, context?: Context) =>
