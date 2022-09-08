@@ -8,6 +8,8 @@
     "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.0.1",
     "twind": "https://esm.sh/twind@0.16.17",
     "twind/": "https://esm.sh/twind@0.16.17/",
-    "$std/": "https://deno.land/std@0.150.0/"
+    "$std/": "https://deno.land/std@0.150.0/",
+
+    "https://esm.sh/v94/web-streams-ponyfill@1.4.2/deno/web-streams-ponyfill.js": "https://esm.sh/v77/web-streams-ponyfill@1.4.2/deno/web-streams-ponyfill.js"
   }
 }

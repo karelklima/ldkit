@@ -1,22 +1,22 @@
-import { describe, it, assertThrows, assertEquals } from "./test_deps.ts";
+import { assertEquals, assertThrows, describe, it } from "./test_deps.ts";
 import { createGraph, x } from "./test_utils.ts";
 
-import { decode } from "$/decoder.ts";
-import type { Schema } from "$/schema/mod.ts";
-import type { LibraryContext } from "$/context.ts";
-import { xsd } from "$/namespaces/mod.ts";
+import { decode } from "../library/decoder.ts";
+import type { Schema } from "../library/schema/mod.ts";
+import type { LibraryContext } from "../library/context.ts";
+import { xsd } from "../library/namespaces/mod.ts";
 
 const decodeGraph = (
   turtle: string,
   schema: Schema,
-  context: LibraryContext = {}
+  context: LibraryContext = {},
 ) => decode(createGraph(turtle), schema, context);
 
 const evaluate = (
   turtle: string,
   schema: Schema,
   result: Record<string, unknown>[],
-  context?: LibraryContext
+  context?: LibraryContext,
 ) => assertEquals(decodeGraph(turtle, schema, context), result);
 
 describe("Decoder", () => {

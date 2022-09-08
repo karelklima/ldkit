@@ -1,16 +1,16 @@
 import { concat, lastValueFrom, Observable, take } from "https://esm.sh/rxjs";
-import { Store, Parser } from "https://esm.sh/n3";
+import { Parser, Store } from "https://esm.sh/n3";
 
-import { Context, createContext } from "$/context.ts";
+import { Context, createContext } from "../library/context.ts";
 import {
   DataFactory,
-  quad,
   Quad,
+  quad,
+  quadsToGraph,
   Term,
   variable,
-  quadsToGraph,
-} from "$/rdf.ts";
-import { ldkit, xsd, schema } from "$/namespaces/mod.ts";
+} from "../library/rdf.ts";
+import { ldkit, schema, xsd } from "../library/namespaces/mod.ts";
 
 export type Equals<A, B> = A extends B ? (B extends A ? true : false) : false;
 
@@ -24,7 +24,7 @@ export const x = new Proxy(
     get: function (_target, prop, _receiver) {
       return `${X_NAMESPACE}${String(prop)}`;
     },
-  }
+  },
 ) as Record<string, string>;
 
 // Helper data factory wrapper compatible with N3
@@ -60,7 +60,7 @@ const convertPseudoVariables = (q: Quad) => {
     convertPseudoVariable(q.subject),
     convertPseudoVariable(q.predicate),
     convertPseudoVariable(q.object),
-    convertPseudoVariable(q.graph)
+    convertPseudoVariable(q.graph),
   );
 };
 
@@ -102,5 +102,5 @@ export const emptyStore = async (store: Store) => {
 
 export const run = <T>(...args: [...Observable<any>[], Observable<T>]) =>
   lastValueFrom<T>(
-    concat(...args.map((obs: Observable<any>) => obs.pipe(take(1))))
+    concat(...args.map((obs: Observable<any>) => obs.pipe(take(1)))),
   );

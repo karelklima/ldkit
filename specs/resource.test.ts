@@ -1,24 +1,24 @@
 import {
-  describe,
-  it,
-  beforeEach,
-  assertEquals,
-  equal,
   assert,
+  assertEquals,
+  beforeEach,
+  describe,
+  equal,
+  it,
 } from "./test_deps.ts";
 
 import {
   createStore,
   createStoreContext,
+  emptyStore,
   run,
   ttl,
   x,
-  emptyStore,
 } from "./test_utils.ts";
 
-import { createResource } from "$/resource/mod.ts";
-import { rdf, xsd } from "$/namespaces/mod.ts";
-import { quad, variable, literal, namedNode } from "$/rdf.ts";
+import { createResource } from "../library/resource/mod.ts";
+import { rdf, xsd } from "../library/namespaces/mod.ts";
+import { literal, namedNode, quad, variable } from "../library/rdf.ts";
 
 const assertContainsEqual = (haystack: unknown[], needle: unknown) => {
   let found = false;
@@ -121,7 +121,7 @@ describe("Resource", () => {
 
   it("Get multiple resources by IRI", async () => {
     const result = await run(
-      directors.findByIris([Tarantino.$id, Kubrick.$id])
+      directors.findByIris([Tarantino.$id, Kubrick.$id]),
     );
 
     assertContainsEqual(result, Tarantino);
@@ -140,7 +140,7 @@ describe("Resource", () => {
     const condition = quad(
       variable("iri"),
       namedNode(x.name),
-      literal("Quentin Tarantino")
+      literal("Quentin Tarantino"),
     );
     const result = await run(directors.find([condition]));
 
@@ -175,7 +175,7 @@ describe("Resource", () => {
         director: { $id: x.QuentinTarantino },
         released: { date: new Date("2008-01-01") },
       }),
-      movies.findByIri(x.IngloriousBasterds)
+      movies.findByIri(x.IngloriousBasterds),
     );
 
     assertEquals(result?.name, "Inglorious Basterds");
@@ -193,9 +193,9 @@ describe("Resource", () => {
         {
           $id: Tarantino.$id,
           name: "Tarantino Quentin",
-        }
+        },
       ),
-      directors.find()
+      directors.find(),
     );
 
     assertContainsEqual(result, { ...Tarantino, name: "Tarantino Quentin" });
@@ -220,7 +220,7 @@ describe("Resource", () => {
   it("Delete multiple resources", async () => {
     const dirs = await run(
       directors.delete(Tarantino, Kubrick),
-      directors.find()
+      directors.find(),
     );
     assertEquals(dirs.length, 0);
   });
@@ -234,10 +234,10 @@ describe("Resource", () => {
         quad(
           namedNode(x.ChristopherNolan),
           namedNode(x.name),
-          literal("Christopher Nolan")
-        )
+          literal("Christopher Nolan"),
+        ),
       ),
-      directors.findByIri(x.ChristopherNolan)
+      directors.findByIri(x.ChristopherNolan),
     );
     assertEquals(result, {
       $id: x.ChristopherNolan,
@@ -257,10 +257,10 @@ describe("Resource", () => {
         quad(
           namedNode(x.ChristopherNolan),
           namedNode(rdf.type),
-          namedNode(x.CustomType)
-        )
+          namedNode(x.CustomType),
+        ),
       ),
-      directors.findByIri(x.ChristopherNolan)
+      directors.findByIri(x.ChristopherNolan),
     );
     assertEquals(result, {
       $id: x.ChristopherNolan,
@@ -277,7 +277,7 @@ describe("Resource", () => {
         name: "Kill Bill",
         director: { $id: x.QuentinTarantino },
       }),
-      movies.findByIri(x.KillBill)
+      movies.findByIri(x.KillBill),
     );
 
     assertEquals(result?.$type, [x.Movie, x.TarantinoMovie]);

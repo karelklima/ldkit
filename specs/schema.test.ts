@@ -1,9 +1,9 @@
-import { describe, it, assertEquals, assertTypeSafe } from "./test_deps.ts";
-import { x, Equals } from "./test_utils.ts";
+import { assertEquals, assertTypeSafe, describe, it } from "./test_deps.ts";
+import { Equals, x } from "./test_utils.ts";
 
-import { Schema, expandSchema } from "$/schema/mod.ts";
-import type { SchemaInterface } from "$/schema/mod.ts";
-import { xsd } from "$/namespaces/mod.ts";
+import { expandSchema, Schema } from "../library/schema/mod.ts";
+import type { SchemaInterface } from "../library/schema/mod.ts";
+import { xsd } from "../library/namespaces/mod.ts";
 
 type ThingType = {
   $id: string;

@@ -1,16 +1,16 @@
-import { describe, it, assertEquals } from "./test_deps.ts";
+import { assertEquals, describe, it } from "./test_deps.ts";
 import { ttl, x } from "./test_utils.ts";
 
-import { encode } from "$/encoder.ts";
-import type { Schema } from "$/schema/mod.ts";
-import type { LibraryContext } from "$/context.ts";
-import { xsd } from "$/namespaces/mod.ts";
+import { encode } from "../library/encoder.ts";
+import type { Schema } from "../library/schema/mod.ts";
+import type { LibraryContext } from "../library/context.ts";
+import { xsd } from "../library/namespaces/mod.ts";
 
 const evaluate = (
   node: Record<string, unknown>,
   schema: Schema,
   turtle: string,
-  context: LibraryContext = {}
+  context: LibraryContext = {},
 ) => assertEquals(encode(node, schema, context), ttl(turtle));
 
 describe("Encoder", () => {
