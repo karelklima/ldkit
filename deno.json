@@ -1,10 +1,14 @@
 {
-  "importMap": "import_map.json",
+  "importMap": ".vscode/import_map.json",
   "tasks": {
     "test": "deno test --allow-env ./specs",
     "dnt": "deno run -A ./scripts/dnt.ts",
     "lume": "deno eval \"import 'lume/task.ts'\" --",
     "docs": "deno task --cwd docs lume -s",
     "docs:build": "deno task --cwd docs lume"
+  },
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact"
   }
 }

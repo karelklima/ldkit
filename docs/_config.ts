@@ -30,7 +30,8 @@ const site = lume(
 
 site
   .ignore("README.md")
-  .ignore("scripts")
+  .ignore("scripts/components")
+  .ignore("scripts/vendor")
   .copy("static", ".")
   .data("cache_busting", `v${Date.now()}`)
   .use(codeHighlight())

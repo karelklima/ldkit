@@ -1,12 +1,13 @@
 layout: layouts/landing.njk
-title: Lume, the static site generator for Deno
-description: Support for multiple file formats like Markdown, YAML, JavaScript, TypeScript, JSX, Nunjucks etc.
+title: LDkit, the RDF framework for browser, Deno and Node
+description: Query RDF data from anywhere without using RDF.
 header:
-  title: The <span>fast & flexible</span> static site generator for Deno
+  title: LDkit
+  subtitle: The <span>fast & flexible</span> static site generator for Deno
 
 install:
   title: "Run the following to [setup Lume](./docs/overview/installation.md):"
-  code: deno run -A https://deno.land/x/lume/init.ts
+  code: npm i ldkit
   url: /docs/getting-started/your-first-page/
 
 usage:
