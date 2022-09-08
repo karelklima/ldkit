@@ -1,3 +1,0 @@
-imagick:
-  resize: [600, 600]
-  format: webp
