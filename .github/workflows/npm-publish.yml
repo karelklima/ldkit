@@ -3,8 +3,9 @@
 name: Publish Node.js Packages
 
 on:
-  release:
-    types: [created]
+  #release:
+  #  types: [created]
+  workflow_dispatch:
 
 jobs:
   publish:
