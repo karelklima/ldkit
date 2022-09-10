@@ -2,7 +2,7 @@
   "importMap": ".vscode/import_map.json",
   "tasks": {
     "test": "deno test --allow-env ./specs",
-    "dnt": "deno run -A ./scripts/dnt.ts"
+    "dnt": "deno run -A --importmap ./scripts/dnt_import_map.json ./scripts/dnt.ts"
   },
   "compilerOptions": {
     "jsx": "react-jsx",

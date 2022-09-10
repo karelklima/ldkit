@@ -1,16 +1,16 @@
 import type { LibraryContext } from "./context.ts";
 import {
-  toRdf,
-  Quad,
-  Iri,
-  Literal,
-  NamedNode,
   BlankNode,
   DataFactory,
+  Iri,
+  Literal,
   literal,
+  NamedNode,
+  Quad,
+  toRdf,
   Variable,
 } from "./rdf.ts";
-import type { Schema, Property } from "./schema/mod.ts";
+import type { Property, Schema } from "./schema/mod.ts";
 import { rdf, xsd } from "./namespaces/mod.ts";
 
 type DecodedNode = Record<string, unknown>;
@@ -21,7 +21,7 @@ export const encode = (
   node: DecodedNode,
   schema: Schema,
   context: LibraryContext,
-  variableInitCounter = 0
+  variableInitCounter = 0,
 ) => {
   return Encoder.encode(node, schema, context, variableInitCounter);
 };
@@ -46,7 +46,7 @@ class Encoder {
     node: DecodedNode,
     schema: Schema,
     context: LibraryContext,
-    variableInitCounter: number
+    variableInitCounter: number,
   ) {
     return new Encoder(context, variableInitCounter).encode(node, schema);
   }
@@ -61,7 +61,7 @@ class Encoder {
   push(
     s: NamedNode | BlankNode,
     p: NamedNode,
-    o: NamedNode | BlankNode | Literal | Variable
+    o: NamedNode | BlankNode | Literal | Variable,
   ) {
     this.output.push(this.df.quad(s, p, o));
   }
@@ -111,7 +111,7 @@ class Encoder {
       this.push(
         nodeId,
         propertyId,
-        this.df.variable(`v${this.variableCounter++}`)
+        this.df.variable(`v${this.variableCounter++}`),
       );
       return;
     }
@@ -125,7 +125,7 @@ class Encoder {
           this.push(
             nodeId,
             propertyId,
-            literal(singleValue, language.length > 0 ? language : undefined)
+            literal(singleValue, language.length > 0 ? language : undefined),
           );
         });
       });
@@ -142,7 +142,7 @@ class Encoder {
         return;
       }
 
-      const propertyType = property["@type"] ?? xsd.string;
+      const propertyType = property["@type"] ? property["@type"] : xsd.string;
 
       if (typeof val === "string" && this.context.language) {
         if (propertyType === xsd.string || propertyType === rdf.langString) {
@@ -152,7 +152,7 @@ class Encoder {
       }
 
       const rdfValue = toRdf(val, {
-        datatype: this.df.namedNode(property["@type"] ?? xsd.string),
+        datatype: this.df.namedNode(propertyType),
       });
       this.push(nodeId, propertyId, rdfValue);
     });

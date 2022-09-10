@@ -1,37 +1,39 @@
-import { build, emptyDir } from "https://deno.land/x/dnt/mod.ts";
+import { build, emptyDir } from "https://deno.land/x/dnt@0.30.0/mod.ts";
 
 await emptyDir("./npm");
+
+const exports = ["namespaces", "rdf", "sparql"];
+const dntExports = exports.map((e) => ({
+  name: `./${e}`,
+  path: `./${e}.ts`,
+}));
 
 await build({
   entryPoints: [
     "./mod.ts",
-    {
-      name: "./namespaces",
-      path: "./library/namespaces/mod.ts",
-    },
-    {
-      name: "./rdf",
-      path: "./library/rdf.ts",
-    },
-    {
-      name: "./sparql",
-      path: "./library/sparql.ts",
-    },
+    ...dntExports,
   ],
   outDir: "./npm",
+  importMap: "./scripts/dnt_import_map.json",
+  compilerOptions: {
+    //target: "ES5",
+  },
   shims: {
     // see JS docs for overview and more options
     // deno: true,
     // undici: true,
   },
   test: false,
-  typeCheck: false,
+  typeCheck: true,
   declaration: true,
   package: {
     // package.json properties
     name: "ldkit",
     version: Deno.args[0],
-    description: "LDKit",
+    description: "LDkit, a Linked Data query toolkit for TypeScript developers",
+    homepage: "https://ldkit.io",
+    author: "Karel Klima <karelklima@gmail.com> (https://karelklima.com)",
+    keywords: ["linked data, rdf, sparql"],
     license: "MIT",
     repository: {
       type: "git",
@@ -42,6 +44,21 @@ await build({
     },
   },
 });
+
+console.info("Creating legacy node exports");
+for (const e of exports) {
+  const packageContents = {
+    main: `../script/${e}.js`,
+    module: `../esm/${e}.js`,
+    types: `../types/${e}.d.ts`,
+  };
+  Deno.mkdirSync(`npm/${e}`);
+  Deno.writeTextFileSync(
+    `npm/${e}/package.json`,
+    JSON.stringify(packageContents),
+  );
+}
+console.info("Done creating legacy node exports");
 
 // post build steps
 Deno.copyFileSync("LICENSE", "npm/LICENSE");
