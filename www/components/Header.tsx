@@ -1,9 +1,12 @@
-export function Header() {
+import { FunctionalComponent } from "https://esm.sh/v94/preact@10.10.6/src/index.d.ts";
+import { IconGitHub } from "./Icons.tsx";
+
+export function Header(props: { activeLink: ActiveLink }) {
   return (
     <div class="sticky top-0 bg-white bg-opacity-90 border-b-1 border-dark-50 border-opacity-90">
       <header class="container mx-auto px-4 flex flex-row items-center justify-between">
         <Logo />
-        <Menu />
+        <Menu {...props} />
       </header>
     </div>
   );
@@ -12,7 +15,7 @@ export function Header() {
 function Logo() {
   return (
     <h1 class="text-2xl font-black">
-      <a href="/" class="inline-block">
+      <a href="/" class="inline-block hover:text-gray-700">
         <img src="/logo.svg" class="inline-block mb-1 mr-1" />
         <span class="inline-block pb-1">LDkit</span>
       </a>
@@ -20,7 +23,7 @@ function Logo() {
   );
 }
 
-const menuItems: MenuItemProps[] = [
+const menuItems = [
   {
     title: "Home",
     url: "/",
@@ -41,13 +44,17 @@ const menuItems: MenuItemProps[] = [
     title: "GitHub",
     url: "https://github.com/karelklima/ldkit",
   },
-];
+] as const;
 
-function Menu() {
+type Writeable<T> = { -readonly [P in keyof T]: T[P] };
+type Unpacked<T> = T extends (infer U)[] ? U : T;
+export type ActiveLink = Unpacked<Writeable<typeof menuItems>>["url"];
+
+function Menu(props: { activeLink: ActiveLink }) {
   return (
     <nav>
       <ul>
-        {menuItems.map(MenuItem)}
+        {menuItems.map((item) => MenuItem({ ...item, ...props }))}
       </ul>
     </nav>
   );
@@ -56,14 +63,20 @@ function Menu() {
 type MenuItemProps = {
   title: string;
   url: string;
+  activeLink: ActiveLink;
 };
 
-function MenuItem({ title, url }: MenuItemProps) {
+const baseLinkClass = "block p-4 border-b-2 hover:border-black";
+
+function MenuItem({ title, url, activeLink }: MenuItemProps) {
+  const linkClass = url === activeLink
+    ? `${baseLinkClass} border-black bg-gray-50`
+    : `${baseLinkClass} border-transparent`;
   return (
     <li class="inline-block">
       <a
         href={url}
-        class="block p-4 border-b-2 border-transparent hover:border-black"
+        class={linkClass}
       >
         {title}
       </a>

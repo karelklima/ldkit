@@ -1,0 +1,26 @@
+{
+  "about-ldkit": {
+    "title": "About LDkit"
+  },
+  "getting-started": {
+    "title": "Getting Started",
+    "pages": [
+      ["create-a-namespace", "Create a namespace"],
+      ["create-a-schema", "Create a schema"],
+      ["create-a-resource", "Create a resource"]
+    ]
+  },
+  "components": {
+    "title": "Components",
+    "pages": [
+      ["schema", "Schema"],
+      ["resource", "Resource"],
+      ["namespaces", "Namespaces"],
+      ["rdf", "RDF"],
+      ["sparql", "SPARQL"],
+      ["react", "React"],
+      ["decoder", "Decoder"],
+      ["encoder", "Encoder"]
+    ]
+  }
+}
