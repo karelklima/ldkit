@@ -1,4 +1,4 @@
-import { QueryEngine } from "https://esm.sh/@comunica/query-sparql";
+import { QueryEngine } from "https://esm.sh/@comunica/query-sparql@2.4.3";
 
 import { from, map, switchMap } from "./rxjs.ts";
 

@@ -15,9 +15,16 @@ export function Footer() {
           >
             deno.land/x/ldkit
           </a>
+          <a
+            class="m-2 inline-block"
+            href="https://www.npmjs.com/package/ldkit"
+          >
+            npmjs.com/package/ldkit
+          </a>
         </p>
         <p class="text-center p-2 pb-6">
-          &copy; 2022 &ndash; present Karel Klima
+          &copy; 2022 &ndash; present{" "}
+          <a href="https://karelklima.com">Karel Klima</a>
         </p>
       </footer>
     </div>
