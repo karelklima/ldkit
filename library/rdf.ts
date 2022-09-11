@@ -1,13 +1,17 @@
 import type {
-  NamedNode,
+  Bindings,
   BlankNode,
   Literal,
-  Variable,
+  NamedNode,
   Quad,
   Term,
-  Bindings,
+  Variable,
 } from "https://esm.sh/rdf-js@4.0.2";
-export type { NamedNode, BlankNode, Literal, Variable, Quad, Term, Bindings };
+export type { Bindings, BlankNode, Literal, NamedNode, Quad, Term, Variable };
+
+import type * as RDF from "https://esm.sh/rdf-js@4.0.2";
+
+export type { RDF };
 
 export { fromRdf, toRdf } from "https://esm.sh/rdf-literal@1.3.0";
 
@@ -21,27 +25,27 @@ export type Node = Map<Iri, Term[]>;
 export type Graph = Map<Iri, Node>;
 
 export const namedNode = <Iri extends string = string>(
-  value: Iri
+  value: Iri,
 ): NamedNode<Iri> => new DataFactory.NamedNode(value);
 
 export const blankNode = (value: string) => new DataFactory.BlankNode(value);
 
 export const literal = (
   value: string,
-  languageOrDatatype?: string | NamedNode
+  languageOrDatatype?: string | NamedNode,
 ): Literal => new DataFactory.Literal(value, languageOrDatatype);
 
 export const quad = (
   subject: Quad["subject"],
   predicate: Quad["predicate"],
   object: Quad["object"],
-  graph?: Quad["graph"]
+  graph?: Quad["graph"],
 ): Quad =>
   new DataFactory.Quad(
     subject,
     predicate,
     object,
-    graph || DataFactory.DefaultGraph.INSTANCE
+    graph || DataFactory.DefaultGraph.INSTANCE,
   ) as Quad;
 
 export const variable = (value: string): Variable =>
@@ -60,3 +64,23 @@ export const quadsToGraph = (quads: Quad[]) => {
   }
   return graph;
 };
+
+export declare namespace RDFJSON {
+  type Term = {
+    type: "uri" | "literal" | "bnode";
+    value: string;
+    "xml:lang"?: string;
+    datatype?: string;
+  };
+  type Bindings = Record<string, Term>;
+}
+
+//export type { RDFJSON };
+
+/*type JsonTerm = {
+  type: "uri" | "literal" | "bnode";
+  value: string;
+  "xml:lang"?: string;
+  datatype?: string;
+};
+type JsonBindings = Record<string, JsonTerm>;*/

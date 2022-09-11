@@ -1,6 +1,6 @@
-import type { LibraryContext } from "./context.ts";
+import type { Context } from "./context.ts";
 import { fromRdf, Graph, Iri, Node, Term } from "./rdf.ts";
-import type { Schema, Property } from "./schema/mod.ts";
+import type { Property, Schema } from "./schema/mod.ts";
 import { ldkit, rdf } from "./namespaces/mod.ts";
 
 type DecodedNode = Record<string, unknown>;
@@ -8,17 +8,17 @@ type DecodedNode = Record<string, unknown>;
 class Decoder {
   private graph: Graph;
   private schema: Schema;
-  private context: LibraryContext;
+  private context: Context;
 
   private cache: Map<Schema, Map<Iri, DecodedNode>> = new Map();
 
-  private constructor(graph: Graph, schema: Schema, context: LibraryContext) {
+  private constructor(graph: Graph, schema: Schema, context: Context) {
     this.graph = graph;
     this.schema = schema;
     this.context = context;
   }
 
-  static decode(graph: Graph, schema: Schema, context: LibraryContext) {
+  static decode(graph: Graph, schema: Schema, context: Context) {
     return new Decoder(graph, schema, context).decode();
   }
 
@@ -40,9 +40,14 @@ class Decoder {
     const output: DecodedNode[] = [];
 
     for (const [iri, properties] of this.graph) {
+      console.warn("IRI", iri);
       if (properties.has(rdf.type)) {
         const types = properties.get(rdf.type)!;
         for (const type of types) {
+          console.warn("TYPE", type.value);
+          if (type.value === ldkit.Resource) {
+            console.warn("FOUND", type);
+          }
           if (type.termType === "NamedNode" && type.value === ldkit.Resource) {
             output.push(this.decodeNode(iri, this.schema));
           }
@@ -52,7 +57,7 @@ class Decoder {
 
     if (this.graph.size > 0 && output.length < 1) {
       throw new Error(
-        `Unable to decode graph - no resources with type <${ldkit.Resource}> found`
+        `Unable to decode graph - no resources with type <${ldkit.Resource}> found`,
       );
     }
 
@@ -85,7 +90,7 @@ class Decoder {
         nodeIri,
         node,
         key,
-        schema[key] as Property
+        schema[key] as Property,
       );
       if (result !== undefined) {
         output[key] = result;
@@ -114,7 +119,7 @@ class Decoder {
     nodeIri: Iri,
     node: Node,
     propertyKey: string,
-    property: Property
+    property: Property,
   ) {
     const terms = node.get(property["@id"]);
 
@@ -122,7 +127,9 @@ class Decoder {
       if (!property["@optional"]) {
         // No data, required property
         throw new Error(
-          `Required property "${propertyKey}" of type <${property["@id"]}> not found on resource <${nodeIri}>`
+          `Required property "${propertyKey}" of type <${
+            property["@id"]
+          }> not found on resource <${nodeIri}>`,
         );
       } else {
         // No data, optional property
@@ -135,7 +142,7 @@ class Decoder {
         return terms.reduce((acc, term) => {
           if (term.termType !== "Literal") {
             throw new Error(
-              `Property "${propertyKey}" data type mismatch - expected a literal, but received ${term.termType} instead on resource <${nodeIri}>`
+              `Property "${propertyKey}" data type mismatch - expected a literal, but received ${term.termType} instead on resource <${nodeIri}>`,
             );
           }
           const language = term.language;
@@ -149,7 +156,7 @@ class Decoder {
         return terms.reduce((acc, term) => {
           if (term.termType !== "Literal") {
             throw new Error(
-              `Property "${propertyKey}" data type mismatch - expected a literal, but received ${term.termType} instead on resource <${nodeIri}>`
+              `Property "${propertyKey}" data type mismatch - expected a literal, but received ${term.termType} instead on resource <${nodeIri}>`,
             );
           }
           const language = term.language;
@@ -168,7 +175,7 @@ class Decoder {
         return terms.map((term) => {
           if (term.termType !== "NamedNode" && term.termType !== "BlankNode") {
             throw new Error(
-              `Property "${propertyKey}" data type mismatch - expected a node, but received ${term.termType} instead on resource <${nodeIri}>`
+              `Property "${propertyKey}" data type mismatch - expected a node, but received ${term.termType} instead on resource <${nodeIri}>`,
             );
           }
           return this.decodeNode(term.value, property["@context"]!);
@@ -178,7 +185,7 @@ class Decoder {
         return terms.map((term) => {
           if (term.termType !== "Literal" && term.termType !== "NamedNode") {
             throw new Error(
-              `Property "${propertyKey}" data type mismatch - expected a literal or named node, but received ${term.termType} instead on resource <${nodeIri}>`
+              `Property "${propertyKey}" data type mismatch - expected a literal or named node, but received ${term.termType} instead on resource <${nodeIri}>`,
             );
           }
           return this.decodeTerm(term);
@@ -194,7 +201,7 @@ class Decoder {
         }
       }
       throw new Error(
-        `Property "${propertyKey}" data type mismatch - expected a named node for context on resource <${nodeIri}>`
+        `Property "${propertyKey}" data type mismatch - expected a named node for context on resource <${nodeIri}>`,
       );
     }
 
@@ -220,7 +227,7 @@ class Decoder {
     }
 
     throw new Error(
-      `Property "${propertyKey}" data type mismatch - expected a literal or named node instead on resource <${nodeIri}>`
+      `Property "${propertyKey}" data type mismatch - expected a literal or named node instead on resource <${nodeIri}>`,
     );
   }
 
@@ -238,7 +245,7 @@ class Decoder {
 export const decode = (
   graph: Graph,
   schema: Schema,
-  context: LibraryContext
+  context: Context,
 ) => {
   return Decoder.decode(graph, schema, context);
 };

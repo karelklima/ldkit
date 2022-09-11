@@ -1,11 +1,16 @@
 import type { QueryStringContext } from "https://esm.sh/@comunica/types@2.4.0";
 
-export type LibraryContext = Partial<{
+export type Context = Partial<{
+  [key: string]: any;
+  source: string;
+  fetch: typeof fetch;
   graph: string;
   language: string;
 }>;
 
-export type Context = LibraryContext & QueryStringContext;
+type MergeTypes<A, B> = Omit<A, keyof B> & B;
+
+export type ComunicaContext = MergeTypes<Context, QueryStringContext>;
 
 let defaultContext: Context | undefined = undefined;
 

@@ -1,4 +1,4 @@
-import type { LibraryContext } from "./context.ts";
+import type { Context } from "./context.ts";
 import {
   BlankNode,
   DataFactory,
@@ -20,14 +20,14 @@ type NodeId = NamedNode | BlankNode;
 export const encode = (
   node: DecodedNode,
   schema: Schema,
-  context: LibraryContext,
+  context: Context,
   variableInitCounter = 0,
 ) => {
   return Encoder.encode(node, schema, context, variableInitCounter);
 };
 
 class Encoder {
-  private context: LibraryContext;
+  private context: Context;
 
   private df: DataFactory = new DataFactory({
     blankNodePrefix: "b",
@@ -37,7 +37,7 @@ class Encoder {
 
   private output: Quad[] = [];
 
-  private constructor(context: LibraryContext, variableInitCounter: number) {
+  private constructor(context: Context, variableInitCounter: number) {
     this.context = context;
     this.variableCounter = variableInitCounter;
   }
@@ -45,7 +45,7 @@ class Encoder {
   static encode(
     node: DecodedNode,
     schema: Schema,
-    context: LibraryContext,
+    context: Context,
     variableInitCounter: number,
   ) {
     return new Encoder(context, variableInitCounter).encode(node, schema);

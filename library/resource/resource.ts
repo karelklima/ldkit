@@ -1,14 +1,14 @@
-import { map, switchMap, tap, share, BehaviorSubject } from "../rxjs.ts";
+import { BehaviorSubject, map, share, switchMap, tap } from "../rxjs.ts";
 
 import type { Graph, Iri, Quad } from "../rdf.ts";
-import { bindingsQuery, quadsQuery, updateQuery } from "../engine.ts";
+import { bindingsQuery, quadsQuery, updateQuery } from "../engine/mod.ts";
 import { type Context, resolveContext } from "../context.ts";
 import {
+  expandSchema,
   type Schema,
-  type SchemaPrototype,
   type SchemaInterface,
   type SchemaInterfaceIdentity,
-  expandSchema,
+  type SchemaPrototype,
 } from "../schema/mod.ts";
 import { decode } from "../decoder.ts";
 
@@ -17,7 +17,7 @@ import type { Entity } from "./types.ts";
 
 export const createResource = <T extends SchemaPrototype>(
   spec: T,
-  context?: Context
+  context?: Context,
 ) => new Resource(spec, context);
 
 export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
@@ -44,7 +44,7 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
       map((bindings) => {
         console.warn("BINDINGS", bindings);
         return parseInt(bindings[0].get("count")!.value);
-      })
+      }),
     );
   }
 
@@ -54,8 +54,9 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
     console.log(sparqlConstructQuery);
     return quadsQuery(sparqlConstructQuery, this.context).pipe(
       map((graph) => {
+        console.warn("GRAPH", graph);
         return this.decode(graph);
-      })
+      }),
     );
   }
 
@@ -66,13 +67,13 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
       switchMap(() => quadsQuery(q, this.context)),
       map((graph) => {
         return this.decode(graph);
-      })
+      }),
     );
   }
 
   findByIri(iri: Iri) {
     return this.findByIris([iri]).pipe(
-      map((result) => (result.length > 0 ? result[0] : undefined))
+      map((result) => (result.length > 0 ? result[0] : undefined)),
     );
   }
 
@@ -82,8 +83,9 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
     return this.$trigger.pipe(
       switchMap(() => quadsQuery(q, this.context)),
       map((graph) => {
+        console.warn("GRAPH", graph);
         return this.decode(graph);
-      })
+      }),
     );
   }
 
@@ -92,7 +94,7 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
 
     const result = updateQuery(query, this.context).pipe(
       tap(() => this.$trigger.next(null)),
-      share()
+      share(),
     );
     result.subscribe();
     return result;
