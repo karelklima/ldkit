@@ -18,7 +18,9 @@ import {
 
 import { createResource } from "../library/resource/mod.ts";
 import { rdf, xsd } from "../library/namespaces/mod.ts";
-import { literal, namedNode, quad, variable } from "../library/rdf.ts";
+import { DataFactory } from "../library/rdf.ts";
+
+import { QueryEngine as Comunica } from "https://esm.sh/@comunica/query-sparql@2.4.3";
 
 const assertContainsEqual = (haystack: unknown[], needle: unknown) => {
   let found = false;
@@ -91,8 +93,10 @@ const Kubrick = createDirector("StanleyKubrick", "Stanley Kubrick");
 describe("Resource", () => {
   const store = createStore();
   const context = createStoreContext(store);
-  const directors = createResource(Director, context);
-  const movies = createResource(Movie, context);
+  const engine = new Comunica();
+  const directors = createResource(Director, context, engine);
+  const movies = createResource(Movie, context, engine);
+  const _ = new DataFactory();
 
   const assertStore = (turtle: string) => {
     const storeQuads = store.getQuads(null, null, null, null);
@@ -105,7 +109,7 @@ describe("Resource", () => {
     store.addQuads(defaultStoreContent);
   });
 
-  it("Get many resources", async () => {
+  it.only("Get many resources", async () => {
     const result = await run(directors.find());
 
     assertEquals(result.length, 2);
@@ -137,10 +141,10 @@ describe("Resource", () => {
   });
 
   it("Get resource by quad condition", async () => {
-    const condition = quad(
-      variable("iri"),
-      namedNode(x.name),
-      literal("Quentin Tarantino"),
+    const condition = _.quad(
+      _.variable("iri"),
+      _.namedNode(x.name),
+      _.literal("Quentin Tarantino"),
     );
     const result = await run(directors.find([condition]));
 
@@ -231,10 +235,10 @@ describe("Resource", () => {
         $id: x.ChristopherNolan,
       }),
       directors.insertData(
-        quad(
-          namedNode(x.ChristopherNolan),
-          namedNode(x.name),
-          literal("Christopher Nolan"),
+        _.quad(
+          _.namedNode(x.ChristopherNolan),
+          _.namedNode(x.name),
+          _.literal("Christopher Nolan"),
         ),
       ),
       directors.findByIri(x.ChristopherNolan),
@@ -254,10 +258,10 @@ describe("Resource", () => {
         name: "Christopher Nolan",
       }),
       directors.deleteData(
-        quad(
-          namedNode(x.ChristopherNolan),
-          namedNode(rdf.type),
-          namedNode(x.CustomType),
+        _.quad(
+          _.namedNode(x.ChristopherNolan),
+          _.namedNode(rdf.type),
+          _.namedNode(x.CustomType),
         ),
       ),
       directors.findByIri(x.ChristopherNolan),

@@ -1,20 +1,24 @@
-import { concat, lastValueFrom, Observable, take } from "https://esm.sh/rxjs";
-import { Parser, Store } from "https://esm.sh/n3";
-
-import { Context, createContext } from "../library/context.ts";
 import {
+  concat,
+  lastValueFrom,
+  Observable,
+  take,
+} from "https://esm.sh/rxjs@7.5.6";
+import { Parser, Store } from "https://esm.sh/n3@1.16.2";
+
+import {
+  type Context,
   DataFactory,
-  Quad,
-  quad,
   quadsToGraph,
-  Term,
-  variable,
+  type RDF,
 } from "../library/rdf.ts";
 import { ldkit, schema, xsd } from "../library/namespaces/mod.ts";
 
 export type Equals<A, B> = A extends B ? (B extends A ? true : false) : false;
 
 const X_NAMESPACE = "http://x/";
+
+const dataFactory = new DataFactory();
 
 // export const x = (s: string) => `${X_NAMESPACE}${s}`;
 
@@ -47,16 +51,16 @@ const escapePseudoVariables = (turtle: string) => {
   return turtle.replace(/\?/g, "_:");
 };
 
-const convertPseudoVariable = <T extends Term>(term: T) => {
+const convertPseudoVariable = <T extends RDF.Term>(term: T) => {
   const match = term.value.match(/v[0-9]+/);
   if (term.termType === "BlankNode" && match) {
-    return variable(match[0]);
+    return dataFactory.variable(match[0]);
   }
   return term;
 };
 
-const convertPseudoVariables = (q: Quad) => {
-  return quad(
+const convertPseudoVariables = (q: RDF.Quad) => {
+  return dataFactory.quad(
     convertPseudoVariable(q.subject),
     convertPseudoVariable(q.predicate),
     convertPseudoVariable(q.object),
@@ -90,10 +94,12 @@ export const createStore = () =>
     factory: DF(),
   });
 
-export const createStoreContext = (store: Store, context?: Context) =>
-  createContext({ ...context, sources: [store] });
+export const createStoreContext = (store: Store, context?: Context) => ({
+  ...context,
+  sources: [store],
+} as Context);
 
-export const emptyStore = async (store: Store) => {
+export const emptyStore = (store: Store) => {
   const stream = store.removeMatches(null, null, null, null);
   return new Promise((resolve) => {
     stream.on("end", resolve);

@@ -1,21 +1,10 @@
-import type { Context } from "./context.ts";
-import {
-  BlankNode,
-  DataFactory,
-  Iri,
-  Literal,
-  literal,
-  NamedNode,
-  Quad,
-  toRdf,
-  Variable,
-} from "./rdf.ts";
+import { type Context, DataFactory, type Iri, type RDF, toRdf } from "./rdf.ts";
 import type { Property, Schema } from "./schema/mod.ts";
 import { rdf, xsd } from "./namespaces/mod.ts";
 
 type DecodedNode = Record<string, unknown>;
 
-type NodeId = NamedNode | BlankNode;
+type NodeId = RDF.NamedNode | RDF.BlankNode;
 
 export const encode = (
   node: DecodedNode,
@@ -35,7 +24,7 @@ class Encoder {
 
   private variableCounter: number;
 
-  private output: Quad[] = [];
+  private output: RDF.Quad[] = [];
 
   private constructor(context: Context, variableInitCounter: number) {
     this.context = context;
@@ -59,9 +48,9 @@ class Encoder {
   }
 
   push(
-    s: NamedNode | BlankNode,
-    p: NamedNode,
-    o: NamedNode | BlankNode | Literal | Variable,
+    s: RDF.Quad_Subject,
+    p: RDF.Quad_Predicate,
+    o: RDF.Quad_Object,
   ) {
     this.output.push(this.df.quad(s, p, o));
   }
@@ -125,7 +114,10 @@ class Encoder {
           this.push(
             nodeId,
             propertyId,
-            literal(singleValue, language.length > 0 ? language : undefined),
+            this.df.literal(
+              singleValue,
+              language.length > 0 ? language : undefined,
+            ),
           );
         });
       });
@@ -146,7 +138,11 @@ class Encoder {
 
       if (typeof val === "string" && this.context.language) {
         if (propertyType === xsd.string || propertyType === rdf.langString) {
-          this.push(nodeId, propertyId, literal(val, this.context.language));
+          this.push(
+            nodeId,
+            propertyId,
+            this.df.literal(val, this.context.language),
+          );
           return;
         }
       }

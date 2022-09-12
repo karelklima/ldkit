@@ -1,22 +1,22 @@
 import { assertEquals, assertThrows, describe, it } from "./test_deps.ts";
 import { createGraph, x } from "./test_utils.ts";
 
+import type { Context } from "../library/rdf.ts";
 import { decode } from "../library/decoder.ts";
 import type { Schema } from "../library/schema/mod.ts";
-import type { LibraryContext } from "../library/context.ts";
 import { xsd } from "../library/namespaces/mod.ts";
 
 const decodeGraph = (
   turtle: string,
   schema: Schema,
-  context: LibraryContext = {},
+  context: Context = { sources: ["dummy"] },
 ) => decode(createGraph(turtle), schema, context);
 
 const evaluate = (
   turtle: string,
   schema: Schema,
   result: Record<string, unknown>[],
-  context?: LibraryContext,
+  context?: Context,
 ) => assertEquals(decodeGraph(turtle, schema, context), result);
 
 describe("Decoder", () => {
@@ -340,7 +340,7 @@ describe("Decoder", () => {
       },
     ];
 
-    evaluate(input, schema, output, { language: "cs" });
+    evaluate(input, schema, output, { language: "cs", sources: ["dummy"] });
   });
 
   it("Preferred first property", () => {

@@ -1,5 +1,4 @@
-import type { Context } from "./context.ts";
-import { fromRdf, Graph, Iri, Node, Term } from "./rdf.ts";
+import { type Context, fromRdf, Graph, Iri, Node, type RDF } from "./rdf.ts";
 import type { Property, Schema } from "./schema/mod.ts";
 import { ldkit, rdf } from "./namespaces/mod.ts";
 
@@ -231,7 +230,7 @@ class Decoder {
     );
   }
 
-  decodeTerm(term: Term) {
+  decodeTerm(term: RDF.Term) {
     if (term.termType === "NamedNode") {
       return term.value;
     } else if (term.termType === "Literal") {

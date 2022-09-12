@@ -3,14 +3,14 @@ import { ttl, x } from "./test_utils.ts";
 
 import { encode } from "../library/encoder.ts";
 import type { Schema } from "../library/schema/mod.ts";
-import type { LibraryContext } from "../library/context.ts";
+import type { Context } from "../library/rdf.ts";
 import { xsd } from "../library/namespaces/mod.ts";
 
 const evaluate = (
   node: Record<string, unknown>,
   schema: Schema,
   turtle: string,
-  context: LibraryContext = {},
+  context: Context = { sources: ["dummy"] },
 ) => assertEquals(encode(node, schema, context), ttl(turtle));
 
 describe("Encoder", () => {
@@ -344,7 +344,7 @@ describe("Encoder", () => {
         x:language "CS"@cs .
     `;
 
-    evaluate(input, schema, output, { language: "cs" });
+    evaluate(input, schema, output, { language: "cs", sources: ["dummy"] });
   });
 
   it("One resource multiple schemas", () => {

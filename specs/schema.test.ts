@@ -1,8 +1,11 @@
 import { assertEquals, assertTypeSafe, describe, it } from "./test_deps.ts";
 import { Equals, x } from "./test_utils.ts";
 
-import { expandSchema, Schema } from "../library/schema/mod.ts";
-import type { SchemaInterface } from "../library/schema/mod.ts";
+import {
+  expandSchema,
+  Schema,
+  type SchemaInterface,
+} from "../library/schema/mod.ts";
 import { xsd } from "../library/namespaces/mod.ts";
 
 type ThingType = {

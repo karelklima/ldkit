@@ -1,36 +1,52 @@
-import type { RDF } from "../rdf.ts";
+import {
+  BindingsFactory,
+  type Context,
+  type IQueryEngine,
+  QuadFactory,
+  type RDF,
+  RDFJSON,
+} from "../rdf.ts";
 
-import type { Context } from "../context.ts";
-import { jsonToBindingsFactory, jsonToQuadsFactory } from "./utils.ts";
-
-export type QueryEngineContext = Context & RDF.QueryStringContext;
-
-// deno-lint-ignore no-empty-interface
-export interface QueryEngineType
-  extends
-    RDF.StringSparqlQueryable<RDF.SparqlResultSupport, QueryEngineContext> {
-}
-
-export class QueryEngine implements QueryEngineType {
-  protected getSparqlEndpoint(context?: QueryEngineContext) {
+export class QueryEngine implements IQueryEngine {
+  protected getSparqlEndpoint(context?: Context) {
     if (!context) {
       throw new Error(
         "No context supplied to QueryEngine. You need to create a default context or pass one to a resource.",
       );
     }
-    if (!context.source || typeof context.source !== "string") {
+    if (!Array.isArray(context.sources) || context.sources.length < 1) {
       throw new Error(
-        "No context source attribute defined. You need to provide a URL to a SPARQL endpoint to query.",
+        "Invalid context `sources` attribute defined. You need to provide a URL to a SPARQL endpoint to query.",
       );
     }
-    return context.source;
+    if (context.sources.length > 1) {
+      throw new Error(
+        "This query engine supports only one data source, multiple defined in `sources` property in context.",
+      );
+    }
+    const source = context.sources[0];
+    if (typeof source === "string") {
+      return source;
+    }
+    if ("value" in source && typeof source.value === "string") {
+      if ("type" in source) {
+        if (source.type === "sparql") {
+          return source.value;
+        }
+      } else {
+        return source.value;
+      }
+    }
+    throw new Error(
+      "Invalid SPARQL source defined - please provide URL to a SPARQL endpoint to query.",
+    );
   }
 
-  protected getFetch(context?: QueryEngineContext) {
+  protected getFetch(context?: Context) {
     return context && context.fetch ? context.fetch : fetch;
   }
 
-  async query(query: string, context?: QueryEngineContext) {
+  async query(query: string, context?: Context) {
     const endpoint = this.getSparqlEndpoint(context);
     const fetchFn = this.getFetch(context);
     return await fetchFn(endpoint, {
@@ -45,7 +61,7 @@ export class QueryEngine implements QueryEngineType {
 
   async queryBindings(
     query: string,
-    context?: QueryEngineContext,
+    context?: Context,
   ): Promise<RDF.ResultStream<RDF.Bindings>> {
     const result = await this.query(query, context);
     const json = await result.json();
@@ -55,15 +71,16 @@ export class QueryEngine implements QueryEngineType {
     }
 
     // Force richer type from RDF spec
+    const bindingsFactory = new BindingsFactory();
     return Array.from(
-      json.results.bindings,
-      jsonToBindingsFactory(),
+      json.results.bindings as RDFJSON.Bindings[],
+      (i) => bindingsFactory.fromJson(i),
     ) as unknown as RDF.ResultStream<RDF.Bindings>;
   }
 
   async queryBoolean(
     query: string,
-    context?: QueryEngineContext,
+    context?: Context,
   ): Promise<boolean> {
     const result = await this.query(query, context);
     const json = await result.json();
@@ -75,7 +92,7 @@ export class QueryEngine implements QueryEngineType {
 
   async queryQuads(
     query: string,
-    context?: QueryEngineContext,
+    context?: Context,
   ): Promise<RDF.ResultStream<RDF.Quad>> {
     const result = await this.query(query, context);
     const json = await result.json();
@@ -85,15 +102,16 @@ export class QueryEngine implements QueryEngineType {
     }
 
     // Force richer type from RDF spec
+    const quadFactory = new QuadFactory();
     return Array.from(
-      json.results.bindings,
-      jsonToQuadsFactory(),
+      json.results.bindings as RDFJSON.Bindings[],
+      (i) => quadFactory.fromJson(i),
     ) as unknown as RDF.ResultStream<RDF.Quad>;
   }
 
   async queryVoid(
     query: string,
-    context?: QueryEngineContext,
+    context?: Context,
   ): Promise<void> {
     await this.query(query, context);
   }

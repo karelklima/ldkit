@@ -1,8 +1,7 @@
 import { BehaviorSubject, map, share, switchMap, tap } from "../rxjs.ts";
 
-import type { Graph, Iri, Quad } from "../rdf.ts";
-import { bindingsQuery, quadsQuery, updateQuery } from "../engine/mod.ts";
-import { type Context, resolveContext } from "../context.ts";
+import type { Context, Graph, IQueryEngine, Iri, RDF } from "../rdf.ts";
+import { resolveContext } from "../global.ts";
 import {
   expandSchema,
   type Schema,
@@ -14,21 +13,25 @@ import { decode } from "../decoder.ts";
 
 import { QueryBuilder } from "./query_builder.ts";
 import type { Entity } from "./types.ts";
+import { QueryEngineProxy } from "../engine/query_engine_proxy.ts";
 
 export const createResource = <T extends SchemaPrototype>(
   spec: T,
   context?: Context,
-) => new Resource(spec, context);
+  engine?: IQueryEngine,
+) => new Resource(spec, context, engine);
 
 export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
   private readonly schema: Schema;
   private readonly context: Context;
+  private readonly engine: QueryEngineProxy;
   private readonly queryBuilder: QueryBuilder;
   private readonly $trigger = new BehaviorSubject(null);
 
-  constructor(schema: S, context?: Context) {
+  constructor(schema: S, context?: Context, engine?: IQueryEngine) {
     this.schema = expandSchema(schema);
     this.context = resolveContext(context);
+    this.engine = new QueryEngineProxy(this.context, engine);
     this.queryBuilder = new QueryBuilder(this.schema, this.context);
   }
 
@@ -40,7 +43,7 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
     const q = this.queryBuilder.countQuery();
     console.log(q);
     return this.$trigger.pipe(
-      switchMap(() => bindingsQuery(q, this.context)),
+      switchMap(() => this.engine.queryBindings(q)),
       map((bindings) => {
         console.warn("BINDINGS", bindings);
         return parseInt(bindings[0].get("count")!.value);
@@ -52,7 +55,7 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
 
   query(sparqlConstructQuery: string) {
     console.log(sparqlConstructQuery);
-    return quadsQuery(sparqlConstructQuery, this.context).pipe(
+    return this.engine.queryGraph(sparqlConstructQuery).pipe(
       map((graph) => {
         console.warn("GRAPH", graph);
         return this.decode(graph);
@@ -60,12 +63,13 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
     );
   }
 
-  find(where?: string | Quad[], limit?: number) {
+  find(where?: string | RDF.Quad[], limit?: number) {
     const q = this.queryBuilder.getQuery(where, limit);
     console.log(q);
     return this.$trigger.pipe(
-      switchMap(() => quadsQuery(q, this.context)),
+      switchMap(() => this.engine.queryGraph(q)),
       map((graph) => {
+        console.warn("GRAPH", graph);
         return this.decode(graph);
       }),
     );
@@ -81,9 +85,8 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
     const q = this.queryBuilder.getByIrisQuery(iris);
     console.log(q);
     return this.$trigger.pipe(
-      switchMap(() => quadsQuery(q, this.context)),
+      switchMap(() => this.engine.queryGraph(q)),
       map((graph) => {
-        console.warn("GRAPH", graph);
         return this.decode(graph);
       }),
     );
@@ -92,7 +95,7 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
   private updateQuery(query: string) {
     console.log(query);
 
-    const result = updateQuery(query, this.context).pipe(
+    const result = this.engine.queryVoid(query).pipe(
       tap(() => this.$trigger.next(null)),
       share(),
     );
@@ -106,7 +109,7 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
     return this.updateQuery(q);
   }
 
-  insertData(...quads: Quad[]) {
+  insertData(...quads: RDF.Quad[]) {
     const q = this.queryBuilder.insertDataQuery(quads);
 
     return this.updateQuery(q);
@@ -128,7 +131,7 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
     return this.updateQuery(q);
   }
 
-  deleteData(...quads: Quad[]) {
+  deleteData(...quads: RDF.Quad[]) {
     const q = this.queryBuilder.deleteDataQuery(quads);
 
     return this.updateQuery(q);

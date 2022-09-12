@@ -1,10 +1,9 @@
 import type { Property, Schema } from "../schema/mod.ts";
 import { getSchemaProperties } from "../schema/mod.ts";
-import { $, CONSTRUCT, SELECT, INSERT, DELETE } from "../sparql.ts";
-import { Quad, variable, namedNode, quad, Iri } from "../rdf.ts";
-import { rdf, ldkit } from "../namespaces/mod.ts";
+import { $, CONSTRUCT, DELETE, INSERT, SELECT } from "../sparql.ts";
+import { type Context, DataFactory, type Iri, type RDF } from "../rdf.ts";
+import { ldkit, rdf } from "../namespaces/mod.ts";
 import { encode } from "../encoder.ts";
-import type { Context } from "../context.ts";
 
 import type { Entity } from "./types.ts";
 import { QueryHelper } from "./query_helper.ts";
@@ -13,39 +12,45 @@ export class QueryBuilder {
   private readonly schema: Schema;
   private readonly schemaProperties: Record<string, Property>;
   private readonly context: Context;
+  private readonly df: RDF.DataFactory;
 
   constructor(schema: Schema, context: Context) {
     this.schema = schema;
     this.schemaProperties = getSchemaProperties(this.schema);
     this.context = context;
+    this.df = new DataFactory();
   }
 
   private getResourceSignature() {
-    return quad(
-      variable("iri"),
-      namedNode(rdf.type),
-      namedNode(ldkit.Resource)
+    return this.df.quad(
+      this.df.variable!("iri"),
+      this.df.namedNode(rdf.type),
+      this.df.namedNode(ldkit.Resource),
     );
   }
 
   private getTypesSignature() {
-    return quad(variable("iri"), namedNode(rdf.type), variable("iri_type"));
+    return this.df.quad(
+      this.df.variable!("iri"),
+      this.df.namedNode(rdf.type),
+      this.df.variable!("iri_type"),
+    );
   }
 
   private entitiesToQuads(entities: Entity[]) {
     const quadArrays = entities.map((entity) =>
       encode(entity, this.schema, this.context)
     );
-    return ([] as Quad[]).concat(...quadArrays);
+    return ([] as RDF.Quad[]).concat(...quadArrays);
   }
 
   private getShape(
     includeOptional = false,
     wrapOptional = true,
-    omitRootTypes = false
+    omitRootTypes = false,
   ) {
     const mainVar = "iri";
-    const conditions: (Quad | ReturnType<typeof $>)[] = [];
+    const conditions: (RDF.Quad | ReturnType<typeof $>)[] = [];
 
     const populateConditionsRecursive = (s: Schema, varPrefix: string) => {
       const rdfType = s["@type"];
@@ -54,7 +59,11 @@ export class QueryBuilder {
       if (varPrefix !== "iri" || !omitRootTypes) {
         rdfType.forEach((type) => {
           conditions.push(
-            quad(variable(varPrefix), namedNode(rdf.type), namedNode(type))
+            this.df.quad(
+              this.df.variable!(varPrefix),
+              this.df.namedNode(rdf.type),
+              this.df.namedNode(type),
+            ),
           );
         });
       }
@@ -69,16 +78,16 @@ export class QueryBuilder {
           conditions.push($`\nOPTIONAL {`);
         }
         conditions.push(
-          quad(
-            variable(varPrefix),
-            namedNode(property["@id"]),
-            variable(`${varPrefix}_${index}`)
-          )
+          this.df.quad(
+            this.df.variable!(varPrefix),
+            this.df.namedNode(property["@id"]),
+            this.df.variable!(`${varPrefix}_${index}`),
+          ),
         );
         if (typeof property["@context"] === "object") {
           populateConditionsRecursive(
             property["@context"] as Schema,
-            `${varPrefix}_${index}`
+            `${varPrefix}_${index}`,
           );
         }
         if (wrapOptional && isOptional) {
@@ -96,9 +105,9 @@ export class QueryBuilder {
     return SELECT`(count(?iri) as ?count)`.WHERE`${quads}`.build();
   }
 
-  getQuery(where?: string | Quad[], limit = 1000) {
+  getQuery(where?: string | RDF.Quad[], limit = 1000) {
     const selectSubQuery = SELECT`
-      ${variable("iri")}
+      ${this.df.variable!("iri")}
     `.WHERE`
       ${this.getShape(false, true)}
       ${where}
@@ -128,7 +137,7 @@ export class QueryBuilder {
       ${this.getTypesSignature()}
       ${this.getShape(true, true, true)}
       VALUES ?iri {
-        ${iris.map(namedNode)}
+        ${iris.map(this.df.namedNode)}
       }
     `.build();
 
@@ -140,7 +149,7 @@ export class QueryBuilder {
     return this.insertDataQuery(quads);
   }
 
-  insertDataQuery(quads: Quad[]) {
+  insertDataQuery(quads: RDF.Quad[]) {
     return INSERT.DATA`${quads}`.build();
   }
 
@@ -149,25 +158,25 @@ export class QueryBuilder {
       ?s ?p ?o
     `.WHERE`
       ?s ?p ?o .
-      VALUES ?s { ${iris.map(namedNode)} }
+      VALUES ?s { ${iris.map(this.df.namedNode)} }
     `.build();
   };
 
-  deleteDataQuery(quads: Quad[]) {
+  deleteDataQuery(quads: RDF.Quad[]) {
     return $`DELETE DATA { ${quads} }`.toString();
   }
 
   updateQuery(entities: Entity[]) {
-    const deleteQuads: Quad[] = [];
-    const insertQuads: Quad[] = [];
-    const whereQuads: Quad[] = [];
+    const deleteQuads: RDF.Quad[] = [];
+    const insertQuads: RDF.Quad[] = [];
+    const whereQuads: RDF.Quad[] = [];
 
     entities.forEach((entity, index) => {
       const helper = new QueryHelper(
         entity,
         this.schema,
         this.context,
-        1000 * index
+        1000 * index,
       );
       deleteQuads.push(...helper.getDeleteQuads());
       insertQuads.push(...helper.getInsertQuads());

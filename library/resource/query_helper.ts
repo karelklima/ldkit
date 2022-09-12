@@ -1,6 +1,5 @@
-import type { Context } from "../context.ts";
+import type { Context, RDF } from "../rdf.ts";
 import type { Property, Schema } from "../schema/mod.ts";
-import type { Quad } from "../rdf.ts";
 import { encode } from "../encoder.ts";
 import type { Entity } from "./types.ts";
 
@@ -10,14 +9,14 @@ export class QueryHelper {
   private readonly context: Context;
   private readonly variableInitCounter: number;
 
-  private quads?: Quad[];
-  private variableQuads?: Quad[];
+  private quads?: RDF.Quad[];
+  private variableQuads?: RDF.Quad[];
 
   constructor(
     entity: Entity,
     schema: Schema,
     context: Context,
-    variableInitCounter = 0
+    variableInitCounter = 0,
   ) {
     this.entity = entity;
     this.schema = schema;
@@ -31,7 +30,7 @@ export class QueryHelper {
         this.entity,
         this.schema,
         this.context,
-        this.variableInitCounter
+        this.variableInitCounter,
       );
     }
     return this.quads;
@@ -43,7 +42,7 @@ export class QueryHelper {
         this.getEntityWithReplacedVariables(),
         this.schema,
         this.context,
-        this.variableInitCounter
+        this.variableInitCounter,
       );
     }
     return this.variableQuads;
@@ -51,7 +50,7 @@ export class QueryHelper {
 
   getDeleteQuads() {
     return this.getVariableQuads().filter(
-      (quad) => quad.object.termType === "Variable"
+      (quad) => quad.object.termType === "Variable",
     );
   }
 
@@ -101,7 +100,7 @@ export class QueryHelper {
       } else {
         output[key] = this.replaceVariables(
           value as Entity,
-          property["@context"]
+          property["@context"],
         );
       }
 

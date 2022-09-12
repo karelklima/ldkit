@@ -1,14 +1,7 @@
-import {
-  assert,
-  assertEquals,
-  beforeEach,
-  describe,
-  equal,
-  it,
-} from "./test_deps.ts";
+import { assert, describe, it } from "./test_deps.ts";
 
 import {
-  createContext,
+  type Context,
   createNamespace,
   createResource,
   type SchemaInterface,
@@ -44,11 +37,10 @@ const ActorSchema = {
   birthName: dbo.birthName,
 } as const;
 
-export const createLanguageContext = (language: string) =>
-  createContext({
-    source: "https://dbpedia.org/sparql",
-    language,
-  });
+export const createLanguageContext = (language: string) => ({
+  sources: ["https://dbpedia.org/sparql"],
+  language,
+} as Context);
 
 export type ActorInterface = SchemaInterface<typeof ActorSchema>;
 

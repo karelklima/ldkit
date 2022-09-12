@@ -1,11 +1,11 @@
 import { assertEquals, assertRejects, describe, it } from "./test_deps.ts";
 
 import { QueryEngine } from "../library/engine/query_engine.ts";
-import { Bindings, Quad } from "../library/rdf.ts";
+import { type Context, type RDF } from "../library/rdf.ts";
 
 describe("Query Engine", () => {
   const engine = new QueryEngine();
-  const context = { source: "https://dbpedia.org/sparql" };
+  const context: Context = { sources: ["https://dbpedia.org/sparql"] };
 
   const q = async (query: string) => {
     const response = await engine.query(query, context);
@@ -57,7 +57,7 @@ describe("Query Engine", () => {
     const response = await engine.queryBindings(
       q,
       context,
-    ) as unknown as Bindings[];
+    ) as unknown as RDF.Bindings[];
     console.log(response);
     assertEquals(response.length, 1);
     const bindings = response[0];
@@ -78,7 +78,10 @@ describe("Query Engine", () => {
   it("Quads query", async () => {
     const q =
       `CONSTRUCT { <https://x/x> <https://x/y> <https://x/z>  } WHERE { ?s ?p ?o } LIMIT 1`;
-    const response = await engine.queryQuads(q, context) as unknown as Quad[];
+    const response = await engine.queryQuads(
+      q,
+      context,
+    ) as unknown as RDF.Quad[];
     console.log(response);
     assertEquals(response.length, 1);
     const quad = response[0];
@@ -97,11 +100,3 @@ describe("Query Engine", () => {
     }, "Non-quads query should fail");
   });
 });
-
-/*select ?x ?y ?z where {
-  BIND("x" as ?x)
-  BIND("x" as ?y)
-  BIND("x" as ?z)
-
-  ?x ?y ?z
-  }*/
