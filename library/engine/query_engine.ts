@@ -51,11 +51,13 @@ export class QueryEngine implements IQueryEngine {
     const fetchFn = this.getFetch(context);
     return await fetchFn(endpoint, {
       method: "POST",
-      body: query,
       headers: {
-        "content-type": "application/sparql-query",
         "accept": "application/sparql-results+json",
+        "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
       },
+      body: new URLSearchParams({
+        query,
+      }),
     });
   }
 

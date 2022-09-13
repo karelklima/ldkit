@@ -16,6 +16,7 @@ await build({
   outDir: "./npm",
   importMap: "./scripts/dnt_import_map.json",
   compilerOptions: {
+    lib: ["es2021", "dom"],
     //target: "ES5",
   },
   shims: {
