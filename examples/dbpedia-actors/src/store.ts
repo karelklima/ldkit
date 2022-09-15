@@ -1,11 +1,10 @@
 import {
   createResource,
   createNamespace,
-  createDefaultContext,
-  createContext,
-} from "@ldkit/core";
-import type { SchemaInterface } from "@ldkit/core";
-import { xsd } from "@ldkit/namespaces";
+  type Context,
+  type SchemaInterface
+} from "ldkit";
+import { xsd } from "ldkit/namespaces";
 
 export const dbo = createNamespace({
   iri: "http://dbpedia.org/ontology/",
@@ -38,10 +37,10 @@ const ActorSchema = {
 } as const;
 
 export const createLanguageContext = (language: string) =>
-  createContext({
+  ({
     sources: ["https://dbpedia.org/sparql"],
     language,
-  });
+  } as Context);
 
 export type ActorInterface = SchemaInterface<typeof ActorSchema>;
 

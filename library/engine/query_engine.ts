@@ -6,6 +6,10 @@ import {
   type RDF,
   RDFJSON,
 } from "../rdf.ts";
+import {
+  ArrayIterator,
+  MappingIterator,
+} from "https://esm.sh/v94/asynciterator@3.7.0";
 
 export class QueryEngine implements IQueryEngine {
   protected getSparqlEndpoint(context?: Context) {
@@ -72,10 +76,15 @@ export class QueryEngine implements IQueryEngine {
       throw new Error("Bindings SPARQL query result not found");
     }
 
-    // Force richer type from RDF spec
     const bindingsFactory = new BindingsFactory();
-    return Array.from(
-      json.results.bindings as RDFJSON.Bindings[],
+
+    const bindingsIterator = new ArrayIterator<RDFJSON.Bindings>(
+      json.results.bindings,
+    );
+
+    // TODO: review the unknown type cast
+    return new MappingIterator(
+      bindingsIterator,
       (i) => bindingsFactory.fromJson(i),
     ) as unknown as RDF.ResultStream<RDF.Bindings>;
   }
@@ -103,10 +112,15 @@ export class QueryEngine implements IQueryEngine {
       throw new Error("Quads SPARQL query result not found");
     }
 
-    // Force richer type from RDF spec
     const quadFactory = new QuadFactory();
-    return Array.from(
-      json.results.bindings as RDFJSON.Bindings[],
+
+    const bindingsIterator = new ArrayIterator<RDFJSON.Bindings>(
+      json.results.bindings,
+    );
+
+    // TODO: review the unknown type cast
+    return new MappingIterator(
+      bindingsIterator,
       (i) => quadFactory.fromJson(i),
     ) as unknown as RDF.ResultStream<RDF.Quad>;
   }

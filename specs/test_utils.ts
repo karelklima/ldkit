@@ -64,7 +64,7 @@ const convertPseudoVariables = (q: RDF.Quad) => {
     convertPseudoVariable(q.subject),
     convertPseudoVariable(q.predicate),
     convertPseudoVariable(q.object),
-    convertPseudoVariable(q.graph),
+    dataFactory.defaultGraph(),
   );
 };
 
@@ -79,7 +79,9 @@ export const ttl = (turtle: string) => {
 
   const escapedTurtle = escapePseudoVariables(prefixedTurtle);
   const df = DF();
-  const escapedQuads = new Parser({ factory: df }).parse(escapedTurtle);
+  const escapedQuads = new Parser({
+    factory: df,
+  }).parse(escapedTurtle);
   const quads = escapedQuads.map(convertPseudoVariables);
   return quads;
 };
@@ -110,3 +112,26 @@ export const run = <T>(...args: [...Observable<any>[], Observable<T>]) =>
   lastValueFrom<T>(
     concat(...args.map((obs: Observable<any>) => obs.pipe(take(1)))),
   );
+
+import { Logger as LoggerBase } from "https://esm.sh/@comunica/types@2.4.0";
+
+export class Logger extends LoggerBase {
+  trace(message: string, data?: any): void {
+    console.trace(message, data);
+  }
+  debug(message: string, data?: any): void {
+    console.debug(message, data);
+  }
+  info(message: string, data?: any): void {
+    console.info(message, data);
+  }
+  warn(message: string, data?: any): void {
+    console.warn(message, data);
+  }
+  error(message: string, data?: any): void {
+    console.error(message, data);
+  }
+  fatal(message: string, data?: any): void {
+    console.error(message, data);
+  }
+}

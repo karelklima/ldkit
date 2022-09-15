@@ -78,6 +78,10 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
   findByIri(iri: Iri) {
     return this.findByIris([iri]).pipe(
       map((result) => (result.length > 0 ? result[0] : undefined)),
+    ).pipe(
+      tap((res) => {
+        console.log("RESYKK", res);
+      }),
     );
   }
 
@@ -87,6 +91,7 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
     return this.$trigger.pipe(
       switchMap(() => this.engine.queryGraph(q)),
       map((graph) => {
+        console.warn("GRAPH", graph);
         return this.decode(graph);
       }),
     );

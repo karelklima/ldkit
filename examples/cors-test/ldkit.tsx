@@ -2,8 +2,10 @@ import React, { useEffect } from "https://esm.sh/react@17.0.2";
 import type { Context } from "https://deno.land/x/ldkit@v0.5.0/mod.ts";
 import { QueryEngine } from "https://deno.land/x/ldkit@v0.5.0/library/engine/query_engine.ts";
 
-const endpoint =
-  "https://xn--slovnk-7va.gov.cz/prohlizime/sluzby/db-server/repositories/termit";
+const endpoint = "https://dbpedia.org/sparql";
+
+//const endpoint =
+//"https://xn--slovnk-7va.gov.cz/prohlizime/sluzby/db-server/repositories/termit";
 
 const context: Context = {
   sources: [

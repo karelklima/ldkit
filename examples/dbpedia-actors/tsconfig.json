@@ -1,27 +1,8 @@
 {
-  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "noEmit": true
+    "noEmit": true,
+    "jsx": "preserve",
+    "esModuleInterop": true
   },
   "include": ["src"],
-  "references": [
-    {
-      "path": "../../library/context"
-    },
-    {
-      "path": "../../library/core"
-    },
-    {
-      "path": "../../library/namespaces"
-    },
-    {
-      "path": "../../library/rdf"
-    },
-    {
-      "path": "../../library/react"
-    },
-    {
-      "path": "../../library/sparql"
-    }
-  ]
 }

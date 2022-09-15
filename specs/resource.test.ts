@@ -11,6 +11,7 @@ import {
   createStore,
   createStoreContext,
   emptyStore,
+  Logger,
   run,
   ttl,
   x,
@@ -20,7 +21,7 @@ import { createResource } from "../library/resource/mod.ts";
 import { rdf, xsd } from "../library/namespaces/mod.ts";
 import { DataFactory } from "../library/rdf.ts";
 
-import { QueryEngine as Comunica } from "https://esm.sh/@comunica/query-sparql@2.4.3";
+import { QueryEngine as Comunica } from "https://esm.sh/@comunica/query-sparql-rdfjs@2.4.3";
 
 const assertContainsEqual = (haystack: unknown[], needle: unknown) => {
   let found = false;
@@ -92,7 +93,10 @@ const Kubrick = createDirector("StanleyKubrick", "Stanley Kubrick");
 
 describe("Resource", () => {
   const store = createStore();
-  const context = createStoreContext(store);
+  const context = createStoreContext(store, {
+    log: new Logger(),
+    sources: [{ type: "rdfjsSource", value: store }],
+  });
   const engine = new Comunica();
   const directors = createResource(Director, context, engine);
   const movies = createResource(Movie, context, engine);
@@ -109,7 +113,7 @@ describe("Resource", () => {
     store.addQuads(defaultStoreContent);
   });
 
-  it.only("Get many resources", async () => {
+  it("Get many resources", async () => {
     const result = await run(directors.find());
 
     assertEquals(result.length, 2);

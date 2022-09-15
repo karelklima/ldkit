@@ -1,9 +1,5 @@
 import styled from "@emotion/styled";
-import React, {
-  type Component,
-  type ReactElement,
-  type ReactNode,
-} from "react";
+import React, { type Component } from "react";
 
 export const MootButton = styled.button`
   display: block;
@@ -48,9 +44,9 @@ export const RowContent = styled.div`
 `;
 
 type GroupProps = {
-  start?: ReactNode;
-  content?: ReactNode;
-  end?: ReactNode;
+  start?: any;
+  content?: any;
+  end?: any;
 };
 
 export const Group: React.FC<GroupProps> = ({ start, content, end }) => {

@@ -4,15 +4,21 @@
   "author": "Karel Klima",
   "license": "MIT",
   "source": "src/index.html",
+  "scripts": {
+    "start": "parcel src/index.html"
+  },
   "dependencies": {
-    "@emotion/react": "^11.4.1",
-    "@emotion/styled": "^11.3.0",
-    "@ldkit/core": "*",
-    "@ldkit/namespaces": "*",
-    "@ldkit/rdf": "*",
-    "@ldkit/react": "*",
-    "@ldkit/sparql": "*",
-    "@mui/material": "^5.0.4",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/material": "^5.10.5",
+    "ldkit": "^0.5.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "rxjs": "^7.4.0"
-  }
+  },
+  "devDependencies": {
+    "parcel": "^2.7.0",
+    "process": "^0.11.10"
+  },
+  "prettier": {}
 }

@@ -1,9 +1,9 @@
 import React, { useCallback } from "react";
 import styled from "@emotion/styled";
 
-import { useResource } from "../../../../library/react.ts";
+// import { useResource } from "../../../../library/react.ts";
 
-import { Todos, TodoInterface } from "../store.ts";
+import { TodoInterface, Todos } from "../store.ts";
 import { Button, InvisibleButton, Row, RowContent } from "./UI.tsx";
 import { CheckedIcon, CircleIcon, RemoveIcon } from "./Icons.tsx";
 
@@ -40,33 +40,39 @@ const Item: React.FC<ItemProps> = ({ item }) => {
       <RowContent>
         {item.done ? <Done>{item.description}</Done> : item.description}
       </RowContent>
-      {item.done ? (
-        <Button onClick={handleDeleteClicked}>
-          <RemoveIcon />
-        </Button>
-      ) : (
-        <InvisibleButton />
-      )}
+      {item.done
+        ? (
+          <Button onClick={handleDeleteClicked}>
+            <RemoveIcon />
+          </Button>
+        )
+        : <InvisibleButton />}
     </Row>
   );
 };
 
 export const Items: React.FC = () => {
-  const resource = useResource(() => Todos.find());
+  //const resource = useResource(() => Todos.find());
 
-  if (resource.isLoading) {
+  /*if (resource.isLoading) {
     return <List>Loading...</List>;
   }
 
   if (resource.isError) {
     return <List>Error loading todo list...</List>;
-  }
+  }*/
 
   return (
+    <List>
+      LIST
+    </List>
+  );
+
+  /*return (
     <List>
       {resource.data.map((item, index) => (
         <Item item={item} key={index} />
       ))}
     </List>
-  );
+  );*/
 };

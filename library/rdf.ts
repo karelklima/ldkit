@@ -16,7 +16,7 @@ export type { RDF };
 export { fromRdf, toRdf } from "https://esm.sh/rdf-literal@1.3.0";
 
 import { DataFactory } from "https://esm.sh/rdf-data-factory@1.1.1";
-export { DataFactory } from "https://esm.sh/rdf-data-factory@1.1.1";
+export { DataFactory };
 
 import { BindingsFactory as ComunicaBindingsFactory } from "https://esm.sh/@comunica/bindings-factory@2.2.0";
 

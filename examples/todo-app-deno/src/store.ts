@@ -1,18 +1,20 @@
 import {
-  type SchemaInterface,
-  createResource,
   createNamespace,
-  createDefaultContext,
+  createResource,
+  type SchemaInterface,
+  setDefaultContext,
 } from "ldkit";
 import { xsd } from "ldkit/namespaces";
 
 import { Store } from "n3";
 
-const t = createNamespace({
-  iri: "https://todos/",
-  prefix: "t:",
-  terms: ["Todo", "description", "done"],
-} as const);
+const t = createNamespace(
+  {
+    iri: "https://todos/",
+    prefix: "t:",
+    terms: ["Todo", "description", "done"],
+  } as const,
+);
 
 const TodoSchema = {
   "@type": t.Todo,
@@ -25,7 +27,7 @@ const TodoSchema = {
 
 export const store = new Store();
 
-createDefaultContext({
+setDefaultContext({
   sources: [store],
 });
 

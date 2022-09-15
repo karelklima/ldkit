@@ -1,8 +1,8 @@
-import React from "https://esm.sh/react";
-import { Add } from "./Add.tsx";
+import React from "react";
+//import { Add } from "./Add.tsx";
 import { Items } from "./Items.tsx";
 
-import { Global, css } from "@emotion/react";
+import { css, Global } from "@emotion/react";
 import styled from "@emotion/styled";
 
 const globalStyles = css`
@@ -52,7 +52,9 @@ export const App = () => (
     <Card>
       <Heading>TODO</Heading>
       <Items />
-      <Add />
+      {
+        /*<Add />*/
+      }
     </Card>
     <Buffer />
   </Wrapper>
