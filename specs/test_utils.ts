@@ -5,7 +5,6 @@ import {
   take,
 } from "https://esm.sh/rxjs@7.5.6";
 import { Parser, Store } from "https://esm.sh/n3@1.16.2";
-import { ArrayIterator } from "https://esm.sh/asynciterator@3.7.0";
 
 import {
   type Context,
@@ -89,7 +88,7 @@ export const ttl = (turtle: string) => {
 
 export const createGraph = (turtle: string) => {
   const quads = ttl(turtle);
-  return quadsToGraph(new ArrayIterator(quads));
+  return quadsToGraph(quads);
 };
 
 export const createStore = () =>
@@ -113,26 +112,3 @@ export const run = <T>(...args: [...Observable<any>[], Observable<T>]) =>
   lastValueFrom<T>(
     concat(...args.map((obs: Observable<any>) => obs.pipe(take(1)))),
   );
-
-import { Logger as LoggerBase } from "https://esm.sh/@comunica/types@2.4.0";
-
-export class Logger extends LoggerBase {
-  trace(message: string, data?: any): void {
-    console.trace(message, data);
-  }
-  debug(message: string, data?: any): void {
-    console.debug(message, data);
-  }
-  info(message: string, data?: any): void {
-    console.info(message, data);
-  }
-  warn(message: string, data?: any): void {
-    console.warn(message, data);
-  }
-  error(message: string, data?: any): void {
-    console.error(message, data);
-  }
-  fatal(message: string, data?: any): void {
-    console.error(message, data);
-  }
-}

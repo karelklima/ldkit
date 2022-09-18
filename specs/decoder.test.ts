@@ -1,4 +1,4 @@
-import { assertEquals, assertThrows, describe, it } from "./test_deps.ts";
+import { assertEquals, assertThrows } from "./test_deps.ts";
 import { createGraph, x } from "./test_utils.ts";
 
 import type { Context } from "../library/rdf.ts";

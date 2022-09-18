@@ -1,4 +1,4 @@
-import { assert, describe, it } from "./test_deps.ts";
+import { assert } from "./test_deps.ts";
 
 import {
   type Context,
@@ -65,7 +65,7 @@ Deno.test("E2E / Query single remote entity", async () => {
   assert(actor.name === BradName);
 });
 
-it("E2E / Query count", async () => {
+Deno.test("E2E / Query count", async () => {
   const count = await firstValueFrom(Actors.count());
   console.log(count);
   assert(count > 0);

@@ -1,17 +1,9 @@
-import {
-  assert,
-  assertEquals,
-  beforeEach,
-  describe,
-  equal,
-  it,
-} from "./test_deps.ts";
+import { assert, assertEquals, equal } from "./test_deps.ts";
 
 import {
   createStore,
   createStoreContext,
   emptyStore,
-  Logger,
   run,
   ttl,
   x,
@@ -107,8 +99,8 @@ const init = () => {
     const expectedQuads = ttl(turtle);
     assertEquals(storeQuads, expectedQuads);
   };
-  const empty = () => {
-    emptyStore(store);
+  const empty = async () => {
+    await emptyStore(store);
   };
   return { directors, movies, assertStore, empty };
 };
@@ -121,7 +113,7 @@ Deno.test("Resource / Get many resources", async () => {
   assertContainsEqual(result, Tarantino);
   assertContainsEqual(result, Kubrick);
 });
-/*
+
 Deno.test("Resource / Get resource by IRI", async () => {
   const { directors } = init();
   const result = await run(directors.findByIri(Tarantino.$id));
@@ -233,7 +225,6 @@ Deno.test("Resource / Update multiple resources", async () => {
 
     expect(result!.released?.date).toEqual(new Date("1994-01-01"));
   }); */
-/*
 
 Deno.test("Resource / Delete multiple resources", async () => {
   const { directors } = init();
@@ -304,4 +295,3 @@ Deno.test("Resource / Support for custom types", async () => {
 
   assertEquals(result?.$type, [x.Movie, x.TarantinoMovie]);
 });
-*/

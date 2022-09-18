@@ -1,4 +1,4 @@
-import { assertEquals, assertTypeSafe, describe, it } from "./test_deps.ts";
+import { assertEquals, assertTypeSafe } from "./test_deps.ts";
 import { Equals, x } from "./test_utils.ts";
 
 import {

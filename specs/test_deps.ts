@@ -1,10 +1,4 @@
 export {
-  beforeEach,
-  describe,
-  it,
-} from "https://deno.land/std@0.153.0/testing/bdd.ts";
-
-export {
   assert,
   assertEquals,
   assertRejects,

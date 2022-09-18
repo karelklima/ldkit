@@ -1,4 +1,4 @@
-import { assertEquals, describe, it } from "./test_deps.ts";
+import { assertEquals } from "./test_deps.ts";
 import { ttl, x } from "./test_utils.ts";
 
 import { encode } from "../library/encoder.ts";
