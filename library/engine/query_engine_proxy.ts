@@ -1,7 +1,7 @@
 import { type Context, IQueryEngine, quadsToGraph, type RDF } from "../rdf.ts";
 import { resolveContext, resolveEngine } from "../global.ts";
 import { from, map, of, switchMap } from "../rxjs.ts";
-import { type AsyncIterator } from "https://esm.sh/asynciterator@3.7.0";
+import { type AsyncIterator } from "../asynciterator.ts";
 
 export class QueryEngineProxy {
   private readonly context: Context;
@@ -26,7 +26,9 @@ export class QueryEngineProxy {
 
   queryGraph(query: string) {
     return from(this.engine.queryQuads(query, this.context)).pipe(
-      switchMap((stream) => of(stream as unknown as AsyncIterator<RDF.Quad>)),
+      switchMap((stream) =>
+        from((stream as unknown as AsyncIterator<RDF.Quad>).toArray())
+      ),
       map((quads) => {
         return quadsToGraph(quads);
       }),

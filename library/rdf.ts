@@ -25,8 +25,6 @@ import type {
   IQueryContextCommon,
 } from "https://esm.sh/@comunica/types@2.4.0";
 
-import { type AsyncIterator } from "https://esm.sh/asynciterator@3.7.0";
-
 export type LDkitContext = {
   graph?: string;
   language?: string;
@@ -49,10 +47,9 @@ export type Node = Map<Iri, Term[]>;
 
 export type Graph = Map<Iri, Node>;
 
-export const quadsToGraph = (quads: AsyncIterator<RDF.Quad>) => {
+export const quadsToGraph = (quads: Quad[]) => {
   const graph: Graph = new Map();
-  let quad: RDF.Quad | null = null;
-  while ((quad = quads.read()) !== null) {
+  for (const quad of quads) {
     const s = quad.subject.value;
     const p = quad.predicate.value;
 
