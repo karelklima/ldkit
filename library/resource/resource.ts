@@ -1,5 +1,3 @@
-import { BehaviorSubject, map, share, switchMap, tap } from "../rxjs.ts";
-
 import type { Context, Graph, IQueryEngine, Iri, RDF } from "../rdf.ts";
 import { resolveContext } from "../global.ts";
 import {
@@ -26,7 +24,6 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
   private readonly context: Context;
   private readonly engine: QueryEngineProxy;
   private readonly queryBuilder: QueryBuilder;
-  private readonly $trigger = new BehaviorSubject(null);
 
   constructor(schema: S, context?: Context, engine?: IQueryEngine) {
     this.schema = expandSchema(schema);
@@ -39,73 +36,42 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
     return decode(graph, this.schema, this.context) as unknown as I[];
   }
 
-  count() {
+  async count() {
     const q = this.queryBuilder.countQuery();
     console.log(q);
-    return this.$trigger.pipe(
-      switchMap(() => this.engine.queryBindings(q)),
-      map((bindings) => {
-        console.warn("BINDINGS", bindings);
-        return parseInt(bindings[0].get("count")!.value);
-      }),
-    );
+    const bindings = await this.engine.queryBindings(q);
+    return parseInt(bindings[0].get("count")!.value);
   }
 
   //exists(entity: Identity) {}
 
-  query(sparqlConstructQuery: string) {
-    console.log(sparqlConstructQuery);
-    return this.engine.queryGraph(sparqlConstructQuery).pipe(
-      map((graph) => {
-        console.warn("GRAPH", graph);
-        return this.decode(graph);
-      }),
-    );
+  async query(sparqlConstructQuery: string) {
+    const graph = await this.engine.queryGraph(sparqlConstructQuery);
+    return this.decode(graph);
   }
 
-  find(where?: string | RDF.Quad[], limit?: number) {
+  async find(where?: string | RDF.Quad[], limit?: number) {
     const q = this.queryBuilder.getQuery(where, limit);
     console.log(q);
-    return this.$trigger.pipe(
-      switchMap(() => this.engine.queryGraph(q)),
-      map((graph) => {
-        console.warn("GRAPH", graph);
-        return this.decode(graph);
-      }),
-    );
+    const graph = await this.engine.queryGraph(q);
+    return this.decode(graph);
   }
 
-  findByIri(iri: Iri) {
-    return this.findByIris([iri]).pipe(
-      map((result) => (result.length > 0 ? result[0] : undefined)),
-    ).pipe(
-      tap((res) => {
-        console.log("RESYKK", res);
-      }),
-    );
+  async findByIri(iri: Iri) {
+    const results = await this.findByIris([iri]);
+    return results.length > 0 ? results[0] : undefined;
   }
 
-  findByIris(iris: Iri[]) {
+  async findByIris(iris: Iri[]) {
     const q = this.queryBuilder.getByIrisQuery(iris);
     console.log(q);
-    return this.$trigger.pipe(
-      switchMap(() => this.engine.queryGraph(q)),
-      map((graph) => {
-        console.warn("GRAPH", graph);
-        return this.decode(graph);
-      }),
-    );
+    const graph = await this.engine.queryGraph(q);
+    return this.decode(graph);
   }
 
   private updateQuery(query: string) {
     console.log(query);
-
-    const result = this.engine.queryVoid(query).pipe(
-      tap(() => this.$trigger.next(null)),
-      share(),
-    );
-    result.subscribe();
-    return result;
+    return this.engine.queryVoid(query);
   }
 
   insert(...entities: Entity<I>[]) {

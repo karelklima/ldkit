@@ -1,9 +1,3 @@
-import {
-  concat,
-  lastValueFrom,
-  Observable,
-  take,
-} from "https://esm.sh/rxjs@7.5.6";
 import { Parser, Store } from "https://esm.sh/n3@1.16.2";
 
 import {
@@ -107,8 +101,3 @@ export const emptyStore = (store: Store) => {
     stream.on("end", resolve);
   });
 };
-
-export const run = <T>(...args: [...Observable<any>[], Observable<T>]) =>
-  lastValueFrom<T>(
-    concat(...args.map((obs: Observable<any>) => obs.pipe(take(1)))),
-  );

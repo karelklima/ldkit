@@ -7,7 +7,6 @@ import {
   type SchemaInterface,
 } from "../mod.ts";
 import { rdfs, xsd } from "../library/namespaces/mod.ts";
-import { firstValueFrom } from "../library/rxjs.ts";
 
 export const dbo = createNamespace(
   {
@@ -58,7 +57,7 @@ export const languages = ["en", "cs", "ru", "de"];
 Deno.test("E2E / Query single remote entity", async () => {
   const BradId = "http://dbpedia.org/resource/Brad_Pitt";
   const BradName = "Brad Pitt";
-  const actor = await firstValueFrom(Actors.findByIri(favouriteActors[0]));
+  const actor = await Actors.findByIri(favouriteActors[0]);
   console.log(actor);
   assert(actor);
   assert(actor.$id === BradId);
@@ -66,7 +65,7 @@ Deno.test("E2E / Query single remote entity", async () => {
 });
 
 Deno.test("E2E / Query count", async () => {
-  const count = await firstValueFrom(Actors.count());
+  const count = await Actors.count();
   console.log(count);
   assert(count > 0);
 });
