@@ -91,81 +91,88 @@ const createDirector = ($id: string, name: string) => ({
 const Tarantino = createDirector("QuentinTarantino", "Quentin Tarantino");
 const Kubrick = createDirector("StanleyKubrick", "Stanley Kubrick");
 
-describe("Resource", () => {
+const engine = new Comunica();
+const _ = new DataFactory();
+
+const init = () => {
   const store = createStore();
+  store.addQuads(defaultStoreContent);
   const context = createStoreContext(store, {
-    log: new Logger(),
     sources: [{ type: "rdfjsSource", value: store }],
   });
-  const engine = new Comunica();
   const directors = createResource(Director, context, engine);
   const movies = createResource(Movie, context, engine);
-  const _ = new DataFactory();
-
   const assertStore = (turtle: string) => {
     const storeQuads = store.getQuads(null, null, null, null);
     const expectedQuads = ttl(turtle);
     assertEquals(storeQuads, expectedQuads);
   };
+  const empty = () => {
+    emptyStore(store);
+  };
+  return { directors, movies, assertStore, empty };
+};
 
-  beforeEach(async () => {
-    await emptyStore(store);
-    store.addQuads(defaultStoreContent);
-  });
+Deno.test("Resource / Get many resources", async () => {
+  const { directors } = init();
+  const result = await run(directors.find());
 
-  it("Get many resources", async () => {
-    const result = await run(directors.find());
+  assertEquals(result.length, 2);
+  assertContainsEqual(result, Tarantino);
+  assertContainsEqual(result, Kubrick);
+});
+/*
+Deno.test("Resource / Get resource by IRI", async () => {
+  const { directors } = init();
+  const result = await run(directors.findByIri(Tarantino.$id));
 
-    assertEquals(result.length, 2);
-    assertContainsEqual(result, Tarantino);
-    assertContainsEqual(result, Kubrick);
-  });
+  assertEquals(result, Tarantino);
+});
 
-  it("Get resource by IRI", async () => {
-    const result = await run(directors.findByIri(Tarantino.$id));
+Deno.test("Resource / Get multiple resources by IRI", async () => {
+  const { directors } = init();
+  const result = await run(
+    directors.findByIris([Tarantino.$id, Kubrick.$id]),
+  );
 
-    assertEquals(result, Tarantino);
-  });
+  assertContainsEqual(result, Tarantino);
+  assertContainsEqual(result, Kubrick);
+});
 
-  it("Get multiple resources by IRI", async () => {
-    const result = await run(
-      directors.findByIris([Tarantino.$id, Kubrick.$id]),
-    );
+Deno.test("Resource / Get resource by string condition", async () => {
+  const { directors } = init();
+  const condition = `?iri <${x.name}> "Quentin Tarantino" .`;
+  const result = await run(directors.find(condition));
 
-    assertContainsEqual(result, Tarantino);
-    assertContainsEqual(result, Kubrick);
-  });
+  assertEquals(result.length, 1);
+  assertEquals(result[0], Tarantino);
+});
 
-  it("Get resource by string condition", async () => {
-    const condition = `?iri <${x.name}> "Quentin Tarantino" .`;
-    const result = await run(directors.find(condition));
+Deno.test("Resource / Get resource by quad condition", async () => {
+  const { directors } = init();
+  const condition = _.quad(
+    _.variable("iri"),
+    _.namedNode(x.name),
+    _.literal("Quentin Tarantino"),
+  );
+  const result = await run(directors.find([condition]));
 
-    assertEquals(result.length, 1);
-    assertEquals(result[0], Tarantino);
-  });
+  assertEquals(result.length, 1);
+  assertEquals(result[0], Tarantino);
+});
 
-  it("Get resource by quad condition", async () => {
-    const condition = _.quad(
-      _.variable("iri"),
-      _.namedNode(x.name),
-      _.literal("Quentin Tarantino"),
-    );
-    const result = await run(directors.find([condition]));
+Deno.test("Resource / Count resources", async () => {
+  const { directors } = init();
+  const count = await run(directors.count());
+  assertEquals(count, 2);
+});
 
-    assertEquals(result.length, 1);
-    assertEquals(result[0], Tarantino);
-  });
+Deno.test("Resource / Insert multiple resources", async () => {
+  const { directors, empty, assertStore } = init();
+  await empty();
+  await run(directors.insert(Kubrick, Tarantino));
 
-  it("Count resources", async () => {
-    const count = await run(directors.count());
-    assertEquals(count, 2);
-  });
-
-  it("Insert multiple resources", async () => {
-    await emptyStore(store);
-    await run(directors.insert(Kubrick, Tarantino));
-
-    assertStore(`
+  assertStore(`
       x:StanleyKubrick
         a x:Director ;
         x:name "Stanley Kubrick" .
@@ -173,44 +180,46 @@ describe("Resource", () => {
         a x:Director ;
         x:name "Quentin Tarantino" .
     `);
-  });
+});
 
-  it("Insert complex resource", async () => {
-    const result = await run(
-      movies.insert({
-        $id: x.IngloriousBasterds,
-        name: "Inglorious Basterds",
-        director: { $id: x.QuentinTarantino },
-        released: { date: new Date("2008-01-01") },
-      }),
-      movies.findByIri(x.IngloriousBasterds),
-    );
+Deno.test("Resource / Insert complex resource", async () => {
+  const { movies } = init();
+  const result = await run(
+    movies.insert({
+      $id: x.IngloriousBasterds,
+      name: "Inglorious Basterds",
+      director: { $id: x.QuentinTarantino },
+      released: { date: new Date("2008-01-01") },
+    }),
+    movies.findByIri(x.IngloriousBasterds),
+  );
 
-    assertEquals(result?.name, "Inglorious Basterds");
-    assertEquals(result?.director, Tarantino);
-    assertEquals(result?.released?.date, new Date("2008-01-01"));
-  });
+  assertEquals(result?.name, "Inglorious Basterds");
+  assertEquals(result?.director, Tarantino);
+  assertEquals(result?.released?.date, new Date("2008-01-01"));
+});
 
-  it("Update multiple resources", async () => {
-    const result = await run(
-      directors.update(
-        {
-          $id: Kubrick.$id,
-          name: "Kubrick Stanley",
-        },
-        {
-          $id: Tarantino.$id,
-          name: "Tarantino Quentin",
-        },
-      ),
-      directors.find(),
-    );
+Deno.test("Resource / Update multiple resources", async () => {
+  const { directors } = init();
+  const result = await run(
+    directors.update(
+      {
+        $id: Kubrick.$id,
+        name: "Kubrick Stanley",
+      },
+      {
+        $id: Tarantino.$id,
+        name: "Tarantino Quentin",
+      },
+    ),
+    directors.find(),
+  );
 
-    assertContainsEqual(result, { ...Tarantino, name: "Tarantino Quentin" });
-    assertContainsEqual(result, { ...Kubrick, name: "Kubrick Stanley" });
-  });
+  assertContainsEqual(result, { ...Tarantino, name: "Tarantino Quentin" });
+  assertContainsEqual(result, { ...Kubrick, name: "Kubrick Stanley" });
+});
 
-  /*
+/*
   test.skip("Update nested property in resource", async () => {
     const result = await run(
       movies.update({
@@ -224,70 +233,75 @@ describe("Resource", () => {
 
     expect(result!.released?.date).toEqual(new Date("1994-01-01"));
   }); */
+/*
 
-  it("Delete multiple resources", async () => {
-    const dirs = await run(
-      directors.delete(Tarantino, Kubrick),
-      directors.find(),
-    );
-    assertEquals(dirs.length, 0);
-  });
+Deno.test("Resource / Delete multiple resources", async () => {
+  const { directors } = init();
+  const dirs = await run(
+    directors.delete(Tarantino, Kubrick),
+    directors.find(),
+  );
+  assertEquals(dirs.length, 0);
+});
 
-  it("Insert data", async () => {
-    const result = await run(
-      directors.insert({
-        $id: x.ChristopherNolan,
-      }),
-      directors.insertData(
-        _.quad(
-          _.namedNode(x.ChristopherNolan),
-          _.namedNode(x.name),
-          _.literal("Christopher Nolan"),
-        ),
-      ),
-      directors.findByIri(x.ChristopherNolan),
-    );
-    assertEquals(result, {
+Deno.test("Resource / Insert data", async () => {
+  const { directors } = init();
+  const result = await run(
+    directors.insert({
       $id: x.ChristopherNolan,
-      $type: [x.Director],
-      name: "Christopher Nolan",
-    });
-  });
-
-  it("Delete data", async () => {
-    const result = await run(
-      directors.insert({
-        $id: x.ChristopherNolan,
-        $type: [x.Director, x.CustomType],
-        name: "Christopher Nolan",
-      }),
-      directors.deleteData(
-        _.quad(
-          _.namedNode(x.ChristopherNolan),
-          _.namedNode(rdf.type),
-          _.namedNode(x.CustomType),
-        ),
+    }),
+    directors.insertData(
+      _.quad(
+        _.namedNode(x.ChristopherNolan),
+        _.namedNode(x.name),
+        _.literal("Christopher Nolan"),
       ),
-      directors.findByIri(x.ChristopherNolan),
-    );
-    assertEquals(result, {
-      $id: x.ChristopherNolan,
-      $type: [x.Director],
-      name: "Christopher Nolan",
-    });
-  });
-
-  it("Support for custom types", async () => {
-    const result = await run(
-      movies.insert({
-        $id: x.KillBill,
-        $type: [x.TarantinoMovie],
-        name: "Kill Bill",
-        director: { $id: x.QuentinTarantino },
-      }),
-      movies.findByIri(x.KillBill),
-    );
-
-    assertEquals(result?.$type, [x.Movie, x.TarantinoMovie]);
+    ),
+    directors.findByIri(x.ChristopherNolan),
+  );
+  assertEquals(result, {
+    $id: x.ChristopherNolan,
+    $type: [x.Director],
+    name: "Christopher Nolan",
   });
 });
+
+Deno.test("Resource / Delete data", async () => {
+  const { directors } = init();
+  const result = await run(
+    directors.insert({
+      $id: x.ChristopherNolan,
+      $type: [x.Director, x.CustomType],
+      name: "Christopher Nolan",
+    }),
+    directors.deleteData(
+      _.quad(
+        _.namedNode(x.ChristopherNolan),
+        _.namedNode(rdf.type),
+        _.namedNode(x.CustomType),
+      ),
+    ),
+    directors.findByIri(x.ChristopherNolan),
+  );
+  assertEquals(result, {
+    $id: x.ChristopherNolan,
+    $type: [x.Director],
+    name: "Christopher Nolan",
+  });
+});
+
+Deno.test("Resource / Support for custom types", async () => {
+  const { movies } = init();
+  const result = await run(
+    movies.insert({
+      $id: x.KillBill,
+      $type: [x.TarantinoMovie],
+      name: "Kill Bill",
+      director: { $id: x.QuentinTarantino },
+    }),
+    movies.findByIri(x.KillBill),
+  );
+
+  assertEquals(result?.$type, [x.Movie, x.TarantinoMovie]);
+});
+*/

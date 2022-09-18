@@ -13,65 +13,64 @@ const evaluate = (
   context: Context = { sources: ["dummy"] },
 ) => assertEquals(encode(node, schema, context), ttl(turtle));
 
-describe("Encoder", () => {
-  it("Minimal resource", () => {
-    const input = {
-      $id: x.A,
-    };
+Deno.test("Encoder / Minimal resource", () => {
+  const input = {
+    $id: x.A,
+  };
 
-    const output = `
+  const output = `
       x:A a x:Item .
     `;
 
-    const schema = { "@type": [x.Item] };
+  const schema = { "@type": [x.Item] };
 
-    evaluate(input, schema, output);
-  });
+  evaluate(input, schema, output);
+});
 
-  it("Resource types", () => {
-    const inputOneType = {
-      $id: x.A,
-      $type: x.Item,
-    };
+Deno.test("Encoder / Resource types", () => {
+  const inputOneType = {
+    $id: x.A,
+    $type: x.Item,
+  };
 
-    const inputFullTypes = {
-      $id: x.A,
-      $type: [x.Item],
-    };
+  const inputFullTypes = {
+    $id: x.A,
+    $type: [x.Item],
+  };
 
-    const inputExtraTypes = {
-      $id: x.A,
-      $type: [x.Item, x.OtherItem],
-    };
+  const inputExtraTypes = {
+    $id: x.A,
+    $type: [x.Item, x.OtherItem],
+  };
 
-    const output = `
+  const output = `
       x:A a x:Item .
     `;
 
-    const outputExtraTypes = `
+  const outputExtraTypes = `
       x:A a x:Item , x:OtherItem .
     `;
 
-    const schema = { "@type": [x.Item] };
+  const schema = { "@type": [x.Item] };
 
-    evaluate(inputOneType, schema, output);
-    evaluate(inputFullTypes, schema, output);
-    evaluate(inputExtraTypes, schema, outputExtraTypes);
-  });
+  evaluate(inputOneType, schema, output);
+  evaluate(inputFullTypes, schema, output);
+  evaluate(inputExtraTypes, schema, outputExtraTypes);
+});
 
-  it("Basic types", () => {
-    const input = {
-      $id: x.A,
-      $type: [x.Item],
-      string: "LDKit",
-      integer: -5,
-      decimal: 10.5,
-      double: 12345678000.5,
-      boolean: true,
-      date: new Date("2021-11-11"),
-    };
+Deno.test("Encoder / Basic types", () => {
+  const input = {
+    $id: x.A,
+    $type: [x.Item],
+    string: "LDKit",
+    integer: -5,
+    decimal: 10.5,
+    double: 12345678000.5,
+    boolean: true,
+    date: new Date("2021-11-11"),
+  };
 
-    const output = `
+  const output = `
       x:A
         a x:Item ;
         x:string "LDKit"^^xsd:string ;
@@ -82,95 +81,95 @@ describe("Encoder", () => {
         x:date "2021-11-11"^^xsd:date .
     `;
 
-    const schema = {
-      "@type": [x.Item],
-      string: {
-        "@id": x.string,
-        "@type": xsd.string,
-      },
-      integer: {
-        "@id": x.integer,
-        "@type": xsd.integer,
-      },
-      decimal: {
-        "@id": x.decimal,
-        "@type": xsd.decimal,
-      },
-      double: {
-        "@id": x.double,
-        "@type": xsd.double,
-      },
-      boolean: {
-        "@id": x.boolean,
-        "@type": xsd.boolean,
-      },
-      date: {
-        "@id": x.date,
-        "@type": xsd.date,
-      },
-    };
+  const schema = {
+    "@type": [x.Item],
+    string: {
+      "@id": x.string,
+      "@type": xsd.string,
+    },
+    integer: {
+      "@id": x.integer,
+      "@type": xsd.integer,
+    },
+    decimal: {
+      "@id": x.decimal,
+      "@type": xsd.decimal,
+    },
+    double: {
+      "@id": x.double,
+      "@type": xsd.double,
+    },
+    boolean: {
+      "@id": x.boolean,
+      "@type": xsd.boolean,
+    },
+    date: {
+      "@id": x.date,
+      "@type": xsd.date,
+    },
+  };
 
-    evaluate(input, schema, output);
-  });
+  evaluate(input, schema, output);
+});
 
-  it("Array simple property", () => {
-    const input = {
-      $id: x.A,
-      $type: [x.Item],
-      array: [1, 2, 3],
-    };
+Deno.test("Encoder / Array simple property", () => {
+  const input = {
+    $id: x.A,
+    $type: [x.Item],
+    array: [1, 2, 3],
+  };
 
-    const schema = {
-      "@type": [x.Item],
-      array: {
-        "@id": x.array,
-        "@type": xsd.integer,
-        "@array": true as const,
-      },
-    };
+  const schema = {
+    "@type": [x.Item],
+    array: {
+      "@id": x.array,
+      "@type": xsd.integer,
+      "@array": true as const,
+    },
+  };
 
-    const output = `
+  const output = `
       x:A
         a x:Item ;
         x:array 1, 2, 3 .
     `;
 
-    evaluate(input, schema, output);
-  });
+  evaluate(input, schema, output);
+});
 
-  it("Array subschema property", () => {
-    const input = {
-      $id: x.A,
-      $type: [x.Item],
-      array: [
-        {
-          $id: x.B,
-          $type: [x.SubItem],
-          value: "value B",
-        },
-        {
-          $id: x.C,
-          $type: [x.SubItem],
-          value: "value C",
-        },
-      ],
-    };
+Deno.test("Encoder / Array subschema property", () => {
+  const input = {
+    $id: x.A,
+    $type: [x.Item],
+    array: [
+      {
+        $id: x.B,
+        $type: [x.SubItem],
+        value: "value B",
+      },
+      {
+        $id: x.C,
+        $type: [x.SubItem],
+        value: "value C",
+      },
+    ],
+  };
 
-    const schema = {
-      "@type": [x.Item],
-      array: {
-        "@id": x.array,
-        "@array": true as const,
-        "@context": {
-          "@type": [x.SubItem],
-          value: {
-            "@id": x.value,
-          },
+  const schema = {
+    "@type": [x.Item],
+    array: {
+      "@id": x.array,
+      "@array": true as const,
+      "@context": {
+        "@type": [x.SubItem],
+        value: {
+          "@id": x.value,
         },
       },
-    };
+    },
+  };
 
-    const output = `
+  const output = `
       x:A
         a x:Item .
       x:B
@@ -182,33 +181,33 @@ describe("Encoder", () => {
       x:A x:array x:C .
     `;
 
-    evaluate(input, schema, output);
-  });
+  evaluate(input, schema, output);
+});
 
-  it("Anonymous subschema property", () => {
-    const input = {
-      $id: x.A,
-      $type: [x.Item],
-      anonymousProperty: {
-        $type: [x.SubSchema],
-        value: "value in blank node",
-      },
-    };
+Deno.test("Encoder / Anonymous subschema property", () => {
+  const input = {
+    $id: x.A,
+    $type: [x.Item],
+    anonymousProperty: {
+      $type: [x.SubSchema],
+      value: "value in blank node",
+    },
+  };
 
-    const schema = {
-      "@type": [x.Item],
-      anonymousProperty: {
-        "@id": x.anonymousProperty,
-        "@context": {
-          "@type": [x.SubSchema],
-          value: {
-            "@id": x.value,
-          },
+  const schema = {
+    "@type": [x.Item],
+    anonymousProperty: {
+      "@id": x.anonymousProperty,
+      "@context": {
+        "@type": [x.SubSchema],
+        value: {
+          "@id": x.value,
         },
       },
-    };
+    },
+  };
 
-    const output = `
+  const output = `
       x:A
         a x:Item ;
         x:anonymousProperty [
@@ -217,40 +216,40 @@ describe("Encoder", () => {
         ] .
     `;
 
-    evaluate(input, schema, output);
-  });
+  evaluate(input, schema, output);
+});
 
-  it("Anonymous subschema array property", () => {
-    const input = {
-      $id: x.A,
-      $type: [x.Item],
-      anonymousProperty: [
-        {
-          $type: [x.SubSchema],
-          value: "value in blank node",
-        },
-        {
-          $type: [x.SubSchema],
-          value: "value in another blank node",
-        },
-      ],
-    };
+Deno.test("Encoder / Anonymous subschema array property", () => {
+  const input = {
+    $id: x.A,
+    $type: [x.Item],
+    anonymousProperty: [
+      {
+        $type: [x.SubSchema],
+        value: "value in blank node",
+      },
+      {
+        $type: [x.SubSchema],
+        value: "value in another blank node",
+      },
+    ],
+  };
 
-    const schema = {
-      "@type": [x.Item],
-      anonymousProperty: {
-        "@id": x.anonymousProperty,
-        "@array": true as const,
-        "@context": {
-          "@type": [x.SubSchema],
-          value: {
-            "@id": x.value,
-          },
+  const schema = {
+    "@type": [x.Item],
+    anonymousProperty: {
+      "@id": x.anonymousProperty,
+      "@array": true as const,
+      "@context": {
+        "@type": [x.SubSchema],
+        value: {
+          "@id": x.value,
         },
       },
-    };
+    },
+  };
 
-    const output = `
+  const output = `
       x:A
         a x:Item ;
         x:anonymousProperty [
@@ -264,118 +263,118 @@ describe("Encoder", () => {
         ] .
     `;
 
-    evaluate(input, schema, output);
-  });
+  evaluate(input, schema, output);
+});
 
-  it("Multilang property", () => {
-    const input = {
-      $id: x.A,
-      $type: [x.Item],
-      multilang: {
-        cs: "CS",
-        en: "EN",
-        [""]: "Unknown",
-      },
-    };
+Deno.test("Encoder / Multilang property", () => {
+  const input = {
+    $id: x.A,
+    $type: [x.Item],
+    multilang: {
+      cs: "CS",
+      en: "EN",
+      [""]: "Unknown",
+    },
+  };
 
-    const schema = {
-      "@type": [x.Item],
-      multilang: {
-        "@id": x.multilang,
-        "@multilang": true as const,
-      },
-    };
+  const schema = {
+    "@type": [x.Item],
+    multilang: {
+      "@id": x.multilang,
+      "@multilang": true as const,
+    },
+  };
 
-    const output = `
+  const output = `
       x:A
         a x:Item ;
         x:multilang "CS"@cs, "EN"@en, "Unknown" .
     `;
 
-    evaluate(input, schema, output);
-  });
+  evaluate(input, schema, output);
+});
 
-  it("Multilang array property", () => {
-    const input = {
-      $id: x.A,
-      $type: [x.Item],
-      multilang: {
-        cs: ["CS 1", "CS 2", "CS 3"],
-        en: ["EN"],
-        [""]: ["Unknown"],
-      },
-    };
+Deno.test("Encoder / Multilang array property", () => {
+  const input = {
+    $id: x.A,
+    $type: [x.Item],
+    multilang: {
+      cs: ["CS 1", "CS 2", "CS 3"],
+      en: ["EN"],
+      [""]: ["Unknown"],
+    },
+  };
 
-    const schema = {
-      "@type": [x.Item],
-      multilang: {
-        "@id": x.multilang,
-        "@multilang": true as const,
-        "@array": true as const,
-      },
-    };
+  const schema = {
+    "@type": [x.Item],
+    multilang: {
+      "@id": x.multilang,
+      "@multilang": true as const,
+      "@array": true as const,
+    },
+  };
 
-    const output = `
+  const output = `
       x:A
         a x:Item ;
         x:multilang "CS 1"@cs, "CS 2"@cs, "CS 3"@cs, "EN"@en, "Unknown" .
     `;
 
-    evaluate(input, schema, output);
-  });
+  evaluate(input, schema, output);
+});
 
-  it("Localized property using a language set in context", () => {
-    const input = {
-      $id: x.A,
-      $type: [x.Item],
-      language: "CS",
-    };
+Deno.test("Encoder / Localized property using a language set in context", () => {
+  const input = {
+    $id: x.A,
+    $type: [x.Item],
+    language: "CS",
+  };
 
-    const schema = {
-      "@type": [x.Item],
-      language: {
-        "@id": x.language,
-      },
-    };
+  const schema = {
+    "@type": [x.Item],
+    language: {
+      "@id": x.language,
+    },
+  };
 
-    const output = `
+  const output = `
       x:A
         a x:Item ;
         x:language "CS"@cs .
     `;
 
-    evaluate(input, schema, output, { language: "cs", sources: ["dummy"] });
-  });
+  evaluate(input, schema, output, { language: "cs", sources: ["dummy"] });
+});
 
-  it("One resource multiple schemas", () => {
-    const input = {
+Deno.test("Encoder / One resource multiple schemas", () => {
+  const input = {
+    $id: x.A,
+    $type: [x.Item],
+    rootProperty: "Root property",
+    nested: {
       $id: x.A,
-      $type: [x.Item],
-      rootProperty: "Root property",
-      nested: {
-        $id: x.A,
-        $type: [x.SubItem],
-        nestedProperty: "Nested property",
-      },
-    };
+      $type: [x.SubItem],
+      nestedProperty: "Nested property",
+    },
+  };
 
-    const schema = {
-      "@type": [x.Item],
-      rootProperty: {
-        "@id": x.rootProperty,
-      },
-      nested: {
-        "@id": x.nested,
-        "@context": {
-          "@type": [x.SubItem],
-          nestedProperty: {
-            "@id": x.nestedProperty,
-          },
+  const schema = {
+    "@type": [x.Item],
+    rootProperty: {
+      "@id": x.rootProperty,
+    },
+    nested: {
+      "@id": x.nested,
+      "@context": {
+        "@type": [x.SubItem],
+        nestedProperty: {
+          "@id": x.nestedProperty,
         },
       },
-    };
+    },
+  };
 
-    const output = `
+  const output = `
       x:A
         a x:Item ;
         x:rootProperty "Root property" ;
@@ -384,44 +383,44 @@ describe("Encoder", () => {
         x:nested x:A .
     `;
 
-    evaluate(input, schema, output);
-  });
+  evaluate(input, schema, output);
+});
 
-  it("Resource with null values", () => {
-    const input = {
-      $id: x.A,
-      $type: [x.Item],
-      someProperty: null,
-      anonymousProperty: [
-        {
-          $type: [x.SubSchema],
-          value: null,
-        },
-        {
-          $type: [x.SubSchema],
-          value: null,
-        },
-      ],
-    };
-
-    const schema = {
-      "@type": [x.Item],
-      someProperty: {
-        "@id": x.someProperty,
+Deno.test("Encoder / Resource with null values", () => {
+  const input = {
+    $id: x.A,
+    $type: [x.Item],
+    someProperty: null,
+    anonymousProperty: [
+      {
+        $type: [x.SubSchema],
+        value: null,
       },
-      anonymousProperty: {
-        "@id": x.anonymousProperty,
-        "@array": true as const,
-        "@context": {
-          "@type": [x.SubSchema],
-          value: {
-            "@id": x.value,
-          },
+      {
+        $type: [x.SubSchema],
+        value: null,
+      },
+    ],
+  };
+
+  const schema = {
+    "@type": [x.Item],
+    someProperty: {
+      "@id": x.someProperty,
+    },
+    anonymousProperty: {
+      "@id": x.anonymousProperty,
+      "@array": true as const,
+      "@context": {
+        "@type": [x.SubSchema],
+        value: {
+          "@id": x.value,
         },
       },
-    };
+    },
+  };
 
-    const output = `
+  const output = `
       x:A
         a x:Item ;
         x:someProperty ?v0 ;
@@ -436,6 +435,5 @@ describe("Encoder", () => {
         ] .
     `;
 
-    evaluate(input, schema, output);
-  });
+  evaluate(input, schema, output);
 });

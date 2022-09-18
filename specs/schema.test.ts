@@ -118,14 +118,12 @@ const ThingSchema: Schema = {
   },
 };
 
-describe("Schema", () => {
-  it("accepts schema prototype as schema interface creates schema interface from schema prototype", () => {
-    const expandedSchema = expandSchema(Thing);
+Deno.test("Schema / accepts schema prototype as schema interface creates schema interface from schema prototype", () => {
+  const expandedSchema = expandSchema(Thing);
 
-    type I = SchemaInterface<typeof Thing>;
+  type I = SchemaInterface<typeof Thing>;
 
-    assertTypeSafe<Equals<SchemaInterface<typeof Thing>, ThingType>>();
+  assertTypeSafe<Equals<SchemaInterface<typeof Thing>, ThingType>>();
 
-    assertEquals(expandedSchema, ThingSchema);
-  });
+  assertEquals(expandedSchema, ThingSchema);
 });

@@ -5,6 +5,7 @@ import {
   take,
 } from "https://esm.sh/rxjs@7.5.6";
 import { Parser, Store } from "https://esm.sh/n3@1.16.2";
+import { ArrayIterator } from "https://esm.sh/asynciterator@3.7.0";
 
 import {
   type Context,
@@ -88,7 +89,7 @@ export const ttl = (turtle: string) => {
 
 export const createGraph = (turtle: string) => {
   const quads = ttl(turtle);
-  return quadsToGraph(quads);
+  return quadsToGraph(new ArrayIterator(quads));
 };
 
 export const createStore = () =>
