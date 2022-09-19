@@ -34,7 +34,7 @@ await build({
     description: "LDkit, a Linked Data query toolkit for TypeScript developers",
     homepage: "https://ldkit.io",
     author: "Karel Klima <karelklima@gmail.com> (https://karelklima.com)",
-    keywords: ["linked data, rdf, sparql"],
+    keywords: ["linked data", "rdf", "sparql", "deno"],
     license: "MIT",
     repository: {
       type: "git",
