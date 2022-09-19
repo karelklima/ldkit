@@ -69,6 +69,16 @@ export declare namespace RDFJSON {
     datatype?: string;
   };
   type Bindings = Record<string, Term>;
+  type SparqlResultsJsonFormat = {
+    head: {
+      vars?: string[];
+    };
+    results?: {
+      bindings: Bindings[];
+    };
+    boolean?: boolean;
+  };
+  type RdfJsonFormat = Record<Iri, Record<Iri, Term[]>>;
   interface TermFactory {
     fromJson(jsonTerm: Term): RDF.Term;
   }
@@ -76,7 +86,7 @@ export declare namespace RDFJSON {
     fromJson(jsonBindings: Bindings): RDF.Bindings;
   }
   interface QuadFactory {
-    fromJson(jsonBindings: Bindings): RDF.Quad;
+    fromJson(jsonRdf: [Iri, Iri, Term]): RDF.Quad;
   }
 }
 
@@ -135,21 +145,21 @@ export class BindingsFactory extends ComunicaBindingsFactory
 
 export class QuadFactory implements RDFJSON.QuadFactory {
   protected readonly dataFactory: RDF.DataFactory;
-  protected readonly bindingsFactory: RDFJSON.BindingsFactory;
+  protected readonly termFactory: RDFJSON.TermFactory;
   constructor(
     dataFactory: RDF.DataFactory = new DataFactory(),
-    bindingsFactory: RDFJSON.BindingsFactory = new BindingsFactory(dataFactory),
+    termFactory: RDFJSON.TermFactory = new TermFactory(),
   ) {
     this.dataFactory = dataFactory;
-    this.bindingsFactory = bindingsFactory;
+    this.termFactory = termFactory;
   }
 
-  fromJson(jsonBindings: RDFJSON.Bindings) {
-    const bindings = this.bindingsFactory.fromJson(jsonBindings);
+  fromJson(jsonRdf: [Iri, Iri, RDFJSON.Term]) {
+    const [s, p, o] = jsonRdf;
     return this.dataFactory.quad(
-      bindings.get("s") as RDF.Quad_Subject,
-      bindings.get("p") as RDF.Quad_Predicate,
-      bindings.get("o") as RDF.Quad_Object,
+      this.dataFactory.namedNode(s),
+      this.dataFactory.namedNode(p),
+      this.termFactory.fromJson(o) as RDF.Quad_Object,
     );
   }
 }
