@@ -39,14 +39,9 @@ class Decoder {
     const output: DecodedNode[] = [];
 
     for (const [iri, properties] of this.graph) {
-      console.warn("IRI", iri);
       if (properties.has(rdf.type)) {
         const types = properties.get(rdf.type)!;
         for (const type of types) {
-          console.warn("TYPE", type.value);
-          if (type.value === ldkit.Resource) {
-            console.warn("FOUND", type);
-          }
           if (type.termType === "NamedNode" && type.value === ldkit.Resource) {
             output.push(this.decodeNode(iri, this.schema));
           }

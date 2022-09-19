@@ -38,7 +38,7 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
 
   async count() {
     const q = this.queryBuilder.countQuery();
-    console.log(q);
+    // TODO: console.log(q);
     const bindings = await this.engine.queryBindings(q);
     return parseInt(bindings[0].get("count")!.value);
   }
@@ -52,7 +52,7 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
 
   async find(where?: string | RDF.Quad[], limit?: number) {
     const q = this.queryBuilder.getQuery(where, limit);
-    console.log(q);
+    // TODO: console.log(q);
     const graph = await this.engine.queryGraph(q);
     return this.decode(graph);
   }
@@ -64,13 +64,13 @@ export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
 
   async findByIris(iris: Iri[]) {
     const q = this.queryBuilder.getByIrisQuery(iris);
-    console.log(q);
+    // TODO: console.log(q);
     const graph = await this.engine.queryGraph(q);
     return this.decode(graph);
   }
 
   private updateQuery(query: string) {
-    console.log(query);
+    // TODO: console.log(query);
     return this.engine.queryVoid(query);
   }
 
