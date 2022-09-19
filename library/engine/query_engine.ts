@@ -6,10 +6,7 @@ import {
   type RDF,
   RDFJSON,
 } from "../rdf.ts";
-import {
-  ArrayIterator,
-  MappingIterator,
-} from "https://esm.sh/v94/asynciterator@3.7.0";
+import { ArrayIterator, MappingIterator } from "../asynciterator.ts";
 
 export class QueryEngine implements IQueryEngine {
   protected getSparqlEndpoint(context?: Context) {
