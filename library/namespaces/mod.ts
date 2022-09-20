@@ -6,6 +6,7 @@ export { default as foaf } from "./foaf.ts";
 export { default as gr } from "./gr.ts";
 export { default as ldkit } from "./ldkit.ts";
 export { default as schema } from "./schema.ts";
+export { default as sioc } from "./sioc.ts";
 export { default as skos } from "./skos.ts";
 export { default as xsd } from "./xsd.ts";
 
