@@ -1,11 +1,9 @@
 {
   "imports": {
-    "ldkit": "./mod.ts",
-    "ldkit/namespaces": "./namespaces.ts",
-    "ldkit/sparql": "./library/sparql.ts",
-    "ldkit/rdf": "./library/rdf.ts",
-
-    "lume/": "https://deno.land/x/lume@v1.11.1/",
+    "ldkit": "../mod.ts",
+    "ldkit/namespaces": "../namespaces.ts",
+    "ldkit/sparql": "../sparql.ts",
+    "ldkit/rdf": "../rdf.ts",
 
     "react": "https://esm.sh/react@18.2.0",
     "react-dom": "https://esm.sh/react-dom@18.2.0",
