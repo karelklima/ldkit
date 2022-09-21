@@ -52,9 +52,13 @@ type GroupProps = {
 export const Group: React.FC<GroupProps> = ({ start, content, end }) => {
   return (
     <Row>
-      <RowAction>{start ? start : InvisibleButton}</RowAction>
+      <RowAction>
+        {start ? start : (InvisibleButton as unknown as ReactNode)}
+      </RowAction>
       <RowContent>{content}</RowContent>
-      <RowAction>{end ? end : InvisibleButton}</RowAction>
+      <RowAction>
+        {end ? end : (InvisibleButton as unknown as ReactNode)}
+      </RowAction>
     </Row>
   );
 };

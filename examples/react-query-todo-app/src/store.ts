@@ -1,10 +1,11 @@
 import {
   createResource,
   createNamespace,
-  createDefaultContext,
-} from "@ldkit/core";
-import type { SchemaInterface } from "@ldkit/core";
-import { xsd } from "@ldkit/namespaces";
+  type Context,
+  type SchemaInterface
+} from "ldkit";
+import { xsd } from "ldkit/namespaces";
+import { QueryEngine as Comunica } from "@comunica/query-sparql-rdfjs";
 
 import { Store } from "n3";
 
@@ -25,13 +26,15 @@ const TodoSchema = {
 
 export const store = new Store();
 
-createDefaultContext({
+const context: Context = {
   sources: [store],
-});
+};
+
+const engine = new Comunica();
 
 export type TodoInterface = SchemaInterface<typeof TodoSchema>;
 
-export const Todos = createResource(TodoSchema);
+export const Todos = createResource(TodoSchema, context, engine);
 
 export const getRandomId = () =>
   `https://todos/${1000 + Math.floor(Math.random() * 1000)}`;

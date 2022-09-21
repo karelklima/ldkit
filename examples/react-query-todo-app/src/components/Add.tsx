@@ -1,15 +1,9 @@
 import React, { useState, useRef, useCallback, KeyboardEvent } from "react";
 import styled from "@emotion/styled";
+import { useQueryClient } from "@tanstack/react-query";
 
-import { Todos, getRandomId, store } from "../store";
-import {
-  Button,
-  InvisibleButton,
-  MootButton,
-  Row,
-  RowAction,
-  RowContent,
-} from "./UI";
+import { Todos, getRandomId } from "../store";
+import { Button, InvisibleButton, MootButton, Row, RowContent } from "./UI";
 
 import { AddIcon, CircleIcon } from "./Icons";
 
@@ -30,6 +24,7 @@ const AddInput = styled.input`
 export const Add: React.FC = () => {
   const [isOpen, setOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -55,11 +50,13 @@ export const Add: React.FC = () => {
           $id: getRandomId(),
           description: inputValue,
           done: false,
+        }).then(() => {
+          queryClient.invalidateQueries(["todos"]);
         });
         inputRef.current.value = "";
       }
     },
-    [inputRef, setOpen]
+    [inputRef, setOpen, queryClient]
   );
 
   if (isOpen) {

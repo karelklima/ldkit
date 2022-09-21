@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import styled from "@emotion/styled";
 
-import { useResource } from "@ldkit/react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Todos, TodoInterface } from "../store";
 import { Button, InvisibleButton, Row, RowContent } from "./UI";
@@ -21,16 +21,21 @@ const Done = styled.span`
 type ItemProps = { item: TodoInterface };
 
 const Item: React.FC<ItemProps> = ({ item }) => {
+  const queryClient = useQueryClient();
   const handleDeleteClicked = useCallback(() => {
-    Todos.delete(item);
-  }, [item]);
+    Todos.delete(item).then(() => {
+      queryClient.invalidateQueries(["todos"]);
+    });
+  }, [item, queryClient]);
 
   const handleCheckboxClicked = useCallback(() => {
     Todos.update({
       $id: item.$id,
       done: !item.done,
+    }).then(() => {
+      queryClient.invalidateQueries(["todos"]);
     });
-  }, [item]);
+  }, [item, queryClient]);
 
   return (
     <Row>
@@ -52,19 +57,19 @@ const Item: React.FC<ItemProps> = ({ item }) => {
 };
 
 export const Items: React.FC = () => {
-  const resource = useResource(() => Todos.find());
+  const { isLoading, isError, data } = useQuery(["todos"], () => Todos.find());
 
-  if (resource.isLoading) {
+  if (isLoading) {
     return <List>Loading...</List>;
   }
 
-  if (resource.isError) {
+  if (isError) {
     return <List>Error loading todo list...</List>;
   }
 
   return (
     <List>
-      {resource.data.map((item, index) => (
+      {data.map((item, index) => (
         <Item item={item} key={index} />
       ))}
     </List>

@@ -1,4 +1,6 @@
 import React from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import { Add } from "./Add";
 import { Items } from "./Items";
 
@@ -45,15 +47,19 @@ const Heading = styled.h1`
   margin: 0 0 10px;
 `;
 
+const queryClient = new QueryClient();
+
 export const App = () => (
-  <Wrapper>
-    <Global styles={globalStyles} />
-    <Buffer />
-    <Card>
-      <Heading>TODO</Heading>
-      <Items />
-      <Add />
-    </Card>
-    <Buffer />
-  </Wrapper>
+  <QueryClientProvider client={queryClient}>
+    <Wrapper>
+      <Global styles={globalStyles} />
+      <Buffer />
+      <Card>
+        <Heading>TODO</Heading>
+        <Items />
+        <Add />
+      </Card>
+      <Buffer />
+    </Wrapper>
+  </QueryClientProvider>
 );
