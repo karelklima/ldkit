@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { firstValueFrom } from "rxjs";
 
 import { createLocalizedActorResource, ActorInterface } from "../store";
 import { Grid, Typography } from "@mui/material";
@@ -15,9 +14,9 @@ export const Actor: React.FC<ActorProps> = ({ actorIri, language }) => {
   useEffect(() => {
     const fetchData = async () => {
       setActor(null);
-      const result = await firstValueFrom(
-        createLocalizedActorResource(language).findByIris([actorIri])
-      );
+      const result = await createLocalizedActorResource(language).findByIris([
+        actorIri,
+      ]);
       setActor(result[0]);
     };
     fetchData();

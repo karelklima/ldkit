@@ -1,28 +1,9 @@
 import {
   createResource,
-  createNamespace,
   type Context,
   type SchemaInterface
 } from "ldkit";
-import { xsd } from "ldkit/namespaces";
-
-export const dbo = createNamespace({
-  iri: "http://dbpedia.org/ontology/",
-  prefix: "dbo:",
-  terms: ["Person", "abstract", "thumbnail", "birthDate", "birthName"],
-} as const);
-
-export const dbp = createNamespace({
-  iri: "http://dbpedia.org/property/",
-  prefix: "dbp:",
-  terms: ["name"],
-} as const);
-
-export const rdfs = createNamespace({
-  iri: "http://www.w3.org/2000/01/rdf-schema#",
-  prefix: "rdfs:",
-  terms: ["label"],
-} as const);
+import { dbo, xsd, rdfs } from "ldkit/namespaces";
 
 const ActorSchema = {
   "@type": dbo.Person,

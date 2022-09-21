@@ -4,5 +4,5 @@
     "jsx": "preserve",
     "esModuleInterop": true
   },
-  "include": ["src"],
+  "include": ["src"]
 }

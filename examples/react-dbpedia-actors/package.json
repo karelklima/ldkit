@@ -1,7 +1,5 @@
 {
-  "name": "@ldkit/example-dbpedia-actors",
-  "version": "0.0.0",
-  "author": "Karel Klima",
+  "author": "Karel Klima <karelklima@gmail.com> (https://karelklima.com)",
   "license": "MIT",
   "source": "src/index.html",
   "scripts": {
@@ -11,14 +9,13 @@
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@mui/material": "^5.10.5",
-    "ldkit": "^0.5.1",
+    "ldkit": "^0.6.3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "rxjs": "^7.4.0"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "events": "^3.3.0",
     "parcel": "^2.7.0",
     "process": "^0.11.10"
-  },
-  "prettier": {}
+  }
 }
