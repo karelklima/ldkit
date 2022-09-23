@@ -16,11 +16,16 @@
       ["schema", "Schema"],
       ["resource", "Resource"],
       ["namespaces", "Namespaces"],
+      ["query-engine", "Query Engine"],
       ["rdf", "RDF"],
       ["sparql", "SPARQL"],
       ["react", "React"],
       ["decoder", "Decoder"],
       ["encoder", "Encoder"]
     ]
+  },
+  "advanced": {
+    "title": "Advanced",
+    "pages": [["query-with-comunica", "Query with Comunica"]]
   }
 }

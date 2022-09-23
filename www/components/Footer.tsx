@@ -9,21 +9,18 @@ export function Footer() {
           >
             GitHub
           </a>
-          <a
-            href="https://github.com/karelklima/ldkit"
-            class="m-2 inline-block"
-          >
+          <a href="https://deno.land/x/ldkit" class="m-2 inline-block">
             deno.land/x/ldkit
           </a>
           <a
-            class="m-2 inline-block"
             href="https://www.npmjs.com/package/ldkit"
+            class="m-2 inline-block"
           >
             npmjs.com/package/ldkit
           </a>
         </p>
         <p class="text-center p-2 pb-6">
-          &copy; 2022 &ndash; present{" "}
+          &copy; 2021 &ndash; present{" "}
           <a href="https://karelklima.com">Karel Klima</a>
         </p>
       </footer>
