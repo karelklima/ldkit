@@ -1,7 +1,3 @@
----
-title: Decoder
-description: Decoder
-order: 6
----
+# Decoder
 
 This page is under construction.

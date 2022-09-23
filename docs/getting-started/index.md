@@ -1,7 +1,4 @@
----
----
-
-## Getting Started
+# Getting Started
 
 If you are using Node, then you can install LDkit using your favourite package
 manager.

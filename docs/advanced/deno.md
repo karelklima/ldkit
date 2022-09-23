@@ -1,7 +1,3 @@
----
-title: Deno
-description: Deno
-order: 1
----
+# Usage with Deno
 
 This page is under construction.

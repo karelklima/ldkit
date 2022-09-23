@@ -1,7 +1,6 @@
----
-title: About LDKit
-description: Welcome to LDkit, the RDF framework for browser, Deno and Node.
-order: 0
----
+# About LDkit
 
-**LDKit** is the RDF framework for browser, [Deno](https://deno.land/) and Node.
+**LDkit** is Linked Data query toolkit for TypeScript developers.
+
+**LDKit** lets you access, display and modify any RDF data, and it works in
+browser, [Deno](https://deno.land/) and Node.

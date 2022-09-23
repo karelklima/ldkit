@@ -1,7 +1,3 @@
----
-title: SPARQL utils
-description: SPARQL utils
-order: 5
----
+# SPARQL utilities
 
 This page is under construction.

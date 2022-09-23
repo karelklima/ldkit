@@ -3,12 +3,7 @@
     "title": "About LDkit"
   },
   "getting-started": {
-    "title": "Getting Started",
-    "pages": [
-      ["create-a-namespace", "Create a namespace"],
-      ["create-a-schema", "Create a schema"],
-      ["create-a-resource", "Create a resource"]
-    ]
+    "title": "Getting Started"
   },
   "components": {
     "title": "Components",
@@ -19,13 +14,16 @@
       ["query-engine", "Query Engine"],
       ["rdf", "RDF"],
       ["sparql", "SPARQL"],
-      ["react", "React"],
       ["decoder", "Decoder"],
       ["encoder", "Encoder"]
     ]
   },
   "advanced": {
     "title": "Advanced",
-    "pages": [["query-with-comunica", "Query with Comunica"]]
+    "pages": [
+      ["query-with-comunica", "Query with Comunica"],
+      ["query-solid-pod", "Query a Solid Pod"],
+      ["usage-with-deno", "Usage with Deno"]
+    ]
   }
 }

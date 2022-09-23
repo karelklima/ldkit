@@ -1,7 +1,3 @@
----
-title: Schema
-description: Schema
-order: 2
----
+# Schema
 
 This page is under construction.

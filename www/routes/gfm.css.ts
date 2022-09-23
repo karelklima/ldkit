@@ -25,6 +25,13 @@ ol.nested li:before {
 .toggle:checked + .toggled {
 	display: block;
 }
+.markdown-body h1 {
+  border-bottom: none;
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  font-weight:800;
+  letter-spacing: -0.025em;
+}
 `;
 
 export const handler: Handlers = {

@@ -1,7 +1,3 @@
----
-title: Namespaces
-description: Namespaces
-order: 1
----
+# Namespaces
 
 This page is under construction.

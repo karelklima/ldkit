@@ -1,7 +1,3 @@
----
-title: RDF utils
-description: RDF utils
-order: 4
----
+# RDF Utilities
 
 This page is under construction.

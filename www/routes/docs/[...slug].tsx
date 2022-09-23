@@ -1,9 +1,8 @@
 import { Head } from "$fresh/runtime.ts";
 import { Handlers, PageProps } from "$fresh/server.ts";
 
-import { frontMatter, gfm } from "../../utils/markdown.ts";
+import { gfm } from "../../utils/markdown.ts";
 
-import DocsSidebar from "../../components/DocsSidebar.tsx";
 import {
   CATEGORIES,
   SLUGS,
@@ -12,7 +11,6 @@ import {
   TableOfContentsCategoryEntry,
   TableOfContentsEntry,
 } from "../../data/docs.ts";
-import { Title } from "../../components/Title.tsx";
 import { App } from "../../components/App.tsx";
 
 interface Data {
@@ -21,7 +19,6 @@ interface Data {
 
 interface Page extends TableOfContentsEntry {
   markdown: string;
-  data: Record<string, unknown>;
 }
 
 export const handler: Handlers<Data> = {
@@ -38,9 +35,8 @@ export const handler: Handlers<Data> = {
       return ctx.renderNotFound();
     }
     const url = new URL(`../../../${entry.file}`, import.meta.url);
-    const fileContent = await Deno.readTextFile(url);
-    const { body, attrs } = frontMatter<Record<string, unknown>>(fileContent);
-    const page = { ...entry, markdown: body, data: attrs ?? {} };
+    const markdown = await Deno.readTextFile(url);
+    const page = { ...entry, markdown };
     const resp = ctx.render({ page });
     return resp;
   },
@@ -48,9 +44,8 @@ export const handler: Handlers<Data> = {
 
 export default function DocsPage(props: PageProps<Data>) {
   return (
-    <App activeLink="/docs">
+    <App activeLink="/docs" title={props.data.page?.title ?? "Not Found"}>
       <Head>
-        <Title>{props.data.page?.title ?? "Not Found"}</Title>
         <link rel="stylesheet" href={`/gfm.css?build=${__FRSH_BUILD_ID}`} />
       </Head>
       <div class="mx-auto max-w-screen-lg px-4 flex gap-6">
@@ -87,7 +82,9 @@ export function SidebarCategory(props: {
 
   return (
     <li class="block">
-      <a href={href} class={linkClass}>{title}</a>
+      <a href={href} class={linkClass}>
+        {title}
+      </a>
       {entries.length > 0 && (
         <ul class="pl-2 nested">
           {entries.map((entry) => (
@@ -109,7 +106,9 @@ export function SidebarEntry(props: {
 
   return (
     <li class="block">
-      <a href={href} class={linkClass}>{title}</a>
+      <a href={href} class={linkClass}>
+        {title}
+      </a>
     </li>
   );
 }
@@ -118,9 +117,6 @@ function Content(props: { page: Page }) {
   const html = gfm.render(props.page.markdown);
   return (
     <main class="py-8 overflow-hidden flex-1">
-      <h1 class="text(4xl gray-900) tracking-tight font-extrabold mt-6">
-        {props.page.title}
-      </h1>
       <div
         class="mt-6 markdown-body"
         dangerouslySetInnerHTML={{ __html: html }}
