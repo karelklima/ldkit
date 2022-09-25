@@ -17,9 +17,9 @@ export const createNamespace = <
   N extends NamespacePrototype,
   I = NamespaceIri<N>,
   P = NamespacePrefix<N>,
-  O = NamespaceObject<N>
+  O = NamespaceObject<N>,
 >(
-  namespaceSpec: N
+  namespaceSpec: N,
 ) =>
   Object.assign(
     //<X extends I>(f: [X]) =>
@@ -32,7 +32,7 @@ export const createNamespace = <
     {
       $prefix: namespaceSpec["prefix"],
       $iri: namespaceSpec["iri"],
-    }
+    },
   ) as O & {
     $prefix: P;
     $iri: I;
