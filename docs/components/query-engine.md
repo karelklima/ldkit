@@ -20,7 +20,7 @@ The `QueryEngine` follows
 [RDF/JS Query specification](https://rdf.js.org/query-spec/) and implements the
 `StringSparqlQueryable` interface.
 
-The `QueryEngine` is configurable through Context.
+The `QueryEngine` is configurable through [context](./context).
 
 ```ts
 import { type Context, QueryEngine } from "ldkit";
@@ -34,6 +34,11 @@ const engine = new QueryEngine();
 const response = await engine.queryBoolean("ASK { ?s ?p ?o }", context);
 ```
 
+> Note: The default query engine supports all SPARQL endpoints that conform to
+> the SPARQL 1.1 specification and can return data of MIME
+> `application/sparql-results+json` for `SELECT` and `ASK` queries, and
+> `application/rdf+json` for `CONSTRUCT` queries.
+
 ## Custom query engine
 
 You can use a custom query engine with LDkit - same as the included query
@@ -43,3 +48,21 @@ engine, it needs to implement `StringSparqlQueryable` interface from the
 For advanced federated querying over multiple datasources you can also use
 Comunica, or a custom engine derived from that - see
 [Query with Comunica](../advanced/query-with-comunica).
+
+## Setting default query engine
+
+A query engine instance needs to be passed to a [resource](./resource) as a
+parameter in order to query data, and there are two ways how to handle that.
+Either you can pass the engine directly as an argument when creating the
+resource, or you can set an engine instance as a default one. If there is a
+default engine instance, then the resource will use that engine, if you do not
+provide one directly.
+
+```ts
+import { createResource, setDefaultEngine } from "ldkit";
+
+const engine = new MyCustomQueryEngine();
+setDefaultEngine(engine);
+
+const resource = createResource(MySchema); // will use the custom engine, which is now default
+```
