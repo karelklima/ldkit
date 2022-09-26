@@ -1,3 +1,3 @@
-# Advanced LDkit uses
+# Advanced LDkit usage
 
-Select a page in the left menu.
+Select topic from the menu.
