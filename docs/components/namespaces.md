@@ -26,7 +26,7 @@ console.log(onto.unknown); // TypeScript error! This term does not exist
 In addition to terms, namespaces include `$iri` and `$prefix` properties to
 access its IRI and prefix denomination.
 
-## Build-in namespaces
+## Included namespaces
 
 LDkit ships with several ready to use namespaces of the most widely used Linked
 Data ontologies.
