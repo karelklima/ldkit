@@ -22,12 +22,12 @@ changes.
 
 ## LDkit context properties
 
-| Key          | Type         | Description                                                                                                                     |
-| ------------ | ------------ | ------------------------------------------------------------------------------------------------------------------------------- |
-| **sources**  | RDF.Source[] | List of RDF sources. The default query engine included in LDkit accepts only a single source, and it must be a SPARQL endpoint. |
-| **fetch**    | typeof fetch | Custom fetch function.                                                                                                          |
-| **language** | string       | Preferred data language - for cases when you query multilingual data.                                                           |
-| **graph**    | string       | IRI of a graph to constrain - if you want to query data stored in a particular named graph.                                     |
+| Key          | Type                          | Description                                                                                                                     |
+| ------------ | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| **sources**  | `string[]` or `IDataSource[]` | List of RDF sources. The default query engine included in LDkit accepts only a single source, and it must be a SPARQL endpoint. |
+| **fetch**    | `typeof fetch`                | Custom fetch function.                                                                                                          |
+| **language** | `string`                      | Preferred data language - for cases when you query multilingual data.                                                           |
+| **graph**    | `string`                      | (**experimental**) IRI of a graph to constrain - if you want to query data stored in a particular named graph.                  |
 
 ## Setting default context
 

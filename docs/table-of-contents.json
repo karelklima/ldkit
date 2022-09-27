@@ -13,14 +13,11 @@
       ["resource", "Resource"],
       ["namespaces", "Namespaces"],
       ["query-engine", "Query Engine"],
-      ["rdf", "RDF"],
-      ["sparql", "SPARQL"],
-      ["decoder", "Decoder"],
-      ["encoder", "Encoder"]
+      ["power-tools", "Power Tools"]
     ]
   },
-  "advanced": {
-    "title": "Advanced",
+  "how-to": {
+    "title": "How To",
     "pages": [
       ["query-with-comunica", "Query with Comunica"],
       ["query-solid-pod", "Query a Solid Pod"],
