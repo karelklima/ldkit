@@ -26,10 +26,10 @@ export default function Home() {
         </div>
 
         <Steps />
-        <p class="text-center pt-4 pb-20">
+        <p class="text-center pt-8 pb-20">
           <a
             href="/docs"
-            class="flex flex-row gap-4 bg-red-800 rounded text-white p-6"
+            class="text-xl flex flex-row gap-4 bg-red-800 rounded text-white p-6"
           >
             <span>Read the documentation</span> <IconArrowRight />
           </a>
