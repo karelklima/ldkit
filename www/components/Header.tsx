@@ -1,5 +1,4 @@
-import { FunctionalComponent } from "https://esm.sh/v94/preact@10.10.6/src/index.d.ts";
-import { IconGitHub, IconExternalLink } from "./Icons.tsx";
+import { IconExternalLink } from "./Icons.tsx";
 
 export function Header(props: { activeLink: ActiveLink }) {
   return (
@@ -71,9 +70,11 @@ function MenuItem({ title, url, activeLink }: MenuItemProps) {
     <li class="inline-block">
       <a href={url} class={linkClass}>
         <span>{title}</span>
-        <span class="ml-1 mt-1 w-2 h-2 text-gray-400">
-          {url.startsWith("http") ? <IconExternalLink /> : null}
-        </span>
+        {url.startsWith("http") ? (
+          <span class="ml-1 mt-1 w-2 h-2 text-gray-400">
+            <IconExternalLink />
+          </span>
+        ) : null}
       </a>
     </li>
   );
