@@ -59,7 +59,7 @@ export default function DocsPage(props: PageProps<Data>) {
 function Sidebar(props: { path: string }) {
   return (
     <nav class="w-[16rem] flex-shrink-0 pt-12 pr-4">
-      <ul class="list-decimal list-inside font-semibold nested">
+      <ul class="list-decimal list-inside font-semibold nested fixed">
         {CATEGORIES.map((category) => (
           <SidebarCategory path={props.path} category={category} />
         ))}

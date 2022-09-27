@@ -1,5 +1,5 @@
 import { FunctionalComponent } from "https://esm.sh/v94/preact@10.10.6/src/index.d.ts";
-import { IconGitHub } from "./Icons.tsx";
+import { IconGitHub, IconExternalLink } from "./Icons.tsx";
 
 export function Header(props: { activeLink: ActiveLink }) {
   return (
@@ -37,10 +37,6 @@ const menuItems = [
     url: "/showcase",
   },
   {
-    title: "Research",
-    url: "/research",
-  },
-  {
     title: "GitHub",
     url: "https://github.com/karelklima/ldkit",
   },
@@ -53,9 +49,7 @@ export type ActiveLink = Unpacked<Writeable<typeof menuItems>>["url"];
 function Menu(props: { activeLink: ActiveLink }) {
   return (
     <nav>
-      <ul>
-        {menuItems.map((item) => MenuItem({ ...item, ...props }))}
-      </ul>
+      <ul>{menuItems.map((item) => MenuItem({ ...item, ...props }))}</ul>
     </nav>
   );
 }
@@ -66,19 +60,20 @@ type MenuItemProps = {
   activeLink: ActiveLink;
 };
 
-const baseLinkClass = "block p-4 border-b-2 hover:border-black";
+const baseLinkClass = "flex flex-row p-4 border-b-2 hover:border-black";
 
 function MenuItem({ title, url, activeLink }: MenuItemProps) {
-  const linkClass = url === activeLink
-    ? `${baseLinkClass} border-black bg-gray-50`
-    : `${baseLinkClass} border-transparent`;
+  const linkClass =
+    url === activeLink
+      ? `${baseLinkClass} border-black bg-gray-50`
+      : `${baseLinkClass} border-transparent`;
   return (
     <li class="inline-block">
-      <a
-        href={url}
-        class={linkClass}
-      >
-        {title}
+      <a href={url} class={linkClass}>
+        <span>{title}</span>
+        <span class="ml-1 mt-1 w-2 h-2 text-gray-400">
+          {url.startsWith("http") ? <IconExternalLink /> : null}
+        </span>
       </a>
     </li>
   );
