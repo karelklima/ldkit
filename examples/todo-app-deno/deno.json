@@ -1,6 +1,0 @@
-{
-  "tasks": {
-    "run": "packup --import-map import_map.json index.html"
-  },
-  "importMap": "import_map.json"
-}
