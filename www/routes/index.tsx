@@ -26,7 +26,7 @@ export default function Home() {
         </div>
 
         <Steps />
-        <p class="text-center pt-8 pb-20">
+        <p class="text-center pt-8 pb-10">
           <a
             href="/docs"
             class="text-xl flex flex-row gap-4 bg-red-800 rounded text-white p-6"
@@ -35,6 +35,7 @@ export default function Home() {
           </a>
         </p>
       </div>
+      <Features />
     </App>
   );
 }
@@ -118,5 +119,28 @@ function Markdown({ markdown }: { markdown: string }) {
   const html = gfm.render(preMarkdown);
   return (
     <div class="markdown-body" dangerouslySetInnerHTML={{ __html: html }} />
+  );
+}
+
+function Features() {
+  return (
+    <div class="grid grid-cols-4 gap-4 pb-20">
+      <div class="p-2">
+        <h2 class="text-xl font-black">Next-gen RDF abstraction</h2>
+        <p>For efortless querying of RDF data from any source.</p>
+      </div>
+      <div class="p-2">
+        <h2 class="text-xl font-black">First class TypeScript</h2>
+        <p>Best in class developer experience. Fully typed workflow.</p>
+      </div>
+      <div class="p-2">
+        <h2 class="text-xl font-black">Deploy anywhere</h2>
+        <p>LDkit runs in browser, Deno and Node.</p>
+      </div>
+      <div class="p-2">
+        <h2 class="text-xl font-black">RDF/JS compliant</h2>
+        <p>Compatible or built upon all the popular RDF/JS libraries</p>
+      </div>
+    </div>
   );
 }
