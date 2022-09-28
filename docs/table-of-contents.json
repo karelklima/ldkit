@@ -18,10 +18,6 @@
   },
   "how-to": {
     "title": "How To",
-    "pages": [
-      ["query-with-comunica", "Query with Comunica"],
-      ["query-solid-pod", "Query a Solid Pod"],
-      ["usage-with-deno", "Usage with Deno"]
-    ]
+    "pages": [["query-with-comunica", "Query with Comunica"]]
   }
 }
