@@ -1,0 +1,25 @@
+{
+  "author": "Karel Klima <karelklima@gmail.com> (https://karelklima.com)",
+  "license": "MIT",
+  "source": "src/index.html",
+  "scripts": {
+    "start": "parcel src/index.html"
+  },
+  "dependencies": {
+    "@comunica/query-sparql": "^2.4.3",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/icons-material": "^5.10.6",
+    "@mui/material": "^5.10.7",
+    "ldkit": "^0.6.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-error-boundary": "^3.1.4",
+    "react-router-dom": "^6.4.1"
+  },
+  "devDependencies": {
+    "events": "^3.3.0",
+    "parcel": "^2.7.0",
+    "process": "^0.11.10"
+  }
+}

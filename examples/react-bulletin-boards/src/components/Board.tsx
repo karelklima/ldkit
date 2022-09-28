@@ -1,7 +1,5 @@
-import React, { useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
-
-import { useResource } from "@ldkit/react";
 
 import {
   InformationInterface,
@@ -54,18 +52,21 @@ const Item: React.FC<ItemProps> = ({ item }) => {
 };
 
 const BoardContent: React.FC<{ iri: string }> = ({ iri }) => {
-  const resource = useResource((iri) => createInfosResource(iri).find(), [iri]);
+  const [informations, setInformations] = useState<
+    InformationInterface[] | null
+  >(null);
 
-  if (resource.isLoading) {
+  useEffect(() => {
+    const fetchData = async () => {
+      setInformations(null);
+      const result = await createInfosResource(iri).find();
+      setInformations(result);
+    };
+    fetchData();
+  }, [setInformations, iri]);
+
+  if (!informations) {
     return <Alert severity="info">Načítám desku z URL {iri}</Alert>;
-  }
-
-  if (resource.isError) {
-    return (
-      <Alert severity="error">
-        Úřední desku na dané URL se nepodařilo načíst
-      </Alert>
-    );
   }
 
   return (
@@ -80,7 +81,7 @@ const BoardContent: React.FC<{ iri: string }> = ({ iri }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {resource.data.map((item, index) => (
+          {informations.map((item, index) => (
             <Item item={item} key={index} />
           ))}
         </TableBody>

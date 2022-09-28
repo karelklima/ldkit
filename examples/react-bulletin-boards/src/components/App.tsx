@@ -2,14 +2,7 @@ import React from "react";
 import { Board } from "./Board";
 import { Form } from "./Form";
 
-import {
-  CssBaseline,
-  AppBar,
-  Toolbar,
-  Typography,
-  Box,
-  Button,
-} from "@mui/material";
+import { CssBaseline, AppBar, Toolbar, Typography, Box } from "@mui/material";
 import { BrowserRouter } from "react-router-dom";
 
 export const App = () => (

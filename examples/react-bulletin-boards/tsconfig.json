@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "jsx": "preserve",
+    "esModuleInterop": true
+  },
+  "include": ["src"]
+}

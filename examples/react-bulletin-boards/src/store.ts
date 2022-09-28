@@ -1,6 +1,6 @@
-import { createResource, createNamespace, createContext } from "@ldkit/core";
-import type { SchemaInterface } from "@ldkit/core";
-import { dcterms, schema, xsd } from "@ldkit/namespaces";
+import { type Context, type SchemaInterface, createResource, createNamespace } from "ldkit";
+import { dcterms, schema, xsd } from "ldkit/namespaces";
+import { QueryEngine as Comunica } from "@comunica/query-sparql";
 
 const time = createNamespace({
   iri: "http://www.w3.org/2006/time#",
@@ -49,7 +49,7 @@ const InformationSchema = {
   published: {
     "@id": sb504_2004["vyvěšení-informace"],
     "@context": InstantSchema,
-    "@meta": ["@optional"],
+    "@optional": true,
   },
   validUntil: {
     "@id": desky["relevantní-do"],
@@ -62,12 +62,14 @@ export const DEFAULT_BOARD_IRI =
 
 export type InformationInterface = SchemaInterface<typeof InformationSchema>;
 
+const engine = new Comunica();
+
 export const createInfosResource = (iri: string) => {
-  const context = createContext({
-    source: {
+  const context: Context = {
+    sources: [{
       type: "file",
       value: iri,
-    },
-  });
-  return createResource(InformationSchema, context);
+    }],
+  };
+  return createResource(InformationSchema, context, engine);
 };
