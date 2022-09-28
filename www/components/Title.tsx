@@ -8,7 +8,7 @@ export function Title({ children }: TitleProps) {
   return children ? (
     <title>
       {children}
-      {" | LDkit"}
+      {" · LDkit"}
     </title>
   ) : (
     <title>
