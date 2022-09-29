@@ -31,10 +31,10 @@ const menuItems = [
     title: "Documentation",
     url: "/docs",
   },
-  {
-    title: "Showcase",
-    url: "/showcase",
-  },
+  //{
+  //  title: "Showcase",
+  //  url: "/showcase",
+  //},
   {
     title: "GitHub",
     url: "https://github.com/karelklima/ldkit",
