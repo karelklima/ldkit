@@ -1,14 +1,3 @@
-import type {
-  Bindings,
-  BlankNode,
-  Literal,
-  NamedNode,
-  Quad,
-  Term,
-  Variable,
-} from "https://esm.sh/rdf-js@4.0.2";
-export type { Bindings, BlankNode, Literal, NamedNode, Quad, Term, Variable };
-
 import type * as RDF from "https://esm.sh/rdf-js@4.0.2";
 
 export type { RDF };
@@ -17,8 +6,6 @@ export { fromRdf, toRdf } from "https://esm.sh/rdf-literal@1.3.0";
 
 import { DataFactory } from "https://esm.sh/rdf-data-factory@1.1.1";
 export { DataFactory };
-
-import { BindingsFactory as ComunicaBindingsFactory } from "https://esm.sh/@comunica/bindings-factory@2.2.0";
 
 import type {
   IDataSource,
@@ -43,11 +30,11 @@ export type IQueryEngine = RDF.StringSparqlQueryable<
 
 export type Iri = string;
 
-export type Node = Map<Iri, Term[]>;
+export type Node = Map<Iri, RDF.Term[]>;
 
 export type Graph = Map<Iri, Node>;
 
-export const quadsToGraph = (quads: Quad[]) => {
+export const quadsToGraph = (quads: RDF.Quad[]) => {
   const graph: Graph = new Map();
   for (const quad of quads) {
     const s = quad.subject.value;
@@ -69,6 +56,7 @@ export declare namespace RDFJSON {
     datatype?: string;
   };
   type Bindings = Record<string, Term>;
+  type Triple = [Iri, Iri, Term];
   type SparqlResultsJsonFormat = {
     head: {
       vars?: string[];
@@ -86,7 +74,7 @@ export declare namespace RDFJSON {
     fromJson(jsonBindings: Bindings): RDF.Bindings;
   }
   interface QuadFactory {
-    fromJson(jsonRdf: [Iri, Iri, Term]): RDF.Quad;
+    fromJson(jsonRdf: Triple): RDF.Quad;
   }
 }
 
@@ -116,17 +104,98 @@ export class TermFactory implements RDFJSON.TermFactory {
   }
 }
 
-export class BindingsFactory extends ComunicaBindingsFactory
-  implements RDFJSON.BindingsFactory {
-  protected readonly localDataFactory: RDF.DataFactory;
+export class ReadOnlyBindings implements RDF.Bindings {
+  public readonly type = "bindings";
+
+  protected readonly dataFactory: RDF.DataFactory;
+  protected readonly entries: Map<RDF.Variable, RDF.Term>;
+  protected readonly variables: Map<string, RDF.Variable>;
+
+  constructor(
+    bindings: Map<RDF.Variable, RDF.Term>,
+    dataFactory: RDF.DataFactory = new DataFactory(),
+  ) {
+    this.entries = bindings;
+    this.dataFactory = dataFactory;
+    this.variables = new Map();
+    for (const variable of bindings.keys()) {
+      this.variables.set(variable.value, variable);
+    }
+  }
+
+  has(key: string | RDF.Variable) {
+    const stringKey = typeof key === "string" ? key : key.value;
+    const variableKey = this.variables.get(stringKey);
+    return this.entries.has(variableKey!);
+  }
+
+  get(key: string | RDF.Variable) {
+    const stringKey = typeof key === "string" ? key : key.value;
+    const variableKey = this.variables.get(stringKey);
+    return this.entries.get(variableKey!);
+  }
+
+  set(_key: string | RDF.Variable, _value: RDF.Term): RDF.Bindings {
+    throw new Error("Method not implemented.");
+  }
+
+  delete(_key: string | RDF.Variable): RDF.Bindings {
+    throw new Error("Method not implemented.");
+  }
+
+  keys() {
+    return this.entries.keys();
+  }
+
+  values() {
+    return this.entries.values();
+  }
+
+  forEach(fn: (value: RDF.Term, key: RDF.Variable) => unknown) {
+    return this.entries.forEach(fn);
+  }
+
+  get size() {
+    return this.entries.size;
+  }
+
+  [Symbol.iterator]() {
+    return this.entries.entries();
+  }
+
+  equals(_other: RDF.Bindings | null | undefined): boolean {
+    throw new Error("Method not implemented.");
+  }
+
+  filter(_fn: (value: RDF.Term, key: RDF.Variable) => boolean): RDF.Bindings {
+    throw new Error("Method not implemented.");
+  }
+
+  map(_fn: (value: RDF.Term, key: RDF.Variable) => RDF.Term): RDF.Bindings {
+    throw new Error("Method not implemented.");
+  }
+
+  merge(_other: RDF.Bindings): RDF.Bindings | undefined {
+    throw new Error("Method not implemented.");
+  }
+
+  mergeWith(
+    _merger: (self: RDF.Term, other: RDF.Term, key: RDF.Variable) => RDF.Term,
+    _other: RDF.Bindings,
+  ): RDF.Bindings {
+    throw new Error("Method not implemented.");
+  }
+}
+
+export class BindingsFactory implements RDFJSON.BindingsFactory {
+  protected readonly dataFactory: RDF.DataFactory;
   protected readonly termFactory: RDFJSON.TermFactory;
 
   constructor(
     dataFactory: RDF.DataFactory = new DataFactory(),
-    termFactory: RDFJSON.TermFactory = new TermFactory(),
+    termFactory: RDFJSON.TermFactory = new TermFactory(dataFactory),
   ) {
-    super(dataFactory);
-    this.localDataFactory = dataFactory;
+    this.dataFactory = dataFactory;
     this.termFactory = termFactory;
   }
 
@@ -135,11 +204,11 @@ export class BindingsFactory extends ComunicaBindingsFactory
       [varName, jsonTerm],
     ) => {
       return [
-        this.localDataFactory.variable!(varName),
+        this.dataFactory.variable!(varName),
         this.termFactory.fromJson(jsonTerm),
       ] as [RDF.Variable, RDF.Term];
     });
-    return this.bindings(bindingsEntries) as unknown as RDF.Bindings;
+    return new ReadOnlyBindings(new Map(bindingsEntries), this.dataFactory);
   }
 }
 
@@ -148,7 +217,7 @@ export class QuadFactory implements RDFJSON.QuadFactory {
   protected readonly termFactory: RDFJSON.TermFactory;
   constructor(
     dataFactory: RDF.DataFactory = new DataFactory(),
-    termFactory: RDFJSON.TermFactory = new TermFactory(),
+    termFactory: RDFJSON.TermFactory = new TermFactory(dataFactory),
   ) {
     this.dataFactory = dataFactory;
     this.termFactory = termFactory;

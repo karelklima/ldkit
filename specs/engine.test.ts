@@ -16,7 +16,6 @@ Deno.test("Boolean query with FALSE outcome", async () => {
     "ASK { ?s <https://probablynonexistentnode> ?o }",
     context,
   );
-  console.log("RESPONSE", response);
   assertEquals(response, false);
 });
 

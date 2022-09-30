@@ -4,7 +4,6 @@ import { type Tree, TreeIterator } from "../library/asynciterator.ts";
 async function assertIterator(input: Tree<unknown>, output: unknown[]) {
   const i = new TreeIterator(input);
   const result = await i.toArray();
-  console.log("RESULT", result);
   assertEquals(result, output);
 }
 
