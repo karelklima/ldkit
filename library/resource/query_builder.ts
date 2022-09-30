@@ -2,7 +2,9 @@ import type { Property, Schema } from "../schema/mod.ts";
 import { getSchemaProperties } from "../schema/mod.ts";
 import { $, CONSTRUCT, DELETE, INSERT, SELECT } from "../sparql.ts";
 import { type Context, DataFactory, type Iri, type RDF } from "../rdf.ts";
-import { ldkit, rdf } from "../namespaces/mod.ts";
+import ldkit from "../namespaces/ldkit.ts";
+import rdf from "../namespaces/rdf.ts";
+
 import { encode } from "../encoder.ts";
 
 import type { Entity } from "./types.ts";

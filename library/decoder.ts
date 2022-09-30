@@ -1,6 +1,7 @@
 import { type Context, fromRdf, Graph, Iri, Node, type RDF } from "./rdf.ts";
 import type { Property, Schema } from "./schema/mod.ts";
-import { ldkit, rdf } from "./namespaces/mod.ts";
+import ldkit from "./namespaces/ldkit.ts";
+import rdf from "./namespaces/rdf.ts";
 
 type DecodedNode = Record<string, unknown>;
 
