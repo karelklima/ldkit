@@ -4,8 +4,11 @@ export type { RDF };
 
 export { fromRdf, toRdf } from "https://esm.sh/rdf-literal@1.3.0";
 
-import { DataFactory } from "https://esm.sh/rdf-data-factory@1.1.1";
-export { DataFactory };
+import {
+  DataFactory,
+  DefaultGraph,
+} from "https://esm.sh/rdf-data-factory@1.1.1";
+export { DataFactory, DefaultGraph };
 
 import type {
   IDataSource,
