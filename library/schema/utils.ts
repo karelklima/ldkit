@@ -1,4 +1,4 @@
-import { xsd } from "../namespaces/mod.ts";
+import xsd from "../namespaces/xsd.ts";
 //import { string } from "yargs";
 import type {
   Property,

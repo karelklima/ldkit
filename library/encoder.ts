@@ -1,6 +1,7 @@
 import { type Context, DataFactory, type Iri, type RDF, toRdf } from "./rdf.ts";
 import type { Property, Schema } from "./schema/mod.ts";
-import { rdf, xsd } from "./namespaces/mod.ts";
+import xsd from "./namespaces/xsd.ts";
+import rdf from "./namespaces/rdf.ts";
 
 type DecodedNode = Record<string, unknown>;
 
