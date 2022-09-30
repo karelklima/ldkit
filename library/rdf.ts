@@ -200,7 +200,6 @@ export class BindingsFactory implements RDFJSON.BindingsFactory {
   }
 
   fromJson(jsonBindings: RDFJSON.Bindings) {
-    console.log(jsonBindings);
     const bindingsEntries = Object.entries(jsonBindings).map((
       [varName, jsonTerm],
     ) => {
@@ -209,7 +208,6 @@ export class BindingsFactory implements RDFJSON.BindingsFactory {
         this.termFactory.fromJson(jsonTerm),
       ] as [RDF.Variable, RDF.Term];
     });
-    console.log(bindingsEntries);
     return new ReadOnlyBindings(new Map(bindingsEntries), this.dataFactory);
   }
 }
