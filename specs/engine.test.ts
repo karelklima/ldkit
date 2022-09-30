@@ -36,6 +36,9 @@ Deno.test("Bindings query", async () => {
     context,
   );
   const bindings = stream.read();
+  console.log("PRE");
+  console.log(bindings);
+  console.log(bindings?.get("x"));
   assertEquals(bindings?.get("x")?.value, "x");
   assertEquals(bindings?.get("y")?.value, "y");
   assertEquals(bindings?.get("z")?.value, undefined);
