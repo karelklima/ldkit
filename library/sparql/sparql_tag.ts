@@ -3,7 +3,7 @@ import xsd from "../namespaces/xsd.ts";
 
 import { stringify } from "./stringify.ts";
 
-type SparqlValue =
+export type SparqlValue =
   | RDF.Term
   | string
   | number
@@ -43,13 +43,17 @@ const valueToString = (value: SparqlValue): string => {
 
   if (typeof value === "number") {
     const numberDataType = Number.isInteger(value) ? xsd.integer : xsd.decimal;
-    return stringify(df.literal(value.toString(), numberDataType));
+    return stringify(
+      df.literal(value.toString(), df.namedNode(numberDataType)),
+    );
   }
   if (typeof value === "boolean") {
-    return stringify(df.literal(value.toString(), xsd.boolean));
+    return stringify(df.literal(value.toString(), df.namedNode(xsd.boolean)));
   }
   if (value instanceof Date) {
-    return stringify(df.literal(value.toISOString(), xsd.dateTime));
+    return stringify(
+      df.literal(value.toISOString(), df.namedNode(xsd.dateTime)),
+    );
   }
 
   if (value.termType) {
