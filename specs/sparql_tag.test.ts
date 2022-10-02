@@ -71,6 +71,21 @@ Deno.test("SPARQL / Sparql tag escape", () => {
   assertEquals(sparql`${df.literal(`th\ning\r\n`)}`, `"th\\ning\\r\\n"`);
 });
 
+Deno.test("SPARQL / Sparql tag iterable terms", () => {
+  const quad = df.quad(df.namedNode("s"), df.namedNode("p"), df.namedNode("o"));
+  const graphedQuad = df.quad(
+    df.namedNode("s"),
+    df.namedNode("p"),
+    df.namedNode("o"),
+    df.namedNode("g"),
+  );
+  const quads = [quad, graphedQuad];
+
+  const result = "<s> <p> <o> .\nGRAPH <g> { <s> <p> <o> . }";
+
+  assertEquals(sparql`${quads}`, result);
+});
+
 Deno.test("SPARQL / Sparql tag complex test", () => {
   const quad = df.quad(df.variable("s"), df.variable("p"), df.variable("o"));
   const input = sparql`SELECT ${df.variable("s")} WHERE { ${quad} }`;

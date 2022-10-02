@@ -9,6 +9,7 @@ export type SparqlValue =
   | number
   | boolean
   | Date
+  | Iterable<SparqlValue>
   | null
   | undefined;
 
@@ -28,6 +29,10 @@ export const sparql = (
   result += strings[counter];
 
   return result;
+};
+
+const isIterable = (obj: unknown): obj is Iterable<unknown> => {
+  return Symbol.iterator in Object(obj);
 };
 
 const df = new DataFactory();
@@ -54,6 +59,16 @@ const valueToString = (value: SparqlValue): string => {
     return stringify(
       df.literal(value.toISOString(), df.namedNode(xsd.dateTime)),
     );
+  }
+
+  if (isIterable(value)) {
+    const [first, ...rest] = value;
+    let result = valueToString(first);
+
+    for (const part of rest) {
+      result += `\n${valueToString(part)}`;
+    }
+    return result;
   }
 
   if (value.termType) {
