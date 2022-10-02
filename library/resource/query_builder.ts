@@ -1,6 +1,12 @@
 import type { Property, Schema } from "../schema/mod.ts";
 import { getSchemaProperties } from "../schema/mod.ts";
-import { $, CONSTRUCT, DELETE, INSERT, SELECT } from "../sparql.ts";
+import {
+  CONSTRUCT,
+  DELETE,
+  INSERT,
+  SELECT,
+  sparql as $,
+} from "../sparql/mod.ts";
 import { type Context, DataFactory, type Iri, type RDF } from "../rdf.ts";
 import ldkit from "../namespaces/ldkit.ts";
 import rdf from "../namespaces/rdf.ts";
@@ -113,7 +119,7 @@ export class QueryBuilder {
     `.WHERE`
       ${this.getShape(false, true)}
       ${where}
-    `.LIMIT(limit);
+    `.LIMIT(limit).build();
 
     const query = CONSTRUCT`
       ${this.getResourceSignature()}
@@ -165,7 +171,7 @@ export class QueryBuilder {
   };
 
   deleteDataQuery(quads: RDF.Quad[]) {
-    return $`DELETE DATA { ${quads} }`.toString();
+    return DELETE.DATA`${quads}`.build();
   }
 
   updateQuery(entities: Entity[]) {
