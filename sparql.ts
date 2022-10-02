@@ -1,1 +1,1 @@
-export * from "./library/sparql.ts";
+export * from "./library/sparql/mod.ts";
