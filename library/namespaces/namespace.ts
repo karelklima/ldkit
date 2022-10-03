@@ -33,7 +33,7 @@ export const createNamespace = <
       $prefix: namespaceSpec["prefix"],
       $iri: namespaceSpec["iri"],
     },
-  ) as O & {
+  ) as unknown as O & {
     $prefix: P;
     $iri: I;
   };
