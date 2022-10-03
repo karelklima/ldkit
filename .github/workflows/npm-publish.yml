@@ -1,25 +1,40 @@
-# This workflow will run tests using node and then publish packages to NPM Packages when a release is created
+# This workflow will run DNT and then publish to NPM when a tag is created
 
-name: Publish Node.js Packages
+name: Publish to NPM
 
 on:
-  #release:
-  #  types: [created]
+  push:
+    tags:
+    - 'v*'
   workflow_dispatch:
 
 jobs:
-  publish:
+  dnt-and-publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - uses: actions/setup-node@v2
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-      - run: npm install
-      - run: npm run build
-      - run: npm run set-version ${{ github.event.release.tag_name }}
-      - run: npm run publish
+
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - uses: actions/github-script@v4
+        id: version
+        with:
+          script: |
+            const tag = context.ref.substring(10)
+            const no_v = tag.replace('v', '')
+            core.setOutput('tag', tag)
+            core.setOutput('no-v', no_v)
+
+      - run: deno task dnt ${{ steps.version.outputs.no-v }}
+      - run: npm publish --access public
+        working-directory: ./npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
