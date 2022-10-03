@@ -1,6 +1,9 @@
 {
   "importMap": ".vscode/import_map.json",
   "tasks": {
+    "fmt:fix": "deno fmt library/ specs/ www/ docs/",
+    "fmt:check": "deno fmt --check library/ specs/ www/ docs/",
+    "lint": "deno lint library/ specs/ www/ docs/",
     "test": "deno test --allow-env --allow-net ./specs",
     "dnt": "deno run -A --importmap ./scripts/dnt_import_map.json ./scripts/dnt.ts"
   },
