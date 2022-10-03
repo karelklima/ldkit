@@ -24,7 +24,7 @@ type ConvertPropertyType<T extends PropertyPrototype> = T extends {
   // embedded schema
   ? SchemaInterface<T["@context"]>
   // type specified
-  : T extends { "@type": any } ? T["@type"] extends keyof SupportedDataTypes
+  : T extends { "@type": unknown } ? T["@type"] extends keyof SupportedDataTypes
       // type is built-int
       ? SupportedDataTypes[T["@type"]]
       // type is invalid

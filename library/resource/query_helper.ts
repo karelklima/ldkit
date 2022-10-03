@@ -71,7 +71,7 @@ export class QueryHelper {
       const value = entity[key];
 
       if (key === "$id") {
-        output.$id = value;
+        output.$id = value as string;
         return output;
       }
       if (key === "$type") {
@@ -90,10 +90,10 @@ export class QueryHelper {
       }
 
       if (property["@array"]) {
-        if (value.length === 0) {
+        if ((value as Entity[]).length === 0) {
           output[key] = null;
         } else {
-          output[key] = value.map((subEntity: Entity) =>
+          output[key] = (value as Entity[]).map((subEntity) =>
             this.replaceVariables(subEntity, property["@context"]!)
           );
         }

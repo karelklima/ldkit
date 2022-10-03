@@ -89,7 +89,7 @@ class Encoder {
     });
   }
 
-  encodeNodeProperty(value: any, property: Property, nodeId: NodeId) {
+  encodeNodeProperty(value: unknown, property: Property, nodeId: NodeId) {
     if (value === undefined) {
       return;
     }
@@ -107,10 +107,11 @@ class Encoder {
     }
 
     if (property["@multilang"]) {
-      Object.keys(value).forEach((language) => {
-        const languageValue: string[] = Array.isArray(value[language])
-          ? value[language]
-          : [value[language]];
+      const multiValue = value as unknown as Record<string, unknown>;
+      Object.keys(multiValue).forEach((language) => {
+        const languageValue: string[] = Array.isArray(multiValue[language])
+          ? multiValue[language] as string[]
+          : [multiValue[language]] as string[];
         languageValue.forEach((singleValue) => {
           this.push(
             nodeId,
