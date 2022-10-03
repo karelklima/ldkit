@@ -13,7 +13,7 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
   };
 
   const expandSchemaProperty = (
-    stringOrProperty: string | PropertyPrototype
+    stringOrProperty: string | PropertyPrototype,
   ) => {
     if (typeof stringOrProperty === "string") {
       return {
@@ -66,7 +66,7 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
       acc[key] = expandArray(schemaPrototype[key]);
     } else {
       acc[key] = expandSchemaProperty(
-        schemaPrototype[key] as string | PropertyPrototype
+        schemaPrototype[key] as string | PropertyPrototype,
       );
     }
     return acc;
