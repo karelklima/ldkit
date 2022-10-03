@@ -13,7 +13,7 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
   };
 
   const expandSchemaProperty = (
-    stringOrProperty: string | PropertyPrototype
+    stringOrProperty: string | PropertyPrototype,
   ) => {
     if (typeof stringOrProperty === "string") {
       return {
@@ -37,7 +37,7 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
       "@multilang",
     ] as const;
 
-    const baseProperty: Record<string, any> = {
+    const baseProperty: Record<string, unknown> = {
       "@id": "",
     };
 
@@ -45,7 +45,7 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
       if (key === "@context") {
         acc[key] = expandSchema(property[key]!);
       } else if (validKeys.includes(key as keyof PropertyPrototype)) {
-        acc[key] = property[key as keyof PropertyPrototype] as any;
+        acc[key] = property[key as keyof PropertyPrototype] as unknown;
       }
       return acc;
     }, baseProperty);
@@ -66,7 +66,7 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
       acc[key] = expandArray(schemaPrototype[key]);
     } else {
       acc[key] = expandSchemaProperty(
-        schemaPrototype[key] as string | PropertyPrototype
+        schemaPrototype[key] as string | PropertyPrototype,
       );
     }
     return acc;

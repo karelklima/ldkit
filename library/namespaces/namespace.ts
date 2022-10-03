@@ -28,7 +28,7 @@ export const createNamespace = <
       //acc[term] = `${namespaceSpec.prefix}${term}`
       acc[term] = `${namespaceSpec.iri}${term}`;
       return acc;
-    }, {} as any),
+    }, {} as Record<string, string>),
     {
       $prefix: namespaceSpec["prefix"],
       $iri: namespaceSpec["iri"],

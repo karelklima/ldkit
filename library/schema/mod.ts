@@ -5,10 +5,10 @@ export type {
 } from "./interface.ts";
 
 export type {
-  Schema,
-  SchemaPrototype,
   Property,
   PropertyPrototype,
+  Schema,
+  SchemaPrototype,
 } from "./schema.ts";
 
 export { expandSchema, getSchemaProperties } from "./utils.ts";

@@ -62,19 +62,20 @@ type MenuItemProps = {
 const baseLinkClass = "flex flex-row p-4 border-b-2 hover:border-black";
 
 function MenuItem({ title, url, activeLink }: MenuItemProps) {
-  const linkClass =
-    url === activeLink
-      ? `${baseLinkClass} border-black bg-gray-50`
-      : `${baseLinkClass} border-transparent`;
+  const linkClass = url === activeLink
+    ? `${baseLinkClass} border-black bg-gray-50`
+    : `${baseLinkClass} border-transparent`;
   return (
     <li class="inline-block">
       <a href={url} class={linkClass}>
         <span>{title}</span>
-        {url.startsWith("http") ? (
-          <span class="ml-1 mt-1 w-2 h-2 text-gray-400">
-            <IconExternalLink />
-          </span>
-        ) : null}
+        {url.startsWith("http")
+          ? (
+            <span class="ml-1 mt-1 w-2 h-2 text-gray-400">
+              <IconExternalLink />
+            </span>
+          )
+          : null}
       </a>
     </li>
   );
