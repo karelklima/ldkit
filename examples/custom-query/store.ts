@@ -1,6 +1,6 @@
 import {
+  createLens,
   createNamespace,
-  createResource,
   type SchemaInterface,
   setDefaultContext,
 } from "ldkit";
@@ -51,20 +51,6 @@ const SearchSchema = {
   vocabularyTitle: dcterms.title,
 } as const;
 
-const customFetch = (input: string | Request | URL, init?: RequestInit) => {
-  console.log("CUSTOM FETCH FETCHING");
-  const headers = init?.headers as Headers;
-  const ct = (init?.headers as Headers).get("Content-type");
-  console.log(ct);
-  if (ct === "application/x-www-form-urlencoded") {
-    headers.set(
-      "Content-type",
-      "application/x-www-form-urlencoded; charset=UTF-8",
-    );
-  }
-  return fetch(input, init);
-};
-
 setDefaultContext({
   sources: [
     {
@@ -72,9 +58,8 @@ setDefaultContext({
       value: "https://xn--slovnk-7va.gov.cz/sparql",
     },
   ],
-  fetch: customFetch,
 });
 
 export type SearchInterface = SchemaInterface<typeof SearchSchema>;
 
-export const SearchResource = createResource(SearchSchema);
+export const SearchLens = createLens(SearchSchema);
