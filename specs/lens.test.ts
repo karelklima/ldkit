@@ -8,7 +8,7 @@ import {
   x,
 } from "./test_utils.ts";
 
-import { createResource } from "../library/lens/mod.ts";
+import { createLens } from "../library/lens/mod.ts";
 import { rdf, xsd } from "../library/namespaces/mod.ts";
 import { DataFactory } from "../library/rdf.ts";
 
@@ -91,8 +91,8 @@ const init = () => {
   const context = createStoreContext(store, {
     sources: [{ type: "rdfjsSource", value: store }],
   });
-  const directors = createResource(Director, context, engine);
-  const movies = createResource(Movie, context, engine);
+  const directors = createLens(Director, context, engine);
+  const movies = createLens(Movie, context, engine);
   const assertStore = (turtle: string) => {
     const storeQuads = store.getQuads(null, null, null, null);
     const expectedQuads = ttl(turtle);

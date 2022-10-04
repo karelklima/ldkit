@@ -11,7 +11,7 @@ export const setDefaultContext = (context: Context) => {
 export const resolveContext = (context?: Context) => {
   if (!context && !defaultContext) {
     throw new Error(
-      "No context found. Please create a default context or pass one to createResource function",
+      "No context found. Please create a default context or pass one to createLens function",
     );
   }
   return context || defaultContext!;
@@ -26,7 +26,7 @@ export const resolveEngine = (engine?: IQueryEngine) => {
     setDefaultEngine(new QueryEngine());
     // TODO: consider the consequences here, maybe log a warning?
     /*throw new Error(
-      "No engine found. Please create a default engine or pass one to createResource function",
+      "No engine found. Please create a default engine or pass one to createLens function",
     );*/
   }
   return engine || defaultEngine!;

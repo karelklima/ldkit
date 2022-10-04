@@ -13,13 +13,33 @@ import { QueryBuilder } from "./query_builder.ts";
 import type { Entity } from "./types.ts";
 import { QueryEngineProxy } from "../engine/query_engine_proxy.ts";
 
+/**
+ * Lens lets you query and update RDF data via data schema using TypeScript native data types.
+ *
+ * https://ldkit.io/docs/components/lens
+ *
+ * @param schema data schema which extends `SchemaPrototype`
+ * @param context optional `Context` - contains LDkit and query engine configuration
+ * @param engine optional Query Engine
+ * @returns Lens instance
+ */
+export const createLens = <T extends SchemaPrototype>(
+  schema: T,
+  context?: Context,
+  engine?: IQueryEngine,
+) => new Lens(schema, context, engine);
+
+/**
+ * @deprecated
+ * Use `createLens` instead
+ */
 export const createResource = <T extends SchemaPrototype>(
   schema: T,
   context?: Context,
   engine?: IQueryEngine,
-) => new Resource(schema, context, engine);
+) => new Lens(schema, context, engine);
 
-export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
+export class Lens<S extends SchemaPrototype, I = SchemaInterface<S>> {
   private readonly schema: Schema;
   private readonly context: Context;
   private readonly engine: QueryEngineProxy;
