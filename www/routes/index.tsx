@@ -65,9 +65,9 @@ const PersonSchema = {
 `;
 
 const step3Markdown = `
-import { createResource } from "ldkit";
+import { createLens } from "ldkit";
 
-const Persons = createResource(PersonSchema);
+const Persons = createLens(PersonSchema);
 
 const adaIri = "http://dbpedia.org/resource/Ada_Lovelace";
 const ada = await Persons.findByIri(adaIri);
@@ -102,9 +102,8 @@ function Steps() {
       <div>
         <h2 class="pb-5 text-4xl font-black">3. Fetch data!</h2>
         <p class="pl-10 pr-10 text-xl">
-          Convert data schema to a resource and fetch data with one line of
-          code. Data gets transformed from RDF to native TypeScript
-          automatically.
+          Convert data Schema to a Lens and fetch data with one line of code.
+          Data gets transformed from RDF to native TypeScript automatically.
         </p>
       </div>
       <div class="pb-4">
@@ -127,7 +126,7 @@ function Features() {
     <div class="grid grid-cols-4 gap-4 pb-20">
       <div class="p-2">
         <h2 class="text-xl font-black">Next-gen RDF abstraction</h2>
-        <p>For efortless querying of RDF data from any source.</p>
+        <p>Query RDF data from any source effortlessly.</p>
       </div>
       <div class="p-2">
         <h2 class="text-xl font-black">First class TypeScript</h2>

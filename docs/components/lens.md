@@ -1,39 +1,38 @@
-# Resource
+# Lens
 
-A **resource** turns a particular data [schema](./schema) to an interactive
-entity repository. In principle, a resource is a collection of data entities
-that conform to the specified schema. Through resources you can find or update
+A data **Lens** turns a particular data [Schema](./schema) to an interactive
+entity repository. In principle, a Lens is a collection of data entities that
+conform to the specified Schema. Through Lens instances you can find or update
 data easily.
 
-In background, resources handle building and executing SPARQL queries, data
-retrieval and transformation according to the data schema.
+In background, Lens handle building and executing SPARQL queries, data retrieval
+and transformation according to the data Schema.
 
 ## Creating a resource
 
-A resource requires a [schema](./schema), a [context](./context), and a
-[query engine](./query-engine). If you do not specify context or engine, default
+A Lens requires a [Schema](./schema), a [Context](./context), and a
+[Query Engine](./query-engine). If you do not specify context or engine, default
 ones will be used.
 
 ```ts
-import { type Context, createResource } from "ldkit";
+import { type Context, createLens } from "ldkit";
 
 const context: Context = {
   sources: ["https://example.com/sparql"],
 };
 
-const resource = createResource(MySchema, context); // will use default query engine
+const MyLens = createLens(MySchema, context); // will use default query engine
 ```
 
-## Resource usage
+## Lens usage
 
-The examples below show a simple `Person` resource on top of DBpedia - a
-collection of entities of type _dbo:Person_ that have a name, an abstract and a
-birth date.
+The examples below show a simple `Persons` Lens on top of DBpedia - a collection
+of entities of type _dbo:Person_ that have a name, an abstract and a birth date.
 
-### Create a resource to query persons
+### Create a Lens instance to query persons
 
 ```ts
-import { type Context, createResource } from "ldkit";
+import { type Context, createLens } from "ldkit";
 import { dbo, rdfs, xsd } from "ldkit/namespaces";
 
 const context: Context = {
@@ -49,21 +48,21 @@ const PersonSchema = {
 } as const;
 
 // Create a resource using the data schema and context above
-const Person = createResource(PersonSchema, context);
+const Persons = createLens(PersonSchema, context);
 ```
 
 ### List all matched persons
 
 ```ts
 // List all persons
-const persons = await Person.find();
+const persons = await Persons.find();
 for (const person of persons) {
   console.log(person.name); // string
   console.log(person.birthDate); // Date
 }
 
 // Get total count of all persons
-const count = await Person.count();
+const count = await Persons.count();
 console.log(count); // number
 ```
 
@@ -71,7 +70,7 @@ console.log(count); // number
 
 ```ts
 // Get a particular person identified by IRI
-const ada = await Person.findByIri("http://dbpedia.org/resource/Ada_Lovelace");
+const ada = await Persons.findByIri("http://dbpedia.org/resource/Ada_Lovelace");
 console.log(ada?.name); // string "Ada Lovelace"
 console.log(ada?.birthDate); // Date object of 1815-12-10
 ```
@@ -79,24 +78,24 @@ console.log(ada?.birthDate); // Date object of 1815-12-10
 ### Data manipulation - insert, update and delete
 
 When modifying data, you can use the native data format specified by the data
-schema. The data gets transformed to RDF behind the scenes.
+Schema. The data gets transformed to RDF behind the scenes.
 
 ```ts
 // Insert a new person
-Person.insert({
+Persons.insert({
   $id: "http://dbpedia.org/resource/Alan_Turing",
   name: "Alan Turing",
   birthDate: new Date("1912-06-23"),
 });
 
 // Modify a person's name
-Person.update({
+Persons.update({
   $id: "http://dbpedia.org/resource/Alan_Turing",
   name: "Not Alan Turing",
 });
 
 // Delete a person
-Person.delete("http://dbpedia.org/resource/Alan_Turing");
+Persons.delete("http://dbpedia.org/resource/Alan_Turing");
 ```
 
 ### Data manipulation - insert or update raw data
@@ -116,5 +115,5 @@ const quad = df.quad(
   df.namedNode(rdfs.label),
   df.literal("Maybe Not Alan Turing")
 );
-await Person.insertData([quad]); // quad added to the database
+await Persons.insertData([quad]); // quad added to the database
 ```

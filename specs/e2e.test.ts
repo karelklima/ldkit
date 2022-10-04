@@ -2,8 +2,8 @@ import { assert } from "./test_deps.ts";
 
 import {
   type Context,
+  createLens,
   createNamespace,
-  createResource,
   type SchemaInterface,
 } from "../mod.ts";
 import { rdfs, xsd } from "../library/namespaces/mod.ts";
@@ -43,7 +43,7 @@ export const createLanguageContext = (language: string) => ({
 
 export type ActorInterface = SchemaInterface<typeof ActorSchema>;
 
-export const Actors = createResource(ActorSchema, createLanguageContext("en"));
+export const Actors = createLens(ActorSchema, createLanguageContext("en"));
 
 export const favouriteActors = [
   "http://dbpedia.org/resource/Brad_Pitt",

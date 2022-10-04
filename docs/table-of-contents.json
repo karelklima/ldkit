@@ -8,9 +8,9 @@
   "components": {
     "title": "Components",
     "pages": [
-      ["context", "Context"],
       ["schema", "Schema"],
-      ["resource", "Resource"],
+      ["lens", "Lens"],
+      ["context", "Context"],
       ["namespaces", "Namespaces"],
       ["query-engine", "Query Engine"],
       ["power-tools", "Power Tools"]

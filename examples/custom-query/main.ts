@@ -1,5 +1,5 @@
-import { lucene, lucene_instance, popisDat, SearchResource } from "./store.ts";
-import { $ } from "ldkit/sparql";
+import { lucene, lucene_instance, popisDat, SearchLens } from "./store.ts";
+import { sparql as $ } from "ldkit/sparql";
 import { DataFactory } from "ldkit/rdf";
 import { dcterms, skos } from "ldkit/namespaces";
 
@@ -59,7 +59,7 @@ CONSTRUCT {
 
 console.log(query);
 
-const results = await SearchResource.query(query);
+const results = await SearchLens.query(query);
 console.log("NUMBER OF RESULTS", results.length);
 for (const r of results) {
   console.log(

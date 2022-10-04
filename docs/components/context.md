@@ -31,14 +31,14 @@ changes.
 
 ## Setting default context
 
-Context needs to be passed to a [resource](./resource) as a parameter, and there
+Context needs to be passed to a data [Lens](./lens) as a parameter, and there
 are two ways how to handle that. Either you can pass the context directly as an
-argument when creating the resource, or you can set a context as a default one.
-If there is a default context, then the resource will use that context, if you
-do not provide one directly.
+argument when creating the `Lens`, or you can set a context as a default one. If
+there is a default context, then the `Lens` will use that context, if you do not
+provide one directly.
 
 ```ts
-import { type Context, createResource, setDefaultContext } from "ldkit";
+import { type Context, createLens, setDefaultContext } from "ldkit";
 
 const context: Context = {
   sources: ["https://example.com/sparql"],
@@ -52,6 +52,6 @@ const customContext: Context = {
   language: "cs",
 };
 
-const firstResource = createResource(FirstSchema); // will use the default context
-const secondResource = createResource(SecondSchema, customContext); // will use custom context
+const firstResource = createLens(FirstSchema); // will use the default context
+const secondResource = createLens(SecondSchema, customContext); // will use custom context
 ```
