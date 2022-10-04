@@ -218,6 +218,15 @@ Deno.test("SPARQL / Sparql builder CONSTRUCT #10", () => {
   assertEquals(query, expected);
 });
 
+Deno.test("SPARQL / Sparql builder CONSTRUCT #11", () => {
+  const expected =
+    "CONSTRUCT {\n?s ?p ?o .\n}\nWHERE {\n?s ?p ?o .\nVALUES ?s { <x> }\n}\n";
+  const query = CONSTRUCT`${spo}`
+    .WHERE`${spo}\nVALUES ?s { ${[df.namedNode("x")]} }`.build();
+
+  assertEquals(query, expected);
+});
+
 Deno.test("SPARQL / Sparql builder ASK #1", () => {
   const expected = "ASK {\n?s ?p ?o .\n}\n";
   const query = ASK`${spo}`.build();

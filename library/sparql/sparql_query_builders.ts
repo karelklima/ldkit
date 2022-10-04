@@ -69,7 +69,6 @@ class SparqlQueryBuilder extends SparqlBuilder {
     strings: TemplateStringsArray,
     ...values: SparqlValue[]
   ): Builders<"FROM" | "FROM_NAMED" | "WHERE"> {
-    console.error("VALUES", values);
     return this.template(strings, values, "SELECT");
   }
 

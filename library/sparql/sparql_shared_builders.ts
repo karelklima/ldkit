@@ -22,7 +22,7 @@ export abstract class SparqlBuilder {
   ) {
     return !values || values.length < 1
       ? sparql(strings)
-      : sparql(strings, values);
+      : sparql(strings, ...values);
   }
 
   protected template(

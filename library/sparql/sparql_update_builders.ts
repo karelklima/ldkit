@@ -66,21 +66,21 @@ class SparqlUpdateBuilder extends SparqlBuilder {
 export const INSERT = Object.assign((
   strings: TemplateStringsArray,
   ...values: SparqlValue[]
-) => new SparqlUpdateBuilder().INSERT(strings, values), {
+) => new SparqlUpdateBuilder().INSERT(strings, ...values), {
   DATA: (
     strings: TemplateStringsArray,
     ...values: SparqlValue[]
-  ) => new SparqlUpdateBuilder().INSERT_DATA(strings, values),
+  ) => new SparqlUpdateBuilder().INSERT_DATA(strings, ...values),
 });
 
 export const DELETE = Object.assign((
   strings: TemplateStringsArray,
   ...values: SparqlValue[]
-) => new SparqlUpdateBuilder().DELETE(strings, values), {
+) => new SparqlUpdateBuilder().DELETE(strings, ...values), {
   DATA: (
     strings: TemplateStringsArray,
     ...values: SparqlValue[]
-  ) => new SparqlUpdateBuilder().DELETE_DATA(strings, values),
+  ) => new SparqlUpdateBuilder().DELETE_DATA(strings, ...values),
 });
 
 export const WITH = (

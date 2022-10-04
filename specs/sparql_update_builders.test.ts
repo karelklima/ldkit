@@ -102,6 +102,13 @@ Deno.test("SPARQL / Sparql builder DELETE #6", () => {
   assertEquals(query, expected);
 });
 
+Deno.test("SPARQL / Sparql builder DELETE #7", () => {
+  const expected = "DELETE {\n?s ?p ?o\n}\nWHERE {\n?s ?p ?o\n}\n";
+  const query = DELETE`?s ?p ?o`.WHERE`?s ?p ?o`.build();
+
+  assertEquals(query, expected);
+});
+
 Deno.test("SPARQL / Sparql builder WITH #1", () => {
   const expected =
     "WITH <g>\nDELETE {\n?s ?p ?o .\n}\nINSERT {\n?s ?p ?o .\n}\nWHERE {\n?s ?p ?o .\n}\n";
