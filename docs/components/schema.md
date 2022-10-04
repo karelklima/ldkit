@@ -1,9 +1,9 @@
 # Schema
 
-On a conceptual level, a data schema is lens through which you query RDF data.
-It is similar to a data model for standard ORM libraries. Through schema, you
-describe a class of entities and their properties to be retrieved from an RDF
-source.
+On a conceptual level, a data schema is a definition of a data shape through
+which you query RDF data. It is similar to a data model for standard ORM
+libraries. Through schema, you describe a class of entities and their properties
+to be retrieved from an RDF source.
 
 LDkit schemas are based on
 [JSON-LD context](https://json-ld.org/spec/latest/json-ld/) format, and simple
