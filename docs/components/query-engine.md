@@ -51,18 +51,18 @@ Comunica, or a custom engine derived from that - see
 
 ## Setting default query engine
 
-A query engine instance needs to be passed to a [resource](./resource) as a
+A query engine instance needs to be passed to a data [Lens](./lens) as a
 parameter in order to query data, and there are two ways how to handle that.
-Either you can pass the engine directly as an argument when creating the
-resource, or you can set an engine instance as a default one. If there is a
-default engine instance, then the resource will use that engine, if you do not
-provide one directly.
+Either you can pass the engine directly as an argument when creating the `Lens`,
+or you can set an engine instance as a default one. If there is a default engine
+instance, then the `Lens` will use that engine, if you do not provide one
+directly.
 
 ```ts
-import { createResource, setDefaultEngine } from "ldkit";
+import { createLens, setDefaultEngine } from "ldkit";
 
 const engine = new MyCustomQueryEngine();
 setDefaultEngine(engine);
 
-const resource = createResource(MySchema); // will use the custom engine, which is now default
+const MyLens = createLens(MySchema); // will use the custom engine, which is now default
 ```
