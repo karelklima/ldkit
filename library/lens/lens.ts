@@ -14,10 +14,10 @@ import type { Entity } from "./types.ts";
 import { QueryEngineProxy } from "../engine/query_engine_proxy.ts";
 
 export const createResource = <T extends SchemaPrototype>(
-  spec: T,
+  schema: T,
   context?: Context,
   engine?: IQueryEngine,
-) => new Resource(spec, context, engine);
+) => new Resource(schema, context, engine);
 
 export class Resource<S extends SchemaPrototype, I = SchemaInterface<S>> {
   private readonly schema: Schema;

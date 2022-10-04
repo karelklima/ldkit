@@ -8,7 +8,7 @@ import {
   x,
 } from "./test_utils.ts";
 
-import { createResource } from "../library/resource/mod.ts";
+import { createResource } from "../library/lens/mod.ts";
 import { rdf, xsd } from "../library/namespaces/mod.ts";
 import { DataFactory } from "../library/rdf.ts";
 
