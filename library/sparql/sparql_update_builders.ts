@@ -1,4 +1,4 @@
-import { SparqlBuilder } from "./sparql_shared_builders.ts";
+import { braces, SparqlBuilder } from "./sparql_shared_builders.ts";
 
 import { type RDF } from "../rdf.ts";
 import { type SparqlValue } from "./sparql_tag.ts";
@@ -13,7 +13,7 @@ class SparqlUpdateBuilder extends SparqlBuilder {
     strings: TemplateStringsArray,
     ...values: SparqlValue[]
   ): Builders<"build"> {
-    return this.template(strings, values, "WHERE", true);
+    return this.template(strings, values, "WHERE", braces);
   }
 
   public USING_NAMED(
@@ -32,28 +32,28 @@ class SparqlUpdateBuilder extends SparqlBuilder {
     strings: TemplateStringsArray,
     ...values: SparqlValue[]
   ): Builders<"USING" | "USING_NAMED" | "WHERE"> {
-    return this.template(strings, values, "INSERT", true);
+    return this.template(strings, values, "INSERT", braces);
   }
 
   public INSERT_DATA(
     strings: TemplateStringsArray,
     ...values: SparqlValue[]
   ): Builders<"build"> {
-    return this.template(strings, values, "INSERT DATA", true);
+    return this.template(strings, values, "INSERT DATA", braces);
   }
 
   public DELETE(
     strings: TemplateStringsArray,
     ...values: SparqlValue[]
   ): Builders<"INSERT" | "USING" | "USING_NAMED" | "WHERE"> {
-    return this.template(strings, values, "DELETE", true);
+    return this.template(strings, values, "DELETE", braces);
   }
 
   public DELETE_DATA(
     strings: TemplateStringsArray,
     ...values: SparqlValue[]
   ): Builders<"build"> {
-    return this.template(strings, values, "DELETE DATA", true);
+    return this.template(strings, values, "DELETE DATA", braces);
   }
 
   public WITH(

@@ -6,9 +6,12 @@ import xsd from "../library/namespaces/xsd.ts";
 
 const df = new DataFactory();
 
-Deno.test("SPARQL / Sparql tag basic types", () => {
+Deno.test("SPARQL / Sparql tags simple strings", () => {
   assertEquals(sparql``, "");
+  assertEquals(sparql`abc`, "abc");
+});
 
+Deno.test("SPARQL / Sparql tag basic types", () => {
   assertEquals(sparql`${df.blankNode("x")}`, "_:x");
   assertEquals(sparql`${df.namedNode("x")}`, "<x>");
   assertEquals(sparql`${df.variable("x")}`, "?x");
