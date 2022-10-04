@@ -45,14 +45,14 @@ Deno.test("SPARQL / Sparql builder SELECT #4", () => {
 
 Deno.test("SPARQL / Sparql builder SELECT #5", () => {
   const expected = "SELECT ?s\nFROM <g>\nWHERE {\n?s ?p ?o .\n}\n";
-  const query = SELECT`${s}`.FROM`${g}`.WHERE`${spo}`.build();
+  const query = SELECT`${s}`.FROM(g).WHERE`${spo}`.build();
 
   assertEquals(query, expected);
 });
 
 Deno.test("SPARQL / Sparql builder SELECT #6", () => {
   const expected = "SELECT ?s\nFROM NAMED <g>\nWHERE {\n?s ?p ?o .\n}\n";
-  const query = SELECT`${s}`.FROM_NAMED`${g}`.WHERE`${spo}`.build();
+  const query = SELECT`${s}`.FROM_NAMED(g).WHERE`${spo}`.build();
 
   assertEquals(query, expected);
 });
@@ -60,7 +60,7 @@ Deno.test("SPARQL / Sparql builder SELECT #6", () => {
 Deno.test("SPARQL / Sparql builder SELECT #7", () => {
   const expected =
     "SELECT ?s\nFROM <g>\nFROM NAMED <g>\nWHERE {\n?s ?p ?o .\n}\n";
-  const query = SELECT`${s}`.FROM`${g}`.FROM_NAMED`${g}`.WHERE`${spo}`.build();
+  const query = SELECT`${s}`.FROM(g).FROM_NAMED(g).WHERE`${spo}`.build();
 
   assertEquals(query, expected);
 });
@@ -106,7 +106,7 @@ Deno.test("SPARQL / Sparql builder SELECT #12", () => {
 
 Deno.test("SPARQL / Sparql builder SELECT #13", () => {
   const expected =
-    "SELECT ?s\nWHERE {\n?s ?p ?o .\n}\nGROUP BY ?s\nHAVING(true)\n";
+    "SELECT ?s\nWHERE {\n?s ?p ?o .\n}\nGROUP BY ?s\nHAVING (true)\n";
   const query = SELECT`${s}`.WHERE`${spo}`.GROUP_BY`${s}`.HAVING`${true}`
     .build();
 
@@ -115,10 +115,17 @@ Deno.test("SPARQL / Sparql builder SELECT #13", () => {
 
 Deno.test("SPARQL / Sparql builder SELECT #14", () => {
   const expected =
-    "SELECT ?s\nWHERE {\n?s ?p ?o .\n}\nGROUP BY ?s\nHAVING(true)\nLIMIT 5\n";
+    "SELECT ?s\nWHERE {\n?s ?p ?o .\n}\nGROUP BY ?s\nHAVING (true)\nLIMIT 5\n";
   const query = SELECT`${s}`.WHERE`${spo}`.GROUP_BY`${s}`.HAVING`${true}`
     .LIMIT(5)
     .build();
+
+  assertEquals(query, expected);
+});
+
+Deno.test("SPARQL / Sparql builder SELECT #15", () => {
+  const expected = "SELECT ?x ?s ?y\nWHERE {\n?s ?p ?o .\n?s ?p ?o .\n}\n";
+  const query = SELECT`?x ${s} ?y`.WHERE`${[spo, spo]}`.build();
 
   assertEquals(query, expected);
 });
@@ -184,7 +191,7 @@ Deno.test("SPARQL / Sparql builder CONSTRUCT #7", () => {
 
 Deno.test("SPARQL / Sparql builder CONSTRUCT #8", () => {
   const expected =
-    "CONSTRUCT {\n?s ?p ?o .\n}\nWHERE {\n?s ?p ?o .\n}\nGROUP BY ?s\nHAVING(true)\n";
+    "CONSTRUCT {\n?s ?p ?o .\n}\nWHERE {\n?s ?p ?o .\n}\nGROUP BY ?s\nHAVING (true)\n";
   const query = CONSTRUCT`${spo}`.WHERE`${spo}`.GROUP_BY`${s}`.HAVING`${true}`
     .build();
 
@@ -193,7 +200,7 @@ Deno.test("SPARQL / Sparql builder CONSTRUCT #8", () => {
 
 Deno.test("SPARQL / Sparql builder CONSTRUCT #9", () => {
   const expected =
-    "CONSTRUCT {\n?s ?p ?o .\n}\nWHERE {\n?s ?p ?o .\n}\nGROUP BY ?s\nHAVING(true)\nLIMIT 5\n";
+    "CONSTRUCT {\n?s ?p ?o .\n}\nWHERE {\n?s ?p ?o .\n}\nGROUP BY ?s\nHAVING (true)\nLIMIT 5\n";
   const query = CONSTRUCT`${spo}`.WHERE`${spo}`.GROUP_BY`${s}`.HAVING`${true}`
     .LIMIT(5)
     .build();
@@ -203,10 +210,19 @@ Deno.test("SPARQL / Sparql builder CONSTRUCT #9", () => {
 
 Deno.test("SPARQL / Sparql builder CONSTRUCT #10", () => {
   const expected =
-    "CONSTRUCT {\n?s ?p ?o .\n}\nWHERE {\n?s ?p ?o .\n}\nGROUP BY ?s\nHAVING(true)\nLIMIT 5\n";
+    "CONSTRUCT {\n?s ?p ?o .\n}\nWHERE {\n?s ?p ?o .\n}\nGROUP BY ?s\nHAVING (true)\nLIMIT 5\n";
   const query = CONSTRUCT`${spo}`.WHERE`${spo}`.GROUP_BY`${s}`.HAVING`${true}`
     .LIMIT(5)
     .build();
+
+  assertEquals(query, expected);
+});
+
+Deno.test("SPARQL / Sparql builder CONSTRUCT #11", () => {
+  const expected =
+    "CONSTRUCT {\n?s ?p ?o .\n}\nWHERE {\n?s ?p ?o .\nVALUES ?s { <x> }\n}\n";
+  const query = CONSTRUCT`${spo}`
+    .WHERE`${spo}\nVALUES ?s { ${[df.namedNode("x")]} }`.build();
 
   assertEquals(query, expected);
 });
@@ -227,21 +243,21 @@ Deno.test("SPARQL / Sparql builder ASK #2", () => {
 
 Deno.test("SPARQL / Sparql builder ASK #3", () => {
   const expected = "ASK\nFROM <g>\nWHERE {\n?s ?p ?o .\n}\n";
-  const query = ASK.FROM`${g}`.WHERE`${spo}`.build();
+  const query = ASK.FROM(g).WHERE`${spo}`.build();
 
   assertEquals(query, expected);
 });
 
 Deno.test("SPARQL / Sparql builder ASK #4", () => {
   const expected = "ASK\nFROM NAMED <g>\nWHERE {\n?s ?p ?o .\n}\n";
-  const query = ASK.FROM_NAMED`${g}`.WHERE`${spo}`.build();
+  const query = ASK.FROM_NAMED(g).WHERE`${spo}`.build();
 
   assertEquals(query, expected);
 });
 
 Deno.test("SPARQL / Sparql builder ASK #5", () => {
   const expected = "ASK\nFROM <g>\nFROM NAMED <g>\nWHERE {\n?s ?p ?o .\n}\n";
-  const query = ASK.FROM`${g}`.FROM_NAMED`${g}`.WHERE`${spo}`.build();
+  const query = ASK.FROM(g).FROM_NAMED(g).WHERE`${spo}`.build();
 
   assertEquals(query, expected);
 });
@@ -262,14 +278,14 @@ Deno.test("SPARQL / Sparql builder DESCRIBE #2", () => {
 
 Deno.test("SPARQL / Sparql builder DESCRIBE #3", () => {
   const expected = "DESCRIBE <g>\nFROM <g>\nWHERE {\n?s ?p ?o .\n}\n";
-  const query = DESCRIBE`${g}`.FROM`${g}`.WHERE`${spo}`.build();
+  const query = DESCRIBE`${g}`.FROM(g).WHERE`${spo}`.build();
 
   assertEquals(query, expected);
 });
 
 Deno.test("SPARQL / Sparql builder DESCRIBE #4", () => {
   const expected = "DESCRIBE <g>\nFROM NAMED <g>\nWHERE {\n?s ?p ?o .\n}\n";
-  const query = DESCRIBE`${g}`.FROM_NAMED`${g}`.WHERE`${spo}`.build();
+  const query = DESCRIBE`${g}`.FROM_NAMED(g).WHERE`${spo}`.build();
 
   assertEquals(query, expected);
 });
@@ -277,7 +293,7 @@ Deno.test("SPARQL / Sparql builder DESCRIBE #4", () => {
 Deno.test("SPARQL / Sparql builder DESCRIBE #5", () => {
   const expected =
     "DESCRIBE <g>\nFROM <g>\nFROM NAMED <g>\nWHERE {\n?s ?p ?o .\n}\n";
-  const query = DESCRIBE`${g}`.FROM`${g}`.FROM_NAMED`${g}`.WHERE`${spo}`
+  const query = DESCRIBE`${g}`.FROM(g).FROM_NAMED(g).WHERE`${spo}`
     .build();
 
   assertEquals(query, expected);

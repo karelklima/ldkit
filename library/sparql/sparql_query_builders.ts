@@ -1,114 +1,183 @@
 import {
-  build,
-  createNumericBuilder,
-  createTemplateBuilder,
+  braces,
+  parentheses,
+  SparqlBuilder,
 } from "./sparql_shared_builders.ts";
 
-const OFFSET = createNumericBuilder(
-  (value) => `OFFSET ${value}\n`,
-  { build },
-);
+import { type RDF } from "../rdf.ts";
+import { type SparqlValue } from "./sparql_tag.ts";
 
-const LIMIT = createNumericBuilder(
-  (value) => `LIMIT ${value}\n`,
-  { build, OFFSET },
-);
+type Builders<T extends keyof SparqlQueryBuilder> = Pick<
+  SparqlQueryBuilder,
+  T
+>;
 
-const ORDER_BY = createTemplateBuilder(
-  (value) => `ORDER BY ${value}\n`,
-  { build, LIMIT },
-);
+class SparqlQueryBuilder extends SparqlBuilder {
+  public OFFSET(
+    number: number,
+  ): Builders<"build"> {
+    return this.number(number, "OFFSET");
+  }
 
-const HAVING = createTemplateBuilder(
-  (value) => `HAVING(${value})\n`,
-  { build, LIMIT },
-);
+  public LIMIT(
+    number: number,
+  ): Builders<"build" | "OFFSET"> {
+    return this.number(number, "LIMIT");
+  }
 
-const GROUP_BY = createTemplateBuilder(
-  (value) => `GROUP BY ${value}\n`,
-  { build, HAVING, ORDER_BY, LIMIT },
-);
+  public ORDER_BY(
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ): Builders<"build" | "LIMIT"> {
+    return this.template(strings, values, "ORDER BY");
+  }
 
-const WHERE = createTemplateBuilder(
-  (value) => `WHERE {\n${value}\n}\n`,
-  { build, GROUP_BY, ORDER_BY, LIMIT },
-);
+  public HAVING(
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ): Builders<"build" | "ORDER_BY" | "LIMIT"> {
+    return this.template(strings, values, "HAVING", parentheses);
+  }
 
-const FROM_NAMED = createTemplateBuilder(
-  (value) => `FROM NAMED ${value}\n`,
-  { WHERE },
-);
+  public GROUP_BY(
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ): Builders<"build" | "HAVING" | "ORDER_BY" | "LIMIT"> {
+    return this.template(strings, values, "GROUP BY");
+  }
 
-const FROM = createTemplateBuilder(
-  (value) => `FROM ${value}\n`,
-  { FROM_NAMED, WHERE },
-);
+  public WHERE(
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ): Builders<"build" | "GROUP_BY" | "ORDER_BY" | "LIMIT"> {
+    return this.template(strings, values, "WHERE", braces);
+  }
 
-const _SELECT = createTemplateBuilder(
-  (value) => `SELECT ${value}\n`,
-  { FROM, FROM_NAMED, WHERE },
-);
+  public FROM_NAMED(
+    stringOrNamedNode: string | RDF.NamedNode<string>,
+  ): Builders<"FROM_NAMED" | "WHERE"> {
+    return this.namedNode(stringOrNamedNode, "FROM NAMED");
+  }
 
-const DISTINCT = createTemplateBuilder(
-  (value) => `SELECT DISTINCT ${value}\n`,
-  { FROM, WHERE },
-);
+  public FROM(
+    stringOrNamedNode: string | RDF.NamedNode<string>,
+  ): Builders<"FROM" | "FROM_NAMED" | "WHERE"> {
+    return this.namedNode(stringOrNamedNode, "FROM");
+  }
 
-const REDUCED = createTemplateBuilder(
-  (value) => `SELECT REDUCED ${value}\n`,
-  {
-    FROM,
-    WHERE,
+  public SELECT(
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ): Builders<"FROM" | "FROM_NAMED" | "WHERE"> {
+    return this.template(strings, values, "SELECT");
+  }
+
+  public SELECT_DISTINCT(
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ): Builders<"FROM" | "FROM_NAMED" | "WHERE"> {
+    return this.template(strings, values, "SELECT DISTINCT");
+  }
+
+  public SELECT_REDUCED(
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ): Builders<"FROM" | "FROM_NAMED" | "WHERE"> {
+    return this.template(strings, values, "SELECT REDUCED");
+  }
+
+  public CONSTRUCT(
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ): Builders<"WHERE"> {
+    return this.template(strings, values, "CONSTRUCT", braces);
+  }
+
+  public CONSTRUCT_WHERE(
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ): Builders<"build" | "GROUP_BY" | "ORDER_BY" | "LIMIT"> {
+    return this.template(strings, values, "CONSTRUCT WHERE", braces);
+  }
+
+  public ASK(
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ): Builders<"build"> {
+    return this.template(strings, values, "ASK", braces);
+  }
+
+  public ASK_FROM(
+    stringOrNamedNode: string | RDF.NamedNode<string>,
+  ): Builders<"FROM" | "FROM_NAMED" | "WHERE"> {
+    return this.namedNode(stringOrNamedNode, "ASK\nFROM");
+  }
+
+  public ASK_FROM_NAMED(
+    stringOrNamedNode: string | RDF.NamedNode<string>,
+  ): Builders<"FROM_NAMED" | "WHERE"> {
+    return this.namedNode(stringOrNamedNode, "ASK\nFROM NAMED");
+  }
+
+  public ASK_WHERE(
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ): Builders<"build" | "GROUP_BY" | "ORDER_BY" | "LIMIT"> {
+    return this.template(strings, values, "ASK\nWHERE", braces);
+  }
+
+  public DESCRIBE(
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ): Builders<"build" | "FROM" | "FROM_NAMED" | "WHERE"> {
+    return this.template(strings, values, "DESCRIBE");
+  }
+}
+
+export const SELECT = Object.assign((
+  strings: TemplateStringsArray,
+  ...values: SparqlValue[]
+) => new SparqlQueryBuilder().SELECT(strings, ...values), {
+  DISTINCT: (
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ) => new SparqlQueryBuilder().SELECT_DISTINCT(strings, ...values),
+  REDUCED: (
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ) => new SparqlQueryBuilder().SELECT_REDUCED(strings, ...values),
+  get ALL() {
+    return new SparqlQueryBuilder().SELECT`*`;
   },
-);
-
-export const SELECT = Object.assign(_SELECT, {
-  DISTINCT,
-  REDUCED,
-  ALL: _SELECT`*`,
 });
 
-const _CONSTRUCT = createTemplateBuilder(
-  (value) => `CONSTRUCT {\n${value}\n}\n`,
-  { WHERE },
-);
-
-const _CONSTRUCT_WHERE = createTemplateBuilder(
-  (value) => `CONSTRUCT WHERE {\n${value}\n}\n`,
-  { build, GROUP_BY, ORDER_BY, LIMIT },
-);
-
-export const CONSTRUCT = Object.assign(_CONSTRUCT, {
-  WHERE: _CONSTRUCT_WHERE,
+export const CONSTRUCT = Object.assign((
+  strings: TemplateStringsArray,
+  ...values: SparqlValue[]
+) => new SparqlQueryBuilder().CONSTRUCT(strings, ...values), {
+  WHERE: (
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ) => new SparqlQueryBuilder().CONSTRUCT_WHERE(strings, ...values),
 });
 
-const _ASK = createTemplateBuilder(
-  (value) => `ASK {\n${value}\n}\n`,
-  { build },
-);
-
-const _ASK_FROM = createTemplateBuilder(
-  (value) => `ASK\nFROM ${value}\n`,
-  { FROM_NAMED, WHERE },
-);
-
-const _ASK_FROM_NAMED = createTemplateBuilder(
-  (value) => `ASK\nFROM NAMED ${value}\n`,
-  { FROM_NAMED, WHERE },
-);
-
-const _ASK_WHERE = createTemplateBuilder(
-  (value) => `ASK\nWHERE {\n${value}\n}\n`,
-  { build, GROUP_BY, ORDER_BY, LIMIT },
-);
-
-export const ASK = Object.assign(_ASK, {
-  FROM: _ASK_FROM,
-  FROM_NAMED: _ASK_FROM_NAMED,
-  WHERE: _ASK_WHERE,
+export const ASK = Object.assign((
+  strings: TemplateStringsArray,
+  ...values: SparqlValue[]
+) => new SparqlQueryBuilder().ASK(strings, ...values), {
+  FROM: (
+    stringOrNamedNode: string | RDF.NamedNode<string>,
+  ) => new SparqlQueryBuilder().ASK_FROM(stringOrNamedNode),
+  FROM_NAMED: (
+    stringOrNamedNode: string | RDF.NamedNode<string>,
+  ) => new SparqlQueryBuilder().ASK_FROM_NAMED(stringOrNamedNode),
+  WHERE: (
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ) => new SparqlQueryBuilder().ASK_WHERE(strings, ...values),
 });
 
-export const DESCRIBE = createTemplateBuilder(
-  (value) => `DESCRIBE ${value}\n`,
-  { build, FROM, FROM_NAMED, WHERE },
-);
+export const DESCRIBE = (
+  strings: TemplateStringsArray,
+  ...values: SparqlValue[]
+) => new SparqlQueryBuilder().DESCRIBE(strings, ...values);
