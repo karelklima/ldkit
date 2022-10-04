@@ -96,3 +96,62 @@ export const createNamedNodeBuilder = <
 export const build = function (this: unknown): string {
   return (this as This)?.$partialQuery || "";
 };
+
+export interface BUILD {
+  build: () => string;
+}
+
+export abstract class SparqlBuilder implements BUILD {
+  protected value = "";
+  protected dataFactory = new DataFactory();
+
+  public build() {
+    return this.value;
+  }
+
+  private sparql(
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ) {
+    return sparql(strings, ...values);
+  }
+
+  private wrap(value: string, keyword: string, curlyBrackets: boolean) {
+    return curlyBrackets
+      ? `${keyword} {\n${value}\n}\n`
+      : `${keyword} ${value}\n`;
+  }
+
+  protected template(
+    strings: TemplateStringsArray,
+    values: SparqlValue[],
+    keyword: string,
+    curlyBrackets = false,
+  ) {
+    const inputSparql = this.sparql(strings, values);
+    this.value += this.wrap(inputSparql, keyword, curlyBrackets);
+    return this;
+  }
+
+  protected namedNode(
+    stringOrNamedNode: string | RDF.NamedNode<string>,
+    keyword: string,
+    curlyBrackets = false,
+  ) {
+    const namedNode = typeof stringOrNamedNode === "string"
+      ? this.dataFactory.namedNode(stringOrNamedNode)
+      : stringOrNamedNode;
+    const inputSparql = this.sparql`${namedNode}`;
+    this.value += this.wrap(inputSparql, keyword, curlyBrackets);
+    return this;
+  }
+
+  protected number(
+    number: number,
+    keyword: string,
+    curlyBrackets = false,
+  ) {
+    this.value += this.wrap(number.toString(), keyword, curlyBrackets);
+    return this;
+  }
+}

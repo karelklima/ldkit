@@ -1,53 +1,88 @@
-import {
-  build,
-  createNamedNodeBuilder,
-  createTemplateBuilder,
-} from "./sparql_shared_builders.ts";
+import { SparqlBuilder } from "./sparql_shared_builders.ts";
 
-const WHERE = createTemplateBuilder(
-  (value) => `WHERE {\n${value}\n}\n`,
-  { build },
-);
+import { type RDF } from "../rdf.ts";
+import { type SparqlValue } from "./sparql_tag.ts";
 
-const USING_NAMED = createNamedNodeBuilder(
-  (value) => `USING NAMED ${value}\n`,
-  { WHERE },
-);
+type Builders<T extends keyof SparqlUpdateBuilder> = Pick<
+  SparqlUpdateBuilder,
+  T
+>;
 
-const USING = createNamedNodeBuilder(
-  (value) => `USING ${value}\n`,
-  { USING_NAMED, WHERE },
-);
+class SparqlUpdateBuilder extends SparqlBuilder {
+  public WHERE(
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ): Builders<"build"> {
+    return this.template(strings, values, "WHERE", true);
+  }
 
-const _INSERT = createTemplateBuilder(
-  (value) => `INSERT {\n${value}\n}\n`,
-  { USING, USING_NAMED, WHERE },
-);
+  public USING_NAMED(
+    stringOrNamedNode: string | RDF.NamedNode<string>,
+  ): Builders<"USING_NAMED" | "WHERE"> {
+    return this.namedNode(stringOrNamedNode, "USING NAMED");
+  }
 
-const _INSERT_DATA = createTemplateBuilder(
-  (value) => `INSERT DATA {\n${value}\n}\n`,
-  { build },
-);
+  public USING(
+    stringOrNamedNode: string | RDF.NamedNode<string>,
+  ): Builders<"USING" | "USING_NAMED" | "WHERE"> {
+    return this.namedNode(stringOrNamedNode, "USING");
+  }
 
-export const INSERT = Object.assign(_INSERT, {
-  DATA: _INSERT_DATA,
+  public INSERT(
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ): Builders<"USING" | "USING_NAMED" | "WHERE"> {
+    return this.template(strings, values, "INSERT", true);
+  }
+
+  public INSERT_DATA(
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ): Builders<"build"> {
+    return this.template(strings, values, "INSERT DATA", true);
+  }
+
+  public DELETE(
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ): Builders<"INSERT" | "USING" | "USING_NAMED" | "WHERE"> {
+    return this.template(strings, values, "DELETE", true);
+  }
+
+  public DELETE_DATA(
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ): Builders<"build"> {
+    return this.template(strings, values, "DELETE DATA", true);
+  }
+
+  public WITH(
+    stringOrNamedNode: string | RDF.NamedNode<string>,
+  ): Builders<"INSERT" | "DELETE"> {
+    return this.namedNode(stringOrNamedNode, "WITH");
+  }
+}
+
+export const INSERT = Object.assign((
+  strings: TemplateStringsArray,
+  ...values: SparqlValue[]
+) => new SparqlUpdateBuilder().INSERT(strings, values), {
+  DATA: (
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ) => new SparqlUpdateBuilder().INSERT_DATA(strings, values),
 });
 
-const _DELETE = createTemplateBuilder(
-  (value) => `DELETE {\n${value}\n}\n`,
-  { INSERT: _INSERT, USING, USING_NAMED, WHERE },
-);
-
-const _DELETE_DATA = createTemplateBuilder(
-  (value) => `DELETE DATA {\n${value}\n}\n`,
-  { build },
-);
-
-export const DELETE = Object.assign(_DELETE, {
-  DATA: _DELETE_DATA,
+export const DELETE = Object.assign((
+  strings: TemplateStringsArray,
+  ...values: SparqlValue[]
+) => new SparqlUpdateBuilder().DELETE(strings, values), {
+  DATA: (
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ) => new SparqlUpdateBuilder().DELETE_DATA(strings, values),
 });
 
-export const WITH = createNamedNodeBuilder(
-  (value) => `WITH ${value}\n`,
-  { build, INSERT: _INSERT, DELETE: _DELETE },
-);
+export const WITH = (
+  stringOrNamedNode: string | RDF.NamedNode<string>,
+) => new SparqlUpdateBuilder().WITH(stringOrNamedNode);

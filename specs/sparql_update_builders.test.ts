@@ -44,6 +44,15 @@ Deno.test("SPARQL / Sparql builder INSERT #4", () => {
   assertEquals(query, expected);
 });
 
+Deno.test("SPARQL / Sparql builder INSERT #5", () => {
+  const expected =
+    "INSERT {\n?s ?p ?o .\n}\nUSING <g>\nUSING <g>\nUSING NAMED <g>\nUSING NAMED <g>\nUSING NAMED <g>\nWHERE {\n?s ?p ?o .\n}\n";
+  const query = INSERT`${spo}`.USING("g").USING("g").USING_NAMED(g)
+    .USING_NAMED(g).USING_NAMED(g).WHERE`${spo}`.build();
+
+  assertEquals(query, expected);
+});
+
 Deno.test("SPARQL / Sparql builder DELETE #1", () => {
   const expected = "DELETE DATA {\n?s ?p ?o .\n}\n";
   const query = DELETE.DATA`${spo}`.build();
@@ -78,6 +87,16 @@ Deno.test("SPARQL / Sparql builder DELETE #5", () => {
   const expected =
     "DELETE {\n?s ?p ?o .\n}\nINSERT {\n?s ?p ?o .\n}\nUSING <g>\nUSING NAMED <g>\nWHERE {\n?s ?p ?o .\n}\n";
   const query = DELETE`${spo}`.INSERT`${spo}`.USING("g").USING_NAMED(g)
+    .WHERE`${spo}`.build();
+
+  assertEquals(query, expected);
+});
+
+Deno.test("SPARQL / Sparql builder DELETE #6", () => {
+  const expected =
+    "DELETE {\n?s ?p ?o .\n}\nINSERT {\n?s ?p ?o .\n}\nUSING <g>\nUSING <g>\nUSING NAMED <g>\nUSING NAMED <g>\nUSING NAMED <g>\nWHERE {\n?s ?p ?o .\n}\n";
+  const query = DELETE`${spo}`.INSERT`${spo}`.USING("g").USING("g")
+    .USING_NAMED(g).USING_NAMED(g).USING_NAMED(g)
     .WHERE`${spo}`.build();
 
   assertEquals(query, expected);
