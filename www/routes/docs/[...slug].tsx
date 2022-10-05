@@ -48,9 +48,9 @@ export default function DocsPage(props: PageProps<Data>) {
       <Head>
         <link rel="stylesheet" href={`/gfm.css?build=${__FRSH_BUILD_ID}`} />
       </Head>
-      <div class="mx-auto max-w-screen-lg px-4 flex gap-6">
-        <Sidebar path={props.url.pathname} />
+      <div class="mx-auto max-w-screen-lg flex flex-col md:flex-row-reverse gap-6">
         <Content page={props.data.page} />
+        <Sidebar path={props.url.pathname} />
       </div>
     </App>
   );
@@ -58,8 +58,8 @@ export default function DocsPage(props: PageProps<Data>) {
 
 function Sidebar(props: { path: string }) {
   return (
-    <nav class="w-[16rem] flex-shrink-0 pt-12 pr-4">
-      <ul class="list-decimal list-inside font-semibold nested fixed">
+    <nav class="md:w-[16rem] flex-shrink-0 pb-6 md:pb-0 md:pt-12 md:pr-4">
+      <ul class="list-decimal list-inside font-semibold nested md:fixed">
         {CATEGORIES.map((category) => (
           <SidebarCategory path={props.path} category={category} />
         ))}
@@ -68,9 +68,10 @@ function Sidebar(props: { path: string }) {
   );
 }
 
-const linkBase = "block px-8 py-2 rounded hover:bg-gray-200";
+const linkBase =
+  "block px-8 py-2 rounded hover:bg-gray-200 dark:hover:bg-gray-800";
 const link = linkBase;
-const linkActive = `${linkBase} bg-gray-300`;
+const linkActive = `${linkBase} bg-gray-300 dark:bg-gray-800`;
 
 export function SidebarCategory(props: {
   path: string;
@@ -116,17 +117,21 @@ export function SidebarEntry(props: {
 function Content(props: { page: Page }) {
   const html = gfm.render(props.page.markdown);
   return (
-    <main class="py-8 overflow-hidden flex-1">
-      <div
-        class="mt-6 markdown-body"
+    <div class="py-4 md:py-8 overflow-hidden flex-1 md:mt-6">
+      <article
+        class="markdown-body"
+        data-color-mode="auto"
+        data-light-theme="light"
+        data-dark-theme="dark"
         dangerouslySetInnerHTML={{ __html: html }}
-      />
+      ></article>
       <ForwardBackButtons slug={props.page.slug} />
-    </main>
+    </div>
   );
 }
 
-const button = "p-2 bg-gray-100 w-full border(1 gray-200) grid";
+const button =
+  "p-2 bg-gray-100 dark:bg-gray-800 w-full border-1 border-gray-200 dark:border-gray-700 grid";
 
 function ForwardBackButtons(props: { slug: string }) {
   const currentIndex = SLUGS.findIndex((slug) => slug === props.slug);
@@ -135,9 +140,9 @@ function ForwardBackButtons(props: { slug: string }) {
   const previous = TABLE_OF_CONTENTS[previousSlug];
   const next = TABLE_OF_CONTENTS[nextSlug];
 
-  const upper = "text(sm gray-600)";
+  const upper = "text(sm gray-400)";
   const category = "font-normal";
-  const lower = "text-gray-900 font-medium";
+  const lower = "text-gray-900 dark:text-[#c9d1d9] font-medium";
 
   return (
     <div class="mt-8 flex flex(col md:row) gap-4">
