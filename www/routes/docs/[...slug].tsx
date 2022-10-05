@@ -48,9 +48,9 @@ export default function DocsPage(props: PageProps<Data>) {
       <Head>
         <link rel="stylesheet" href={`/gfm.css?build=${__FRSH_BUILD_ID}`} />
       </Head>
-      <div class="mx-auto max-w-screen-lg px-4 flex gap-6">
-        <Sidebar path={props.url.pathname} />
+      <div class="mx-auto max-w-screen-lg flex flex-col md:flex-row-reverse gap-6">
         <Content page={props.data.page} />
+        <Sidebar path={props.url.pathname} />
       </div>
     </App>
   );
@@ -58,8 +58,8 @@ export default function DocsPage(props: PageProps<Data>) {
 
 function Sidebar(props: { path: string }) {
   return (
-    <nav class="w-[16rem] flex-shrink-0 pt-12 pr-4">
-      <ul class="list-decimal list-inside font-semibold nested fixed">
+    <nav class="md:w-[16rem] flex-shrink-0 pb-6 md:pb-0 md:pt-12 md:pr-4">
+      <ul class="list-decimal list-inside font-semibold nested md:fixed">
         {CATEGORIES.map((category) => (
           <SidebarCategory path={props.path} category={category} />
         ))}
@@ -116,13 +116,13 @@ export function SidebarEntry(props: {
 function Content(props: { page: Page }) {
   const html = gfm.render(props.page.markdown);
   return (
-    <main class="py-8 overflow-hidden flex-1">
-      <div
-        class="mt-6 markdown-body"
+    <div class="py-4 md:py-8 overflow-hidden flex-1 md:mt-6">
+      <article
+        class="markdown-body"
         dangerouslySetInnerHTML={{ __html: html }}
-      />
+      ></article>
       <ForwardBackButtons slug={props.page.slug} />
-    </main>
+    </div>
   );
 }
 
