@@ -66,19 +66,20 @@ const baseLinkClass =
   "flex flex-row p-4 border-b-2 hover:border-black dark:hover:border-red-700 dark:hover:text-white";
 
 function MenuItem({ title, url, activeLink }: MenuItemProps) {
-  const linkClass =
-    url === activeLink
-      ? `${baseLinkClass} border-black dark:border-red-700 bg-gray-50 dark:bg-gray-800`
-      : `${baseLinkClass} border-transparent`;
+  const linkClass = url === activeLink
+    ? `${baseLinkClass} border-black dark:border-red-700 bg-gray-50 dark:bg-gray-800`
+    : `${baseLinkClass} border-transparent`;
   return (
     <li>
       <a href={url} class={linkClass}>
         <span>{title}</span>
-        {url.startsWith("http") ? (
-          <span class="ml-1 mt-1 w-2 h-2 text-gray-400">
-            <IconExternalLink />
-          </span>
-        ) : null}
+        {url.startsWith("http")
+          ? (
+            <span class="ml-1 mt-1 w-2 h-2 text-gray-400">
+              <IconExternalLink />
+            </span>
+          )
+          : null}
       </a>
     </li>
   );
