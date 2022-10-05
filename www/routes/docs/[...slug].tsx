@@ -124,7 +124,8 @@ function Content(props: { page: Page }) {
         data-light-theme="light"
         data-dark-theme="dark"
         dangerouslySetInnerHTML={{ __html: html }}
-      ></article>
+      >
+      </article>
       <ForwardBackButtons slug={props.page.slug} />
     </div>
   );
