@@ -1,6 +1,6 @@
 export function Footer() {
   return (
-    <div class="bg-gray-100">
+    <div class="bg-gray-100 dark:bg-gray-800">
       <footer class="container mx-auto p-4">
         <p class="text-center">
           <a
