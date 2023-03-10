@@ -1,19 +1,21 @@
 import {
-  createResource,
-  createNamespace,
   type Context,
-  type SchemaInterface
+  createNamespace,
+  createResource,
+  type SchemaInterface,
 } from "ldkit";
 import { xsd } from "ldkit/namespaces";
 import { QueryEngine as Comunica } from "@comunica/query-sparql-rdfjs";
 
 import { Store } from "n3";
 
-const t = createNamespace({
-  iri: "https://todos/",
-  prefix: "t:",
-  terms: ["Todo", "description", "done"],
-} as const);
+const t = createNamespace(
+  {
+    iri: "https://todos/",
+    prefix: "t:",
+    terms: ["Todo", "description", "done"],
+  } as const,
+);
 
 const TodoSchema = {
   "@type": t.Todo,

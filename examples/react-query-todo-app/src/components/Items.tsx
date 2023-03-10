@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { Todos, TodoInterface } from "../store";
+import { TodoInterface, Todos } from "../store";
 import { Button, InvisibleButton, Row, RowContent } from "./UI";
 import { CheckedIcon, CircleIcon, RemoveIcon } from "./Icons";
 
@@ -45,13 +45,13 @@ const Item: React.FC<ItemProps> = ({ item }) => {
       <RowContent>
         {item.done ? <Done>{item.description}</Done> : item.description}
       </RowContent>
-      {item.done ? (
-        <Button onClick={handleDeleteClicked}>
-          <RemoveIcon />
-        </Button>
-      ) : (
-        <InvisibleButton />
-      )}
+      {item.done
+        ? (
+          <Button onClick={handleDeleteClicked}>
+            <RemoveIcon />
+          </Button>
+        )
+        : <InvisibleButton />}
     </Row>
   );
 };
@@ -69,9 +69,7 @@ export const Items: React.FC = () => {
 
   return (
     <List>
-      {data.map((item, index) => (
-        <Item item={item} key={index} />
-      ))}
+      {data.map((item, index) => <Item item={item} key={index} />)}
     </List>
   );
 };
