@@ -1,4 +1,4 @@
-import { assert, assertEquals, equal } from "./test_deps.ts";
+import { assert, assertEquals, Comunica, equal } from "./test_deps.ts";
 
 import {
   createStore,
@@ -11,8 +11,6 @@ import {
 import { createLens } from "../library/lens/mod.ts";
 import { rdf, xsd } from "../library/namespaces/mod.ts";
 import { DataFactory } from "../library/rdf.ts";
-
-import { QueryEngine as Comunica } from "https://esm.sh/@comunica/query-sparql-rdfjs@2.4.3";
 
 const assertContainsEqual = (haystack: unknown[], needle: unknown) => {
   let found = false;

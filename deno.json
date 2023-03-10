@@ -4,11 +4,12 @@
     "fmt:fix": "deno fmt library/ specs/ www/ docs/",
     "fmt:check": "deno fmt --check library/ specs/ www/ docs/",
     "lint": "deno lint library/ specs/ www/ docs/",
-    "test": "deno test --allow-env --allow-net ./specs",
+    "test": "deno test --allow-env --allow-net --allow-read ./specs",
     "dnt": "deno run -A --importmap ./scripts/dnt_import_map.json ./scripts/dnt.ts"
   },
   "compilerOptions": {
     "jsx": "react-jsx",
     "jsxImportSource": "preact"
-  }
+  },
+  "lock": false
 }

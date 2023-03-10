@@ -1,19 +1,16 @@
-import type * as RDF from "https://esm.sh/rdf-js@4.0.2";
+import type * as RDF from "npm:rdf-js@4.0.2";
 
 export type { RDF };
 
-export { fromRdf, toRdf } from "https://esm.sh/rdf-literal@1.3.0";
+export { fromRdf, toRdf } from "npm:rdf-literal@1.3.1";
 
-import {
-  DataFactory,
-  DefaultGraph,
-} from "https://esm.sh/rdf-data-factory@1.1.1";
+import { DataFactory, DefaultGraph } from "npm:rdf-data-factory@1.1.1";
 export { DataFactory, DefaultGraph };
 
 import type {
   IDataSource,
   IQueryContextCommon,
-} from "https://esm.sh/@comunica/types@2.4.0";
+} from "npm:@comunica/types@2.6.8";
 
 export type LDkitContext = {
   graph?: string;
