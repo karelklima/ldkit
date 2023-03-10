@@ -20,9 +20,6 @@
     "ldkit/sparql": "../sparql.ts",
     "ldkit/rdf": "../rdf.ts",
 
-    "n3": "https://esm.sh/n3",
-
-    "https://esm.sh/v94/web-streams-ponyfill@1.4.2/deno/web-streams-ponyfill.js": "https://esm.sh/v77/web-streams-ponyfill@1.4.2/deno/web-streams-ponyfill.js",
-    "https://esm.sh/v94/@types/rdf-js@4.0.2/rdf-js": "https://esm.sh/v94/rdf-js@4.0.2"
+    "n3": "https://esm.sh/n3"
   }
 }
