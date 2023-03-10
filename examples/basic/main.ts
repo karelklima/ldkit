@@ -37,18 +37,26 @@ console.log(ada?.birthDate); // Date object of 1815-12-10
 const count = await Persons.count();
 console.log(count); // number
 
+// The following code will not work on DBPedia as it needs write permissions
+
 // Insert a new person
+/*
 Persons.insert({
   $id: "http://dbpedia.org/resource/Alan_Turing",
   name: "Alan Turing",
   birthDate: new Date("1912-06-23"),
 });
+*/
 
 // Modify a person's name
+/*
 Persons.update({
   $id: "http://dbpedia.org/resource/Alan_Turing",
   name: "Not Alan Turing",
 });
+*/
 
 // Delete a person
+/*
 Persons.delete("http://dbpedia.org/resource/Alan_Turing");
+*/
