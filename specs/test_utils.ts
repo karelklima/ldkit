@@ -1,4 +1,4 @@
-import { Parser, Store } from "https://esm.sh/n3@1.16.2";
+import { N3 } from "./test_deps.ts";
 
 import {
   type Context,
@@ -13,8 +13,6 @@ export type Equals<A, B> = A extends B ? (B extends A ? true : false) : false;
 const X_NAMESPACE = "http://x/";
 
 const dataFactory = new DataFactory();
-
-// export const x = (s: string) => `${X_NAMESPACE}${s}`;
 
 export const x = new Proxy(
   {},
@@ -73,7 +71,7 @@ export const ttl = (turtle: string) => {
 
   const escapedTurtle = escapePseudoVariables(prefixedTurtle);
   const df = DF();
-  const escapedQuads = new Parser({
+  const escapedQuads = new N3.Parser({
     factory: df,
   }).parse(escapedTurtle);
   const quads = escapedQuads.map(convertPseudoVariables);
@@ -86,16 +84,16 @@ export const createGraph = (turtle: string) => {
 };
 
 export const createStore = () =>
-  new Store(undefined, {
+  new N3.Store(undefined, {
     factory: DF(),
   });
 
-export const createStoreContext = (store: Store, context?: Context) => ({
+export const createStoreContext = (store: N3.Store, context?: Context) => ({
   ...context,
   sources: [store],
 } as Context);
 
-export const emptyStore = (store: Store) => {
+export const emptyStore = (store: N3.Store) => {
   const stream = store.removeMatches(null, null, null, null);
   return new Promise((resolve) => {
     stream.on("end", resolve);

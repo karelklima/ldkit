@@ -1,10 +1,10 @@
-import { AsyncIterator } from "https://esm.sh/asynciterator@3.7.0";
+import { AsyncIterator } from "npm:asynciterator@3.8.0";
 
 export {
   ArrayIterator,
   type AsyncIterator,
   MappingIterator,
-} from "https://esm.sh/asynciterator@3.7.0";
+} from "npm:asynciterator@3.8.0";
 
 type TreeNode<T> = {
   [property: string]: T[] | TreeNode<T>;
