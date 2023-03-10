@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-import { createLocalizedActorResource, ActorInterface } from "../store";
+import { ActorInterface, createLocalizedActorResource } from "./store";
 import { Grid, Typography } from "@mui/material";
 
 type ActorProps = {

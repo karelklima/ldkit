@@ -2,12 +2,12 @@ import React from "react";
 import { Actors } from "./Actors";
 
 import {
-  CssBaseline,
   AppBar,
-  Toolbar,
-  Typography,
   Box,
   Button,
+  CssBaseline,
+  Toolbar,
+  Typography,
 } from "@mui/material";
 
 export const App = () => (

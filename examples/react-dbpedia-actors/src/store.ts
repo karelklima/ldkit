@@ -1,9 +1,5 @@
-import {
-  createResource,
-  type Context,
-  type SchemaInterface
-} from "ldkit";
-import { dbo, xsd, rdfs } from "ldkit/namespaces";
+import { type Context, createResource, type SchemaInterface } from "ldkit";
+import { dbo, rdfs, xsd } from "ldkit/namespaces";
 
 const ActorSchema = {
   "@type": dbo.Person,
@@ -17,11 +13,10 @@ const ActorSchema = {
   birthName: dbo.birthName,
 } as const;
 
-export const createLanguageContext = (language: string) =>
-  ({
-    sources: ["https://dbpedia.org/sparql"],
-    language,
-  } as Context);
+export const createLanguageContext = (language: string) => ({
+  sources: ["https://dbpedia.org/sparql"],
+  language,
+} as Context);
 
 export type ActorInterface = SchemaInterface<typeof ActorSchema>;
 

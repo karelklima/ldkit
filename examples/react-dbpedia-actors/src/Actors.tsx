@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Container, Grid, TextField, MenuItem } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Container, Grid, MenuItem, TextField } from "@mui/material";
 
-import { favouriteActors, languages } from "../store";
+import { favouriteActors, languages } from "./store";
 import { Actor } from "./Actor";
 
 export const Actors: React.FC = () => {
