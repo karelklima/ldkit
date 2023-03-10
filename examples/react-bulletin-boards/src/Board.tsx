@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 
 import {
-  InformationInterface,
   createInfosResource,
   DEFAULT_BOARD_IRI,
-} from "../store";
+  InformationInterface,
+} from "./store";
 import {
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Paper,
-  IconButton,
   Alert,
   Box,
+  IconButton,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from "@mui/material";
 import LinkIcon from "@mui/icons-material/Link";
 import { useSearchParams } from "react-router-dom";
@@ -81,9 +81,7 @@ const BoardContent: React.FC<{ iri: string }> = ({ iri }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {informations.map((item, index) => (
-            <Item item={item} key={index} />
-          ))}
+          {informations.map((item, index) => <Item item={item} key={index} />)}
         </TableBody>
       </Table>
     </TableContainer>

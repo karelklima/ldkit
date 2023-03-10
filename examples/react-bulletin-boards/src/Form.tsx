@@ -1,7 +1,7 @@
 import React, { FormEvent, useEffect, useRef } from "react";
 
-import { DEFAULT_BOARD_IRI } from "../store";
-import { Grid, TextField, Button } from "@mui/material";
+import { DEFAULT_BOARD_IRI } from "./store";
+import { Button, Grid, TextField } from "@mui/material";
 import { useSearchParams } from "react-router-dom";
 
 type Inputs = {

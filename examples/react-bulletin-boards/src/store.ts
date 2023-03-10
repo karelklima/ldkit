@@ -1,33 +1,44 @@
-import { type Context, type SchemaInterface, createResource, createNamespace } from "ldkit";
+import {
+  type Context,
+  createNamespace,
+  createResource,
+  type SchemaInterface,
+} from "ldkit";
 import { dcterms, schema, xsd } from "ldkit/namespaces";
 import { QueryEngine as Comunica } from "@comunica/query-sparql";
 
-const time = createNamespace({
-  iri: "http://www.w3.org/2006/time#",
-  prefix: "time:",
-  terms: ["Instant", "inXSDDate", "inXSDDateTimeStamp"],
-} as const);
+const time = createNamespace(
+  {
+    iri: "http://www.w3.org/2006/time#",
+    prefix: "time:",
+    terms: ["Instant", "inXSDDate", "inXSDDateTimeStamp"],
+  } as const,
+);
 
-const desky = createNamespace({
-  iri: "https://slovník.gov.cz/datový/ofn-úřední-desky/pojem/",
-  prefix: "desky:",
-  terms: [
-    "úřední-deska",
-    "stránka-zveřejnění",
-    "informace-zveřejněná-na-úřední-desce",
-    "vyvěšení-informace",
-    "schválení-informace",
-    "relevantní-do",
-    "číslo-jednací",
-    "spisová-značka-spisu",
-  ],
-} as const);
+const desky = createNamespace(
+  {
+    iri: "https://slovník.gov.cz/datový/ofn-úřední-desky/pojem/",
+    prefix: "desky:",
+    terms: [
+      "úřední-deska",
+      "stránka-zveřejnění",
+      "informace-zveřejněná-na-úřední-desce",
+      "vyvěšení-informace",
+      "schválení-informace",
+      "relevantní-do",
+      "číslo-jednací",
+      "spisová-značka-spisu",
+    ],
+  } as const,
+);
 
-const sb504_2004 = createNamespace({
-  iri: "https://slovník.gov.cz/legislativní/sbírka/500/2004/pojem/",
-  prefix: "sb504_2004:",
-  terms: ["vyvěšení-informace"],
-} as const);
+const sb504_2004 = createNamespace(
+  {
+    iri: "https://slovník.gov.cz/legislativní/sbírka/500/2004/pojem/",
+    prefix: "sb504_2004:",
+    terms: ["vyvěšení-informace"],
+  } as const,
+);
 
 const InstantSchema = {
   "@type": time.Instant,
