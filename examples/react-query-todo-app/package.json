@@ -1,25 +1,28 @@
 {
   "author": "Karel Klima <karelklima@gmail.com> (https://karelklima.com)",
   "license": "MIT",
-  "source": "src/index.html",
+  "type": "module",
   "scripts": {
-    "start": "parcel src/index.html"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@comunica/query-sparql-rdfjs": "^2.4.3",
-    "@emotion/react": "^11.10.4",
-    "@emotion/styled": "^11.10.4",
-    "@tanstack/react-query": "^4.3.9",
-    "ldkit": "^0.6.3",
-    "n3": "^1.11.1",
+    "@comunica/query-sparql-rdfjs": "^2.6.10",
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@tanstack/react-query": "^4.26.1",
+    "ldkit": "^0.8.0",
+    "n3": "^1.16.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@types/react": "^18.0.20",
-    "buffer": "^6.0.3",
-    "events": "^3.3.0",
-    "parcel": "^2.7.0",
-    "process": "^0.11.10"
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "@vitejs/plugin-react": "^3.1.0",
+    "typescript": "^4.9.3",
+    "vite": "^4.1.0",
+    "vite-plugin-node-polyfills": "^0.7.0"
   }
 }

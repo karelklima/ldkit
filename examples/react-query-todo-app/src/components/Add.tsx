@@ -1,8 +1,8 @@
-import React, { useState, useRef, useCallback, KeyboardEvent } from "react";
+import React, { KeyboardEvent, useCallback, useRef, useState } from "react";
 import styled from "@emotion/styled";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { Todos, getRandomId } from "../store";
+import { getRandomId, Todos } from "../store";
 import { Button, InvisibleButton, MootButton, Row, RowContent } from "./UI";
 
 import { AddIcon, CircleIcon } from "./Icons";
@@ -56,7 +56,7 @@ export const Add: React.FC = () => {
         inputRef.current.value = "";
       }
     },
-    [inputRef, setOpen, queryClient]
+    [inputRef, setOpen, queryClient],
   );
 
   if (isOpen) {

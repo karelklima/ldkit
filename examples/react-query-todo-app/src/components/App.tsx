@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Add } from "./Add";
 import { Items } from "./Items";
 
-import { Global, css } from "@emotion/react";
+import { css, Global } from "@emotion/react";
 import styled from "@emotion/styled";
 
 const globalStyles = css`
