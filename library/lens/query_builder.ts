@@ -114,7 +114,7 @@ export class QueryBuilder {
   }
 
   getQuery(where?: string | RDF.Quad[], limit = 1000) {
-    const selectSubQuery = SELECT`
+    const selectSubQuery = SELECT.DISTINCT`
       ${this.df.variable!("iri")}
     `.WHERE`
       ${this.getShape(false, true)}
@@ -123,10 +123,10 @@ export class QueryBuilder {
 
     const query = CONSTRUCT`
       ${this.getResourceSignature()}
-      ${this.getTypesSignature()}
+      ${/*this.getTypesSignature()*/ ""}
       ${this.getShape(true, false, true)}
     `.WHERE`
-      ${this.getTypesSignature()}
+      ${/*this.getTypesSignature()*/ ""}
       ${this.getShape(true, true, true)}
       {
         ${selectSubQuery}
