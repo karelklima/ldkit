@@ -21,6 +21,7 @@ export const dbp = createNamespace(
 class LoggingQueryEngine extends QueryEngine {
   async query(
     query: string,
+    // deno-lint-ignore no-explicit-any
     responseType: any,
     context?: Context,
   ) {
