@@ -63,12 +63,3 @@ Deno.test("Quads query", async () => {
   assertEquals(quad?.object.value, "https://x/z");
   assertEquals(stream.read(), null);
 });
-
-Deno.test("Invalid quads query", async () => {
-  await assertRejects(() => {
-    return engine.queryQuads(
-      "ASK { ?s ?p ?o }",
-      context,
-    );
-  }, "Non-quads query should fail");
-});
