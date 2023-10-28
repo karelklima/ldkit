@@ -1,8 +1,7 @@
-import { N3 } from "./test_deps.ts";
-
 import {
   type Context,
   DataFactory,
+  N3,
   quadsToGraph,
   type RDF,
 } from "../library/rdf.ts";

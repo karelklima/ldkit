@@ -1,5 +1,6 @@
 {
   "deno.enable": true,
   "deno.importMap": ".vscode/import_map.json",
+  "deno.documentPreloadLimit": 0,
   "editor.defaultFormatter": "denoland.vscode-deno"
 }

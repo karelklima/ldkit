@@ -7,6 +7,9 @@ export { fromRdf, toRdf } from "npm:rdf-literal@1.3.1";
 import { DataFactory, DefaultGraph } from "npm:rdf-data-factory@1.1.1";
 export { DataFactory, DefaultGraph };
 
+// @deno-types="npm:@types/n3"
+export * as N3 from "npm:n3@1.17.2";
+
 import type {
   IDataSource,
   IQueryContextCommon,
@@ -52,7 +55,7 @@ export declare namespace RDFJSON {
   type Term = {
     type: "uri" | "literal" | "bnode";
     value: string;
-    "xml:lang"?: string;
+    lang?: string;
     datatype?: string;
   };
   type Bindings = Record<string, Term>;
@@ -91,8 +94,8 @@ export class TermFactory implements RDFJSON.TermFactory {
     if (jsonTerm.type === "bnode") {
       return this.dataFactory.blankNode(jsonTerm.value);
     }
-    if ("xml:lang" in jsonTerm) {
-      return this.dataFactory.literal(jsonTerm.value, jsonTerm["xml:lang"]);
+    if ("lang" in jsonTerm) {
+      return this.dataFactory.literal(jsonTerm.value, jsonTerm["lang"]);
     }
     if ("datatype" in jsonTerm) {
       return this.dataFactory.literal(

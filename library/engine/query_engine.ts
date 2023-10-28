@@ -1,21 +1,9 @@
+import { type Context, type IQueryEngine, type RDF } from "../rdf.ts";
 import {
-  BindingsFactory,
-  type Context,
-  type IQueryEngine,
-  QuadFactory,
-  type RDF,
-  RDFJSON,
-} from "../rdf.ts";
-import {
-  ArrayIterator,
-  MappingIterator,
-  TreeIterator,
-} from "../asynciterator.ts";
-
-type QueryResponseFormat = {
-  "application/sparql-results+json": RDFJSON.SparqlResultsJsonFormat;
-  "application/rdf+json": RDFJSON.RdfJsonFormat;
-};
+  getResponseTypes,
+  resolve,
+  type ResolverType,
+} from "./query_resolvers.ts";
 
 export class QueryEngine implements IQueryEngine {
   protected getSparqlEndpoint(context?: Context) {
@@ -56,17 +44,10 @@ export class QueryEngine implements IQueryEngine {
     return context && context.fetch ? context.fetch : fetch;
   }
 
-  async query<
-    ResponseType extends keyof QueryResponseFormat,
-    ResponseFormat = QueryResponseFormat[ResponseType],
-  >(
-    query: string,
-    responseType: ResponseType,
-    context?: Context,
-  ) {
+  query(query: string, responseType: string, context?: Context) {
     const endpoint = this.getSparqlEndpoint(context);
     const fetchFn = this.getFetch(context);
-    const response = await fetchFn(endpoint, {
+    return fetchFn(endpoint, {
       method: "POST",
       headers: {
         "accept": responseType,
@@ -76,71 +57,49 @@ export class QueryEngine implements IQueryEngine {
         query,
       }),
     });
-    const json = await response.json();
-    return json as ResponseFormat;
   }
 
-  async queryBindings(
+  async queryAndResolve<T extends ResolverType>(
+    type: T,
+    query: string,
+    context?: Context,
+  ) {
+    const responseType = getResponseTypes(type).join(", ");
+    const response = await this.query(
+      query,
+      responseType,
+      context,
+    );
+
+    if (!response.ok) {
+      await response.body?.cancel();
+      throw new Error(
+        `Invalid query response status '${response.status} ${response.statusText}'`,
+      );
+    }
+
+    return resolve(type, response);
+  }
+
+  queryBindings(
     query: string,
     context?: Context,
   ): Promise<RDF.ResultStream<RDF.Bindings>> {
-    const json = await this.query(
-      query,
-      "application/sparql-results+json",
-      context,
-    );
-
-    if (!Array.isArray(json.results?.bindings)) {
-      throw new Error("Bindings SPARQL query result not found");
-    }
-
-    const bindingsFactory = new BindingsFactory();
-
-    const bindingsIterator = new ArrayIterator<RDFJSON.Bindings>(
-      json.results!.bindings,
-    );
-
-    // TODO: review the unknown type cast
-    return new MappingIterator(
-      bindingsIterator,
-      (i) => bindingsFactory.fromJson(i),
-    ) as unknown as RDF.ResultStream<RDF.Bindings>;
+    return this.queryAndResolve("bindings", query, context);
   }
 
-  async queryBoolean(
+  queryBoolean(
     query: string,
     context?: Context,
   ): Promise<boolean> {
-    const json = await this.query(
-      query,
-      "application/sparql-results+json",
-      context,
-    );
-    if ("boolean" in json) {
-      return Boolean(json.boolean);
-    }
-    throw new Error("Boolean SPARQL query result not found");
+    return this.queryAndResolve("boolean", query, context);
   }
 
-  async queryQuads(
+  queryQuads(
     query: string,
     context?: Context,
   ): Promise<RDF.ResultStream<RDF.Quad>> {
-    const json = await this.query(query, "application/rdf+json", context);
-
-    if (!(json?.constructor === Object)) {
-      throw new Error("Quads SPARQL query result not found");
-    }
-
-    const quadFactory = new QuadFactory();
-
-    const treeIterator = new TreeIterator<RDFJSON.Term>(json);
-
-    // TODO: review the unknown type cast
-    return new MappingIterator(
-      treeIterator,
-      (i) => quadFactory.fromJson(i as [string, string, RDFJSON.Term]),
-    ) as unknown as RDF.ResultStream<RDF.Quad>;
+    return this.queryAndResolve("quads", query, context);
   }
 
   async queryVoid(
