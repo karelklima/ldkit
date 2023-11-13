@@ -1,11 +1,13 @@
-import { IconExternalLink, IconLDkit } from "./Icons.tsx";
+import type { ComponentChildren } from "preact";
 
-export function Header(props: { activeLink: ActiveLink }) {
+import { IconGitHub, IconLDkit } from "./Icons.tsx";
+
+export function Header() {
   return (
     <div class="md:sticky md:top-0 bg-white dark:bg-[#0d1117] bg-opacity-90 dark:bg-opacity-90 border-b-1 border-dark-50 dark:border-red-700 border-opacity-90">
-      <header class="container mx-auto px-4 flex flex-row items-stretch justify-between">
+      <header class="container mx-auto px-4 h-14 flex flex-row items-stretch justify-between">
         <Logo />
-        <Menu {...props} />
+        <Menu />
       </header>
     </div>
   );
@@ -48,38 +50,38 @@ type Writeable<T> = { -readonly [P in keyof T]: T[P] };
 type Unpacked<T> = T extends (infer U)[] ? U : T;
 export type ActiveLink = Unpacked<Writeable<typeof menuItems>>["url"];
 
-function Menu(props: { activeLink: ActiveLink }) {
+function Menu() {
   return (
     <ul class="flex-0-1-auto flex overflow-x-auto">
-      {menuItems.map((item) => MenuItem({ ...item, ...props }))}
+      <Link url="/">Home</Link>
+      <Link url="/docs">Documentation</Link>
+      <Link url="https://github.com/karelklima/ldkit">
+        <IconGitHub />
+      </Link>
     </ul>
   );
 }
 
-type MenuItemProps = {
-  title: string;
-  url: string;
-  activeLink: ActiveLink;
-};
-
 const baseLinkClass =
-  "flex flex-row p-4 border-b-2 hover:border-black dark:hover:border-red-700 dark:hover:text-white";
+  "table-cell align-middle h-14 px-4 border-b-2 hover:border-black dark:hover:border-red-700 dark:hover:text-white border-transparent";
 
-function MenuItem({ title, url, activeLink }: MenuItemProps) {
-  const linkClass = url === activeLink
-    ? `${baseLinkClass} border-black dark:border-red-700 bg-gray-50 dark:bg-gray-800`
-    : `${baseLinkClass} border-transparent`;
+const activeCurrentLinkClass =
+  `${baseLinkClass} [data-current]:border-black [data-current]:dark:border-red-700 [data-current]:bg-gray-50 [data-current]:dark:bg-gray-800`;
+
+const activeAncestorLinkClass =
+  `${baseLinkClass} [data-ancestor]:border-black [data-ancestor]:dark:border-red-700 [data-ancestor]:bg-gray-50 [data-ancestor]:dark:bg-gray-800`;
+
+function Link({ url, children }: {
+  url: string;
+  children: ComponentChildren;
+}) {
+  const linkClass = url === "/"
+    ? activeCurrentLinkClass
+    : activeAncestorLinkClass;
   return (
     <li>
       <a href={url} class={linkClass}>
-        <span>{title}</span>
-        {url.startsWith("http")
-          ? (
-            <span class="ml-1 mt-1 w-2 h-2 text-gray-400">
-              <IconExternalLink />
-            </span>
-          )
-          : null}
+        {children}
       </a>
     </li>
   );

@@ -1,4 +1,3 @@
-import { Head } from "$fresh/runtime.ts";
 import { Handlers, PageProps } from "$fresh/server.ts";
 
 import { gfm } from "../../utils/markdown.ts";
@@ -44,10 +43,7 @@ export const handler: Handlers<Data> = {
 
 export default function DocsPage(props: PageProps<Data>) {
   return (
-    <App activeLink="/docs" title={props.data.page?.title ?? "Not Found"}>
-      <Head>
-        <link rel="stylesheet" href={`/gfm.css?build=${__FRSH_BUILD_ID}`} />
-      </Head>
+    <App title={props.data.page?.title ?? "Not Found"}>
       <div class="mx-auto max-w-screen-lg flex flex-col md:flex-row-reverse gap-6">
         <Content page={props.data.page} />
         <Sidebar path={props.url.pathname} />
