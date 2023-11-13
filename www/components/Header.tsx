@@ -65,14 +65,19 @@ function Menu() {
 const baseLinkClass =
   "table-cell align-middle h-14 px-4 border-b-2 hover:border-black dark:hover:border-red-700 dark:hover:text-white border-transparent";
 
-const activeLinkClass =
+const activeCurrentLinkClass =
+  `${baseLinkClass} [data-current]:border-black [data-current]:dark:border-red-700 [data-current]:bg-gray-50 [data-current]:dark:bg-gray-800`;
+
+const activeAncestorLinkClass =
   `${baseLinkClass} [data-ancestor]:border-black [data-ancestor]:dark:border-red-700 [data-ancestor]:bg-gray-50 [data-ancestor]:dark:bg-gray-800`;
 
 function Link({ url, children }: {
   url: string;
   children: ComponentChildren;
 }) {
-  const linkClass = url === "/" ? baseLinkClass : activeLinkClass;
+  const linkClass = url === "/"
+    ? activeCurrentLinkClass
+    : activeAncestorLinkClass;
   return (
     <li>
       <a href={url} class={linkClass}>
