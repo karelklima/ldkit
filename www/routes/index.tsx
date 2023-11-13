@@ -1,5 +1,3 @@
-import { Head } from "$fresh/runtime.ts";
-
 import { App } from "../components/App.tsx";
 import { Jumbo } from "../components/Jumbo.tsx";
 import { IconArrowRight } from "../components/Icons.tsx";
@@ -7,10 +5,7 @@ import { gfm } from "../utils/markdown.ts";
 
 export default function Home() {
   return (
-    <App activeLink="/">
-      <Head>
-        <link rel="stylesheet" href={`/gfm.css?build=${__FRSH_BUILD_ID}`} />
-      </Head>
+    <App>
       <div class="flex flex-col items-center">
         <Jumbo>LDkit</Jumbo>
         <p class="text-center text-2xl md:text-5xl font-bold leading-tight pb-7 md:pb-10">
