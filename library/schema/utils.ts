@@ -8,6 +8,14 @@ import type {
 } from "./schema.ts";
 
 export const expandSchema = (schemaPrototype: SchemaPrototype) => {
+  if (typeof schemaPrototype !== "object") {
+    throw new Error(`Invalid schema, expected object`);
+  }
+
+  if (Object.keys(schemaPrototype).length === 0) {
+    throw new Error(`Invalid schema, empty object, expected "@type" key or property definition`);
+  }
+
   const expandArray = <T extends string>(stringOrStrings: T | readonly T[]) => {
     return Array.isArray(stringOrStrings) ? stringOrStrings : [stringOrStrings];
   };

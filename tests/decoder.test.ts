@@ -4,7 +4,7 @@ import { createGraph, x } from "./test_utils.ts";
 import type { Context } from "../library/rdf.ts";
 import { decode } from "../library/decoder.ts";
 import type { Schema } from "../library/schema/mod.ts";
-import { xsd } from "../library/namespaces/mod.ts";
+import { rdf, xsd } from "../library/namespaces/mod.ts";
 
 const decodeGraph = (
   turtle: string,
@@ -57,6 +57,75 @@ Deno.test("Decoder / Multiple minimal resources", () => {
     {
       $id: x.C,
       $type: [x.Item],
+    },
+  ];
+
+  evaluate(input, schema, output);
+});
+
+Deno.test("Decoder / Query without RDF type", () => {
+  const input = `
+      x:A a ldkit:Resource;
+        x:property "value" .
+    `;
+
+  const schema = {
+    "@type": [],
+    property: {
+      "@id": x.property,
+    },
+  };
+
+  const output = [
+    {
+      $id: x.A,
+      property: "value",
+    },
+  ];
+
+  evaluate(input, schema, output);
+});
+
+Deno.test("Decoder / Query for RDF types", () => {
+  const input = `
+      x:A a ldkit:Resource, x:TypeA, x:TypeB, x:TypeC .
+    `;
+
+  const schema = {
+    "@type": [],
+    types: {
+      "@id": rdf.type,
+      "@array": true as const,
+    },
+  };
+
+  const output = [
+    {
+      $id: x.A,
+      types: [x.TypeA, x.TypeB, x.TypeC],
+    },
+  ];
+
+  evaluate(input, schema, output);
+});
+
+Deno.test("Decoder / Query with multiple RDF types for RDF types", () => {
+  const input = `
+    x:A a ldkit:Resource, x:TypeA, x:TypeB, x:TypeC .
+  `;
+
+  const schema = {
+    "@type": [x.TypeA, x.TypeB],
+    types: {
+      "@id": rdf.type,
+      "@array": true as const,
+    },
+  };
+
+  const output = [
+    {
+      $id: x.A,
+      types: [x.TypeA, x.TypeB, x.TypeC],
     },
   ];
 

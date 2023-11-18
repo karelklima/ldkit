@@ -1,10 +1,11 @@
-import { assertEquals, assertTypeSafe } from "./test_deps.ts";
+import { assertEquals, assertThrows, assertTypeSafe } from "./test_deps.ts";
 import { Equals, x } from "./test_utils.ts";
 
 import {
   expandSchema,
-  Schema,
+  type Schema,
   type SchemaInterface,
+  type SchemaPrototype,
 } from "../library/schema/mod.ts";
 import { xsd } from "../library/namespaces/mod.ts";
 
@@ -126,4 +127,13 @@ Deno.test("Schema / accepts schema prototype as schema interface creates schema 
   assertTypeSafe<Equals<SchemaInterface<typeof Thing>, ThingType>>();
 
   assertEquals(expandedSchema, ThingSchema);
+});
+
+Deno.test("Schema / should have at least one property or @type restriction", () => {
+  assertThrows(() => {
+    expandSchema(undefined as unknown as SchemaPrototype);
+  });
+  assertThrows(() => {
+    expandSchema({} as unknown as SchemaPrototype);
+  });
 });
