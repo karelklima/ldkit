@@ -21,15 +21,14 @@ const evaluate = (
 
 Deno.test("Decoder / Minimal resource", () => {
   const input = `
-      x:A a ldkit:Resource, x:Item .
+      x:A a ldkit:Resource .
     `;
 
-  const schema = { "@type": [x.Item] };
+  const schema = { "@type": [] };
 
   const output = [
     {
       $id: x.A,
-      $type: [x.Item],
     },
   ];
 
@@ -38,25 +37,22 @@ Deno.test("Decoder / Minimal resource", () => {
 
 Deno.test("Decoder / Multiple minimal resources", () => {
   const input = `
-      x:A a ldkit:Resource, x:Item .
-      x:B a ldkit:Resource, x:Item .
-      x:C a ldkit:Resource, x:Item .
+      x:A a ldkit:Resource .
+      x:B a ldkit:Resource .
+      x:C a ldkit:Resource .
     `;
 
-  const schema = { "@type": [x.Item] };
+  const schema = { "@type": [] };
 
   const output = [
     {
       $id: x.A,
-      $type: [x.Item],
     },
     {
       $id: x.B,
-      $type: [x.Item],
     },
     {
       $id: x.C,
-      $type: [x.Item],
     },
   ];
 
@@ -175,7 +171,6 @@ Deno.test("Decoder / Basic types", () => {
   const output = [
     {
       $id: x.A,
-      $type: [x.Item],
       string: "LDKit",
       integer: -5,
       decimal: -5.0,
@@ -190,11 +185,11 @@ Deno.test("Decoder / Basic types", () => {
 
 Deno.test("Decoder / Required property missing", () => {
   const input = `
-      x:A a ldkit:Resource, x:Item .
+      x:A a ldkit:Resource .
     `;
 
   const schema = {
-    "@type": [x.Item],
+    "@type": [],
     required: {
       "@id": x.required,
     },
@@ -205,11 +200,11 @@ Deno.test("Decoder / Required property missing", () => {
 
 Deno.test("Decoder / Optional property missing", () => {
   const input = `
-      x:A a ldkit:Resource, x:Item .
+      x:A a ldkit:Resource .
     `;
 
   const schema = {
-    "@type": [x.Item],
+    "@type": [],
     optional: {
       "@id": x.optional,
       "@optional": true as const,
@@ -219,7 +214,6 @@ Deno.test("Decoder / Optional property missing", () => {
   const output = [
     {
       $id: x.A,
-      $type: [x.Item],
     },
   ];
 
@@ -228,11 +222,11 @@ Deno.test("Decoder / Optional property missing", () => {
 
 Deno.test("Decoder / Optional array property missing", () => {
   const input = `
-      x:A a ldkit:Resource, x:Item .
+      x:A a ldkit:Resource .
     `;
 
   const schema = {
-    "@type": [x.Item],
+    "@type": [],
     optional: {
       "@id": x.optional,
       "@optional": true as const,
@@ -243,7 +237,6 @@ Deno.test("Decoder / Optional array property missing", () => {
   const output = [
     {
       $id: x.A,
-      $type: [x.Item],
       optional: [],
     },
   ];
@@ -254,12 +247,12 @@ Deno.test("Decoder / Optional array property missing", () => {
 Deno.test("Decoder / Array simple property", () => {
   const input = `
       x:A
-        a ldkit:Resource, x:Item ;
+        a ldkit:Resource ;
         x:array 1, 2, 3 .
     `;
 
   const schema = {
-    "@type": [x.Item],
+    "@type": [],
     array: {
       "@id": x.array,
       "@array": true as const,
@@ -269,7 +262,6 @@ Deno.test("Decoder / Array simple property", () => {
   const output = [
     {
       $id: x.A,
-      $type: [x.Item],
       array: [1, 2, 3],
     },
   ];
@@ -280,22 +272,19 @@ Deno.test("Decoder / Array simple property", () => {
 Deno.test("Decoder / Array subschema property", () => {
   const input = `
       x:A
-        a ldkit:Resource, x:Item ;
+        a ldkit:Resource ;
         x:array x:B, x:C .
-      x:B
-        a x:SubItem ;
-        x:value "value B" .
-      x:C a x:SubItem ;
-        x:value "value C" .
+      x:B x:value "value B" .
+      x:C x:value "value C" .
     `;
 
   const schema = {
-    "@type": [x.Item],
+    "@type": [],
     array: {
       "@id": x.array,
       "@array": true as const,
       "@context": {
-        "@type": [x.SubItem],
+        "@type": [],
         value: {
           "@id": x.value,
         },
@@ -306,16 +295,13 @@ Deno.test("Decoder / Array subschema property", () => {
   const output = [
     {
       $id: x.A,
-      $type: [x.Item],
       array: [
         {
           $id: x.B,
-          $type: [x.SubItem],
           value: "value B",
         },
         {
           $id: x.C,
-          $type: [x.SubItem],
           value: "value C",
         },
       ],
@@ -328,12 +314,12 @@ Deno.test("Decoder / Array subschema property", () => {
 Deno.test("Decoder / Multilang property", () => {
   const input = `
       x:A
-        a ldkit:Resource, x:Item ;
+        a ldkit:Resource ;
         x:multilang "CS"@cs, "EN"@en, "Unknown" .
     `;
 
   const schema = {
-    "@type": [x.Item],
+    "@type": [],
     multilang: {
       "@id": x.multilang,
       "@multilang": true as const,
@@ -343,7 +329,6 @@ Deno.test("Decoder / Multilang property", () => {
   const output = [
     {
       $id: x.A,
-      $type: [x.Item],
       multilang: {
         cs: "CS",
         en: "EN",
@@ -358,12 +343,12 @@ Deno.test("Decoder / Multilang property", () => {
 Deno.test("Decoder / Multilang array property", () => {
   const input = `
       x:A
-        a ldkit:Resource, x:Item ;
+        a ldkit:Resource;
         x:multilang "CS 1"@cs, "CS 2"@cs, "CS 3"@cs, "EN"@en, "Unknown" .
     `;
 
   const schema = {
-    "@type": [x.Item],
+    "@type": [],
     multilang: {
       "@id": x.multilang,
       "@multilang": true as const,
@@ -374,7 +359,6 @@ Deno.test("Decoder / Multilang array property", () => {
   const output = [
     {
       $id: x.A,
-      $type: [x.Item],
       multilang: {
         cs: ["CS 1", "CS 2", "CS 3"],
         en: ["EN"],
@@ -389,12 +373,12 @@ Deno.test("Decoder / Multilang array property", () => {
 Deno.test("Decoder / Preferred language property", () => {
   const input = `
       x:A
-        a ldkit:Resource, x:Item ;
+        a ldkit:Resource ;
         x:preferredLanguage "DE"@de, "CS"@cs, "EN"@en .
     `;
 
   const schema = {
-    "@type": [x.Item],
+    "@type": [],
     preferredLanguage: {
       "@id": x.preferredLanguage,
     },
@@ -403,7 +387,6 @@ Deno.test("Decoder / Preferred language property", () => {
   const output = [
     {
       $id: x.A,
-      $type: [x.Item],
       preferredLanguage: "CS",
     },
   ];
@@ -414,12 +397,12 @@ Deno.test("Decoder / Preferred language property", () => {
 Deno.test("Decoder / Preferred first property", () => {
   const input = `
       x:A
-        a ldkit:Resource, x:Item ;
+        a ldkit:Resource ;
         x:preferredFirst "DE"@de, "CS"@cs, "EN"@en .
     `;
 
   const schema = {
-    "@type": [x.Item],
+    "@type": [],
     preferredFirst: {
       "@id": x.preferredFirst,
     },
@@ -428,7 +411,6 @@ Deno.test("Decoder / Preferred first property", () => {
   const output = [
     {
       $id: x.A,
-      $type: [x.Item],
       preferredFirst: "DE",
     },
   ];
@@ -439,14 +421,14 @@ Deno.test("Decoder / Preferred first property", () => {
 Deno.test("Decoder / One resource multiple schemas", () => {
   const input = `
       x:A
-        a ldkit:Resource, x:Item ;
+        a ldkit:Resource ;
         x:nested x:A ;
         x:rootProperty "Root property" ;
         x:nestedProperty "Nested property" .
     `;
 
   const schema = {
-    "@type": [x.Item],
+    "@type": [],
     rootProperty: {
       "@id": x.rootProperty,
     },
@@ -464,11 +446,9 @@ Deno.test("Decoder / One resource multiple schemas", () => {
   const output = [
     {
       $id: x.A,
-      $type: [x.Item],
       rootProperty: "Root property",
       nested: {
         $id: x.A,
-        $type: [x.Item],
         nestedProperty: "Nested property",
       },
     },
@@ -480,17 +460,17 @@ Deno.test("Decoder / One resource multiple schemas", () => {
 Deno.test("Decoder / Caching", () => {
   const input = `
       x:A
-        a ldkit:Resource, x:Item ;
+        a ldkit:Resource ;
         x:nested x:C .
       x:B
-        a ldkit:Resource, x:Item ;
+        a ldkit:Resource ;
         x:nested x:C .
       x:C
         a x:Nested .
     `;
 
   const schema = {
-    "@type": [x.Item],
+    "@type": [],
     nested: {
       "@id": x.nested,
       "@context": {
@@ -502,18 +482,14 @@ Deno.test("Decoder / Caching", () => {
   const output = [
     {
       $id: x.A,
-      $type: [x.Item],
       nested: {
         $id: x.C,
-        $type: [x.Nested],
       },
     },
     {
       $id: x.B,
-      $type: [x.Item],
       nested: {
         $id: x.C,
-        $type: [x.Nested],
       },
     },
   ];
