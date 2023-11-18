@@ -3,15 +3,16 @@ import { Equals, x } from "./test_utils.ts";
 
 import {
   expandSchema,
+  Property,
   type Schema,
   type SchemaInterface,
   type SchemaPrototype,
 } from "../library/schema/mod.ts";
 import { xsd } from "../library/namespaces/mod.ts";
+import rdf from "../library/namespaces/rdf.ts";
 
 type ThingType = {
   $id: string;
-  $type: string[];
   required: string;
   optional: string | undefined;
   array: string[];
@@ -22,7 +23,6 @@ type ThingType = {
   date: Date;
   nested: {
     $id: string;
-    $type: string[];
     nestedValue: string;
   };
 };
@@ -136,4 +136,20 @@ Deno.test("Schema / should have at least one property or @type restriction", () 
   assertThrows(() => {
     expandSchema({} as unknown as SchemaPrototype);
   });
+});
+
+Deno.test("Schema / should expand @type shortcut definition", () => {
+  const schema = {
+    "type": "@type",
+  };
+  const expandedSchema = expandSchema(schema);
+  assertEquals((expandedSchema["type"] as Property)["@id"], rdf.type);
+});
+
+Deno.test("Schema / should expand @type property definition", () => {
+  const schema = {
+    "type": { "@id": "@type" },
+  };
+  const expandedSchema = expandSchema(schema);
+  assertEquals((expandedSchema["type"] as Property)["@id"], rdf.type);
 });

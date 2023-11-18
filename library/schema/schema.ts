@@ -16,7 +16,7 @@ export type SchemaPrototypeProperties = {
 };
 
 export type SchemaPrototypeType = {
-  "@type": string | readonly string[];
+  "@type"?: string | readonly string[];
 };
 
 export type SchemaPrototype = SchemaPrototypeProperties & SchemaPrototypeType;

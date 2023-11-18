@@ -1,3 +1,4 @@
+import rdf from "../namespaces/rdf.ts";
 import xsd from "../namespaces/xsd.ts";
 
 import type {
@@ -13,8 +14,14 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
   }
 
   if (Object.keys(schemaPrototype).length === 0) {
-    throw new Error(`Invalid schema, empty object, expected "@type" key or property definition`);
+    throw new Error(
+      `Invalid schema, empty object, expected "@type" key or property definition`,
+    );
   }
+
+  const expandShortcut = (value: string) => {
+    return value === "@type" ? rdf.type : value;
+  };
 
   const expandArray = <T extends string>(stringOrStrings: T | readonly T[]) => {
     return Array.isArray(stringOrStrings) ? stringOrStrings : [stringOrStrings];
@@ -25,7 +32,7 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
   ) => {
     if (typeof stringOrProperty === "string") {
       return {
-        "@id": stringOrProperty,
+        "@id": expandShortcut(stringOrProperty),
         "@type": xsd.string,
       };
     }
@@ -52,6 +59,8 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
     const expandedProperty = Object.keys(property).reduce((acc, key) => {
       if (key === "@context") {
         acc[key] = expandSchema(property[key]!);
+      } else if (key === "@id") {
+        acc[key] = expandShortcut(property[key]);
       } else if (validKeys.includes(key as keyof PropertyPrototype)) {
         acc[key] = property[key as keyof PropertyPrototype] as unknown;
       }
@@ -71,7 +80,7 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
 
   return Object.keys(schemaPrototype).reduce((acc, key) => {
     if (key === "@type") {
-      acc[key] = expandArray(schemaPrototype[key]);
+      acc[key] = expandArray(schemaPrototype[key]!);
     } else {
       acc[key] = expandSchemaProperty(
         schemaPrototype[key] as string | PropertyPrototype,
