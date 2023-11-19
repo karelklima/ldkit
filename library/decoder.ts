@@ -75,8 +75,6 @@ class Decoder {
       throw new Error(`Error decoding graph, <${nodeIri}> node not found.`);
     }
 
-    output.$type = this.decodeNodeType(node);
-
     Object.keys(schema).forEach((key) => {
       if (key === "@type") {
         return;
@@ -97,26 +95,16 @@ class Decoder {
     return output;
   }
 
-  decodeNodeType(node: Node) {
-    const typeTerms = node.get(rdf.type);
-    if (!typeTerms) {
-      return [];
-    }
-    return typeTerms.reduce((acc, term) => {
-      if (term.value !== ldkit.Resource) {
-        acc.push(term.value);
-      }
-      return acc;
-    }, [] as Iri[]);
-  }
-
   decodeNodeProperty(
     nodeIri: Iri,
     node: Node,
     propertyKey: string,
     property: Property,
   ) {
-    const terms = node.get(property["@id"]);
+    const allTerms = node.get(property["@id"]);
+    const terms = property["@id"] !== rdf.type
+      ? allTerms
+      : allTerms?.filter((term) => term.value !== ldkit.Resource);
 
     if (!terms) {
       if (!property["@optional"]) {

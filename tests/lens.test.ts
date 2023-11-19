@@ -73,7 +73,6 @@ const defaultStoreContent = ttl(`
 
 const createDirector = ($id: string, name: string) => ({
   $id: x[$id],
-  $type: [x.Director],
   name,
 });
 
@@ -239,7 +238,6 @@ Deno.test("Resource / Insert data", async () => {
   const result = await directors.findByIri(x.ChristopherNolan);
   assertEquals(result, {
     $id: x.ChristopherNolan,
-    $type: [x.Director],
     name: "Christopher Nolan",
   });
 });
@@ -248,7 +246,6 @@ Deno.test("Resource / Delete data", async () => {
   const { directors } = init();
   await directors.insert({
     $id: x.ChristopherNolan,
-    $type: [x.Director, x.CustomType],
     name: "Christopher Nolan",
   });
   await directors.deleteData(
@@ -261,21 +258,6 @@ Deno.test("Resource / Delete data", async () => {
   const result = await directors.findByIri(x.ChristopherNolan);
   assertEquals(result, {
     $id: x.ChristopherNolan,
-    $type: [x.Director],
     name: "Christopher Nolan",
   });
 });
-
-// TODO Review and fix this test
-/*Deno.test("Resource / Support for custom types", async () => {
-  const { movies } = init();
-  await movies.insert({
-    $id: x.KillBill,
-    $type: [x.TarantinoMovie],
-    name: "Kill Bill",
-    director: { $id: x.QuentinTarantino },
-  });
-  const result = await movies.findByIri(x.KillBill);
-
-  assertEquals(result?.$type, [x.Movie, x.TarantinoMovie]);
-});*/
