@@ -1,7 +1,7 @@
 import {
   type Context,
+  createLens,
   createNamespace,
-  createResource,
   type SchemaInterface,
 } from "ldkit";
 import { dcterms, schema, xsd } from "ldkit/namespaces";
@@ -82,5 +82,5 @@ export const createInfosResource = (iri: string) => {
       value: iri,
     }],
   };
-  return createResource(InformationSchema, context, engine);
+  return createLens(InformationSchema, context, engine);
 };

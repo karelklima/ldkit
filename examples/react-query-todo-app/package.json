@@ -8,21 +8,21 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@comunica/query-sparql-rdfjs": "^2.6.10",
-    "@emotion/react": "^11.10.6",
-    "@emotion/styled": "^11.10.6",
-    "@tanstack/react-query": "^4.26.1",
-    "ldkit": "^0.8.0",
-    "n3": "^1.16.3",
+    "@comunica/query-sparql-rdfjs": "^2.10.0",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@tanstack/react-query": "^5.8.4",
+    "ldkit": "^1.1.0",
+    "n3": "^1.17.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@types/react": "^18.0.27",
-    "@types/react-dom": "^18.0.10",
-    "@vitejs/plugin-react": "^3.1.0",
-    "typescript": "^4.9.3",
-    "vite": "^4.1.0",
-    "vite-plugin-node-polyfills": "^0.7.0"
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
+    "@vitejs/plugin-react": "^4.2.0",
+    "typescript": "^5.2.2",
+    "vite": "^4.5.0",
+    "vite-plugin-node-polyfills": "^0.16.0"
   }
 }

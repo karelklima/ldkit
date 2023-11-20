@@ -4,10 +4,6 @@ import { DEFAULT_BOARD_IRI } from "./store";
 import { Button, Grid, TextField } from "@mui/material";
 import { useSearchParams } from "react-router-dom";
 
-type Inputs = {
-  iri: string;
-};
-
 export const Form: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const inputRef = useRef<HTMLInputElement>();
