@@ -66,5 +66,4 @@ export type SchemaInterface<T extends SchemaPrototype> =
       ? ConvertProperty<T[X]>
       : never;
   }
-  & SchemaInterfaceIdentity
-  & SchemaInterfaceType;
+  & SchemaInterfaceIdentity;
