@@ -3,16 +3,6 @@
     "ldkit": "../mod.ts",
     "ldkit/namespaces": "../namespaces.ts",
     "ldkit/sparql": "../sparql.ts",
-    "ldkit/rdf": "../rdf.ts",
-
-    "react": "https://esm.sh/react@18.2.0",
-    "react-dom": "https://esm.sh/react-dom@18.2.0",
-    "@emotion/styled": "https://esm.sh/@emotion/styled",
-    "@emotion/react": "https://esm.sh/@emotion/react",
-    "n3": "https://esm.sh/n3",
-
-    "$/": "./library/",
-    "https://esm.sh/v94/web-streams-ponyfill@1.4.2/deno/web-streams-ponyfill.js": "https://esm.sh/v77/web-streams-ponyfill@1.4.2/deno/web-streams-ponyfill.js",
-    "xxhttps://esm.sh/v92/@types/rdf-js@4.0.2/rdf-js": "https://esm.sh/v92/rdf-js@4.0.2"
+    "ldkit/rdf": "../rdf.ts"
   }
 }
