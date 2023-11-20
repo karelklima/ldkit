@@ -24,7 +24,7 @@ const Item: React.FC<ItemProps> = ({ item }) => {
   const queryClient = useQueryClient();
   const handleDeleteClicked = useCallback(() => {
     Todos.delete(item).then(() => {
-      queryClient.invalidateQueries(["todos"]);
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
     });
   }, [item, queryClient]);
 
@@ -33,7 +33,7 @@ const Item: React.FC<ItemProps> = ({ item }) => {
       $id: item.$id,
       done: !item.done,
     }).then(() => {
-      queryClient.invalidateQueries(["todos"]);
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
     });
   }, [item, queryClient]);
 
@@ -57,7 +57,10 @@ const Item: React.FC<ItemProps> = ({ item }) => {
 };
 
 export const Items: React.FC = () => {
-  const { isLoading, isError, data } = useQuery(["todos"], () => Todos.find());
+  const { isLoading, isError, data } = useQuery({
+    queryKey: ["todos"],
+    queryFn: () => Todos.find(),
+  });
 
   if (isLoading) {
     return <List>Loading...</List>;
@@ -69,7 +72,7 @@ export const Items: React.FC = () => {
 
   return (
     <List>
-      {data.map((item, index) => <Item item={item} key={index} />)}
+      {data!.map((item, index) => <Item item={item} key={index} />)}
     </List>
   );
 };

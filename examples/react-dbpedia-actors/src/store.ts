@@ -1,4 +1,4 @@
-import { type Context, createResource, type SchemaInterface } from "ldkit";
+import { type Context, createLens, type SchemaInterface } from "ldkit";
 import { dbo, rdfs, xsd } from "ldkit/namespaces";
 
 const ActorSchema = {
@@ -21,7 +21,7 @@ export const createLanguageContext = (language: string) => ({
 export type ActorInterface = SchemaInterface<typeof ActorSchema>;
 
 export const createLocalizedActorResource = (language: string) =>
-  createResource(ActorSchema, createLanguageContext(language));
+  createLens(ActorSchema, createLanguageContext(language));
 
 export const favouriteActors = [
   "http://dbpedia.org/resource/Brad_Pitt",

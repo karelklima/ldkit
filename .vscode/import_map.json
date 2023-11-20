@@ -9,18 +9,11 @@
     "twind": "https://esm.sh/twind@0.16.19",
     "twind/": "https://esm.sh/twind@0.16.19/",
 
-    "$std/": "https://deno.land/std@0.193.0/",
-
-    "react": "https://esm.sh/preact@10.10.6/compat",
-    "react-dom": "https://esm.sh/preact@10.10.6/compat",
-    "@emotion/styled": "https://esm.sh/@emotion/styled@11.10.4",
-    "@emotion/react": "https://esm.sh/@emotion/react@11.10.4",
+    "$std/": "https://deno.land/std@0.207.0/",
 
     "ldkit": "../mod.ts",
     "ldkit/namespaces": "../namespaces.ts",
     "ldkit/sparql": "../sparql.ts",
-    "ldkit/rdf": "../rdf.ts",
-
-    "n3": "https://esm.sh/n3"
+    "ldkit/rdf": "../rdf.ts"
   }
 }

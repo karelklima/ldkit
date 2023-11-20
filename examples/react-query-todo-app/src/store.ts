@@ -1,7 +1,7 @@
 import {
   type Context,
+  createLens,
   createNamespace,
-  createResource,
   type SchemaInterface,
 } from "ldkit";
 import { xsd } from "ldkit/namespaces";
@@ -36,7 +36,7 @@ const engine = new Comunica();
 
 export type TodoInterface = SchemaInterface<typeof TodoSchema>;
 
-export const Todos = createResource(TodoSchema, context, engine);
+export const Todos = createLens(TodoSchema, context, engine);
 
 export const getRandomId = () =>
   `https://todos/${1000 + Math.floor(Math.random() * 1000)}`;
