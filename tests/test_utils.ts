@@ -1,3 +1,5 @@
+import { assertEquals } from "./test_deps.ts";
+
 import {
   type Context,
   DataFactory,
@@ -97,4 +99,18 @@ export const emptyStore = (store: N3.Store) => {
   return new Promise((resolve) => {
     stream.on("end", resolve);
   });
+};
+
+export const initStore = () => {
+  const store = createStore();
+  const context = createStoreContext(store);
+  const assertStore = (turtle: string) => {
+    const storeQuads = store.getQuads(null, null, null, null);
+    const expectedQuads = ttl(turtle);
+    assertEquals(storeQuads, expectedQuads);
+  };
+  const empty = async () => {
+    await emptyStore(store);
+  };
+  return { store, context, assertStore, empty };
 };

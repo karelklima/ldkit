@@ -1,12 +1,6 @@
 import { assert, assertEquals, Comunica, equal } from "./test_deps.ts";
 
-import {
-  createStore,
-  createStoreContext,
-  emptyStore,
-  ttl,
-  x,
-} from "./test_utils.ts";
+import { initStore, ttl, x } from "./test_utils.ts";
 
 import { createLens } from "../library/lens/mod.ts";
 import { rdf, xsd } from "../library/namespaces/mod.ts";
@@ -82,22 +76,11 @@ const Kubrick = createDirector("StanleyKubrick", "Stanley Kubrick");
 const engine = new Comunica();
 const _ = new DataFactory();
 
-const init = () => {
-  const store = createStore();
+export const init = () => {
+  const { store, context, assertStore, empty } = initStore();
   store.addQuads(defaultStoreContent);
-  const context = createStoreContext(store, {
-    sources: [{ type: "rdfjsSource", value: store }],
-  });
   const directors = createLens(Director, context, engine);
   const movies = createLens(Movie, context, engine);
-  const assertStore = (turtle: string) => {
-    const storeQuads = store.getQuads(null, null, null, null);
-    const expectedQuads = ttl(turtle);
-    assertEquals(storeQuads, expectedQuads);
-  };
-  const empty = async () => {
-    await emptyStore(store);
-  };
   return { directors, movies, assertStore, empty };
 };
 
@@ -128,7 +111,7 @@ Deno.test("Resource / Get multiple resources by IRI", async () => {
 Deno.test("Resource / Get resource by string condition", async () => {
   const { directors } = init();
   const condition = `?iri <${x.name}> "Quentin Tarantino" .`;
-  const result = await directors.find(condition);
+  const result = await directors.find({ where: condition });
 
   assertEquals(result.length, 1);
   assertEquals(result[0], Tarantino);
@@ -141,7 +124,7 @@ Deno.test("Resource / Get resource by quad condition", async () => {
     _.namedNode(x.name),
     _.literal("Quentin Tarantino"),
   );
-  const result = await directors.find([condition]);
+  const result = await directors.find({ where: [condition] });
 
   assertEquals(result.length, 1);
   assertEquals(result[0], Tarantino);
