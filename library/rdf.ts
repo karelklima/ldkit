@@ -18,6 +18,7 @@ import type {
 export type LDkitContext = {
   graph?: string;
   language?: string;
+  take?: number;
 };
 
 export type Context =

@@ -19,5 +19,11 @@
   "how-to": {
     "title": "How To",
     "pages": [["query-with-comunica", "Query with Comunica"]]
+  },
+  "v2": {
+    "title": "Version 2 (not yet released)",
+    "pages": [
+      ["pagination", "Pagination"]
+    ]
   }
 }

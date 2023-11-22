@@ -22,7 +22,7 @@ const PersonSchema = {
 const Persons = createLens(PersonSchema, context);
 
 // List all persons
-const persons = await Persons.find(undefined, 10);
+const persons = await Persons.find({ take: 10 });
 for (const person of persons) {
   console.log(person.name); // string
   console.log(person.birthDate); // Date

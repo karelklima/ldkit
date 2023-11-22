@@ -1,4 +1,4 @@
-import type { Property, Schema } from "../schema/mod.ts";
+import { type Schema } from "../schema/mod.ts";
 import { getSchemaProperties } from "../schema/mod.ts";
 import {
   CONSTRUCT,
@@ -13,19 +13,19 @@ import rdf from "../namespaces/rdf.ts";
 
 import { encode } from "../encoder.ts";
 
-import type { Entity } from "./types.ts";
+import { type Entity } from "./types.ts";
 import { QueryHelper } from "./query_helper.ts";
 
 export class QueryBuilder {
   private readonly schema: Schema;
-  private readonly schemaProperties: Record<string, Property>;
   private readonly context: Context;
+  private readonly takeDefault: number;
   private readonly df: RDF.DataFactory;
 
   constructor(schema: Schema, context: Context) {
     this.schema = schema;
-    this.schemaProperties = getSchemaProperties(this.schema);
     this.context = context;
+    this.takeDefault = 1000;
     this.df = new DataFactory();
   }
 
@@ -34,14 +34,6 @@ export class QueryBuilder {
       this.df.variable!("iri"),
       this.df.namedNode(rdf.type),
       this.df.namedNode(ldkit.Resource),
-    );
-  }
-
-  private getTypesSignature() {
-    return this.df.quad(
-      this.df.variable!("iri"),
-      this.df.namedNode(rdf.type),
-      this.df.variable!("iri_type"),
     );
   }
 
@@ -113,13 +105,13 @@ export class QueryBuilder {
     return SELECT`(count(?iri) as ?count)`.WHERE`${quads}`.build();
   }
 
-  getQuery(where?: string | RDF.Quad[], limit = 1000) {
+  getQuery(where?: string | RDF.Quad[], limit = this.takeDefault, offset = 0) {
     const selectSubQuery = SELECT.DISTINCT`
       ${this.df.variable!("iri")}
     `.WHERE`
       ${this.getShape(false, true)}
       ${where}
-    `.LIMIT(limit).build();
+    `.LIMIT(limit).OFFSET(offset).build();
 
     const query = CONSTRUCT`
       ${this.getResourceSignature()}
