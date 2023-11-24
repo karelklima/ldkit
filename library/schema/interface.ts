@@ -8,6 +8,11 @@ type Prettify<T> =
   // deno-lint-ignore ban-types
   & {};
 
+type Unite<T> = T extends Record<string, unknown> ? {
+    [Key in keyof T]: T[Key];
+  }
+  : T;
+
 type IsOptional<Property extends PropertyPrototype> = Property extends {
   "@optional": true;
 } ? true
@@ -35,7 +40,7 @@ type ConvertPropertyType<T extends PropertyPrototype> = T extends
   : string;
 
 type ConvertPropertyContext<T extends PropertyPrototype> = T extends
-  { "@context": SchemaPrototype } ? SchemaInterface<T["@context"]>
+  { "@context": SchemaPrototype } ? Unite<SchemaInterface<T["@context"]>>
   : ConvertPropertyType<T>;
 
 type ConvertPropertyOptional<T extends PropertyPrototype> =
@@ -70,12 +75,12 @@ export type SchemaInterface<T extends SchemaPrototype> =
   & SchemaInterfaceIdentity
   & {
     [X in Exclude<keyof T, "@type">]: T[X] extends ValidPropertyDefinition
-      ? Prettify<ConvertProperty<T[X]>>
+      ? ConvertProperty<T[X]>
       : never;
   };
 
 type ConvertUpdatePropertyContext<T extends PropertyPrototype> = T extends
-  { "@context": SchemaPrototype } ? SchemaUpdateInterface<T["@context"]>
+  { "@context": SchemaPrototype } ? Unite<SchemaUpdateInterface<T["@context"]>>
   : ConvertPropertyType<T>;
 
 type ConvertUpdatePropertyOptional<T extends PropertyPrototype> =
@@ -84,8 +89,8 @@ type ConvertUpdatePropertyOptional<T extends PropertyPrototype> =
 
 type CreateArrayUpdateInterface<T extends PropertyPrototype> = {
   $set?: ConvertPropertyType<T>[];
-  $add?: ConvertPropertyType<T> | ConvertPropertyType<T>[];
-  $remove?: ConvertPropertyType<T> | ConvertPropertyType<T>[];
+  $add?: ConvertPropertyType<T>[];
+  $remove?: ConvertPropertyType<T>[];
 } | ConvertPropertyType<T>[];
 
 type ConvertUpdatePropertyArray<T extends PropertyPrototype> =

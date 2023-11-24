@@ -18,8 +18,8 @@ import { rdf, xsd } from "../namespaces.ts";
 
 type ArrayUpdate<T> = {
   $set?: T[];
-  $add?: T | T[];
-  $remove?: T | T[];
+  $add?: T[];
+  $remove?: T[];
 } | T[];
 
 Deno.test("Schema / Full schema", () => {
@@ -38,12 +38,6 @@ Deno.test("Schema / Full schema", () => {
       nestedValue: string;
     };
   };
-
-  type ArrayUpdate<T> = {
-    $set?: T[];
-    $add?: T | T[];
-    $remove?: T | T[];
-  } | T[];
 
   type ThingUpdateType = {
     $id: string;
