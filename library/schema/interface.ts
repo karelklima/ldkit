@@ -5,6 +5,7 @@ type Prettify<T> =
   & {
     [K in keyof T]: T[K];
   }
+  // deno-lint-ignore ban-types
   & {};
 
 type IsOptional<Property extends PropertyPrototype> = Property extends {
