@@ -11,13 +11,21 @@ export const encode = (
   node: DecodedNode,
   schema: Schema,
   context: Context,
+  includeType = true,
   variableInitCounter = 0,
 ) => {
-  return Encoder.encode(node, schema, context, variableInitCounter);
+  return Encoder.encode(
+    node,
+    schema,
+    context,
+    includeType,
+    variableInitCounter,
+  );
 };
 
 class Encoder {
-  private context: Context;
+  private readonly context: Context;
+  private readonly includeType: boolean;
 
   private df: DataFactory = new DataFactory({
     blankNodePrefix: "b",
@@ -27,8 +35,13 @@ class Encoder {
 
   private output: RDF.Quad[] = [];
 
-  private constructor(context: Context, variableInitCounter: number) {
+  private constructor(
+    context: Context,
+    includeType: boolean,
+    variableInitCounter: number,
+  ) {
     this.context = context;
+    this.includeType = includeType;
     this.variableCounter = variableInitCounter;
   }
 
@@ -36,9 +49,13 @@ class Encoder {
     node: DecodedNode,
     schema: Schema,
     context: Context,
+    includeType: boolean,
     variableInitCounter: number,
   ) {
-    return new Encoder(context, variableInitCounter).encode(node, schema);
+    return new Encoder(context, includeType, variableInitCounter).encode(
+      node,
+      schema,
+    );
   }
 
   encode(node: DecodedNode, schema: Schema) {
@@ -71,7 +88,9 @@ class Encoder {
   }
 
   encodeNode(node: DecodedNode, schema: Schema, nodeId: NodeId) {
-    this.encodeNodeType(node, schema["@type"], nodeId);
+    if (this.includeType) {
+      this.encodeNodeType(node, schema["@type"], nodeId);
+    }
 
     Object.keys(schema).forEach((key) => {
       if (key === "@type") {

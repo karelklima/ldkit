@@ -6,6 +6,7 @@ import {
   type SchemaInterface,
   type SchemaInterfaceIdentity,
   type SchemaPrototype,
+  type SchemaUpdateInterface,
 } from "../schema/mod.ts";
 import { decode } from "../decoder.ts";
 
@@ -39,7 +40,11 @@ export const createResource = <T extends SchemaPrototype>(
   engine?: IQueryEngine,
 ) => new Lens(schema, context, engine);
 
-export class Lens<S extends SchemaPrototype, I = SchemaInterface<S>> {
+export class Lens<
+  S extends SchemaPrototype,
+  I = SchemaInterface<S>,
+  U = SchemaUpdateInterface<S>,
+> {
   private readonly schema: Schema;
   private readonly context: Context;
   private readonly engine: QueryEngineProxy;
@@ -113,9 +118,9 @@ export class Lens<S extends SchemaPrototype, I = SchemaInterface<S>> {
     return this.updateQuery(q);
   }
 
-  update(...entities: Entity<I>[]) {
-    const q = this.queryBuilder.updateQuery(entities);
-
+  update(...entities: U[]) {
+    const q = this.queryBuilder.updateQuery(entities as Entity[]);
+    // TODO: console.log(q);
     return this.updateQuery(q);
   }
 
