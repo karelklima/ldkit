@@ -104,11 +104,10 @@ type ConvertUpdatePropertyObject<T extends PropertyPrototype> =
 type ConvertUpdateProperty<T extends ValidPropertyDefinition> = T extends
   PropertyPrototype ? ConvertUpdatePropertyObject<T> : string;
 
-export type SchemaUpdateInterface<T extends SchemaPrototype> = Prettify<
+export type SchemaUpdateInterface<T extends SchemaPrototype> =
   & SchemaInterfaceIdentity
   & {
     [X in Exclude<keyof T, "@type">]?: T[X] extends ValidPropertyDefinition
       ? ConvertUpdateProperty<T[X]>
       : never;
-  }
->;
+  };
