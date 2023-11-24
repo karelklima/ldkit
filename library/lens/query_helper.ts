@@ -3,6 +3,10 @@ import type { Property, Schema } from "../schema/mod.ts";
 import { encode } from "../encoder.ts";
 import type { Entity } from "./types.ts";
 
+/**
+ * @deprecated
+ * TODO: Remove this class
+ */
 export class QueryHelper {
   private readonly entity: Entity;
   private readonly schema: Schema;
@@ -30,6 +34,7 @@ export class QueryHelper {
         this.entity,
         this.schema,
         this.context,
+        true,
         this.variableInitCounter,
       );
     }
@@ -42,6 +47,7 @@ export class QueryHelper {
         this.getEntityWithReplacedVariables(),
         this.schema,
         this.context,
+        true,
         this.variableInitCounter,
       );
     }

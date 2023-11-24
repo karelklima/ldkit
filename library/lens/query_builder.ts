@@ -14,7 +14,7 @@ import rdf from "../namespaces/rdf.ts";
 import { encode } from "../encoder.ts";
 
 import { type Entity } from "./types.ts";
-import { QueryHelper } from "./query_helper.ts";
+import { UpdateHelper } from "./update_helper.ts";
 
 export class QueryBuilder {
   private readonly schema: Schema;
@@ -163,23 +163,13 @@ export class QueryBuilder {
   }
 
   updateQuery(entities: Entity[]) {
-    const deleteQuads: RDF.Quad[] = [];
-    const insertQuads: RDF.Quad[] = [];
-    const whereQuads: RDF.Quad[] = [];
+    const helper = new UpdateHelper(this.schema, this.context);
 
-    entities.forEach((entity, index) => {
-      const helper = new QueryHelper(
-        entity,
-        this.schema,
-        this.context,
-        1000 * index,
-      );
-      deleteQuads.push(...helper.getDeleteQuads());
-      insertQuads.push(...helper.getInsertQuads());
-      whereQuads.push(...helper.getWhereQuads());
-    });
+    for (const entity of entities) {
+      helper.process(entity);
+    }
 
-    return DELETE`${deleteQuads}`.INSERT`${insertQuads}`
-      .WHERE`${deleteQuads}`.build();
+    return DELETE`${helper.deleteQuads}`.INSERT`${helper.insertQuads}`
+      .WHERE`${helper.deleteQuads}`.build();
   }
 }
