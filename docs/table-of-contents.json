@@ -23,7 +23,8 @@
   "v2": {
     "title": "Version 2 (not yet released)",
     "pages": [
-      ["pagination", "Pagination"]
+      ["pagination", "Pagination"],
+      ["working-with-arrays", "Working with arrays"]
     ]
   }
 }
