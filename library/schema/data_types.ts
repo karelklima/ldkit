@@ -36,6 +36,8 @@ const SupportedDataTypesPrototype = {
   [xsd.token]: "",
   [xsd.hexBinary]: "",
   [rdf.langString]: "",
+  [xsd.time]: "",
+  [xsd.duration]: "",
 };
 
 export type SupportedDataTypes = typeof SupportedDataTypesPrototype;

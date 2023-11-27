@@ -44,10 +44,16 @@ Deno.test("SPARQL / Sparql tag literals", () => {
     sparql`${true}`,
     "true",
   );
-  assertEquals(sparql`${df.literal("1", df.namedNode(xsd.integer))}`, "1");
-  assertEquals(sparql`${1}`, "1");
-  assertEquals(sparql`${df.literal("1.0", df.namedNode(xsd.decimal))}`, "1.0");
-  assertEquals(sparql`${1.1}`, "1.1");
+  assertEquals(
+    sparql`${df.literal("1", df.namedNode(xsd.integer))}`,
+    `"1"^^<${xsd.integer}>`,
+  );
+  assertEquals(sparql`${1}`, `"1"^^<${xsd.integer}>`);
+  assertEquals(
+    sparql`${df.literal("10.5", df.namedNode(xsd.decimal))}`,
+    `"10.5"^^<${xsd.decimal}>`,
+  );
+  assertEquals(sparql`${10.5}`, `"10.5"^^<${xsd.decimal}>`);
 
   // date
   assertEquals(

@@ -91,7 +91,7 @@ export class Lens<
 
   async findByIri(iri: Iri) {
     const results = await this.findByIris([iri]);
-    return results.length > 0 ? results[0] : undefined;
+    return results.length > 0 ? results[0] : null;
   }
 
   async findByIris(iris: Iri[]) {

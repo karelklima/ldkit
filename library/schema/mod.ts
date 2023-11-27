@@ -1,3 +1,5 @@
+export type { SupportedDataTypes, SupportedNativeTypes } from "./data_types.ts";
+
 export type {
   SchemaInterface,
   SchemaInterfaceIdentity,

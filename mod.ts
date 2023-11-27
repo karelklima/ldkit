@@ -2,7 +2,7 @@ export { type Context, type IQueryEngine } from "./library/rdf.ts";
 
 export { setDefaultContext, setDefaultEngine } from "./library/global.ts";
 
-export { type SchemaInterface } from "./library/schema/mod.ts";
+export * from "./library/schema/mod.ts";
 
 export { createLens, createResource, type Lens } from "./library/lens/mod.ts";
 
