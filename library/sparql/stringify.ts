@@ -16,11 +16,8 @@ export const variable = (term: RDF.Variable) => {
 
 export const literal = (term: RDF.Literal) => {
   const datatype = term.datatype.value;
-  if (
-    datatype === xsd.integer || datatype === xsd.boolean ||
-    datatype === xsd.decimal
-  ) {
-    return term.value;
+  if (datatype === xsd.boolean) {
+    return term.value == "true" || term.value == "1" ? "true" : "false";
   }
 
   const value = `"${escape(term.value)}"`;
