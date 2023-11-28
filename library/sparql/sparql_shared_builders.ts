@@ -4,6 +4,8 @@ import { sparql, type SparqlValue } from "./sparql_tag.ts";
 type Wrap = (keyword: string, value: string) => string;
 export const braces: Wrap = (keyword: string, value: string) =>
   `${keyword} {\n${value}\n}\n`;
+export const bracesInline: Wrap = (keyword: string, value: string) =>
+  `${keyword} { ${value} }`;
 export const parentheses: Wrap = (keyword: string, value: string) =>
   `${keyword} (${value})\n`;
 const none: Wrap = (keyword: string, value: string) => `${keyword} ${value}\n`;

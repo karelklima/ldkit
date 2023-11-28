@@ -56,6 +56,13 @@ class SparqlUpdateBuilder extends SparqlBuilder {
     return this.template(strings, values, "DELETE DATA", braces);
   }
 
+  public DELETE_WHERE(
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ): Builders<"build"> {
+    return this.template(strings, values, "DELETE WHERE", braces);
+  }
+
   public WITH(
     stringOrNamedNode: string | RDF.NamedNode<string>,
   ): Builders<"INSERT" | "DELETE"> {
@@ -81,6 +88,10 @@ export const DELETE = Object.assign((
     strings: TemplateStringsArray,
     ...values: SparqlValue[]
   ) => new SparqlUpdateBuilder().DELETE_DATA(strings, ...values),
+  WHERE: (
+    strings: TemplateStringsArray,
+    ...values: SparqlValue[]
+  ) => new SparqlUpdateBuilder().DELETE_WHERE(strings, ...values),
 });
 
 export const WITH = (
