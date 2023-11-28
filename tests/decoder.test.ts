@@ -214,6 +214,7 @@ Deno.test("Decoder / Optional property missing", () => {
   const output = [
     {
       $id: x.A,
+      optional: null,
     },
   ];
 
