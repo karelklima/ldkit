@@ -116,7 +116,7 @@ class Decoder {
         );
       } else {
         // No data, optional property
-        return property["@array"] ? [] : undefined;
+        return property["@array"] ? [] : null;
       }
     }
 

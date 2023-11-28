@@ -10,6 +10,7 @@ export type SparqlValue =
   | boolean
   | Date
   | Iterable<SparqlValue>
+  | { build: () => string }
   | null
   | undefined;
 
@@ -69,6 +70,10 @@ const valueToString = (value: SparqlValue): string => {
       result += `\n${valueToString(part)}`;
     }
     return result;
+  }
+
+  if ("build" in value) {
+    return value.build();
   }
 
   if (value.termType) {
