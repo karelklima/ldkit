@@ -1,4 +1,5 @@
 import type { Context, RDF } from "../rdf.ts";
+import { OPTIONAL, type SparqlValue } from "../sparql/mod.ts";
 import {
   getSchemaProperties,
   type Property,
@@ -16,7 +17,7 @@ export class UpdateHelper {
 
   public readonly deleteQuads: RDF.Quad[] = [];
   public readonly insertQuads: RDF.Quad[] = [];
-  public readonly whereQuads: RDF.Quad[] = [];
+  public readonly whereQuads: SparqlValue[] = [];
 
   constructor(
     schema: Schema,
@@ -68,6 +69,12 @@ export class UpdateHelper {
     const quadsToDelete = this.encode(deletePattern);
     this.deleteQuads.push(...quadsToDelete);
 
+    if (property["@optional"]) {
+      this.whereQuads.push(OPTIONAL`${quadsToDelete}`);
+    } else {
+      this.whereQuads.push(...quadsToDelete);
+    }
+
     if (property["@optional"] && propertyValue === null) {
       // The intention was to delete a value of an optional property, nothing to insert
       return;
@@ -110,6 +117,7 @@ export class UpdateHelper {
     };
     const quadsToDelete = this.encode(deletePattern);
     this.deleteQuads.push(...quadsToDelete);
+    this.whereQuads.push(...quadsToDelete);
 
     const insertPattern = {
       $id: entity.$id,

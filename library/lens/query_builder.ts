@@ -131,10 +131,10 @@ export class QueryBuilder {
       ${this.getResourceSignature()}
       ${this.getShape(true, false, true)}
     `.WHERE`
-      ${this.getShape(true, true, false)}
       VALUES ?iri {
         ${iris.map(this.df.namedNode)}
       }
+      ${this.getShape(true, true, false)}
     `.build();
 
     return query;
@@ -170,6 +170,6 @@ export class QueryBuilder {
     }
 
     return DELETE`${helper.deleteQuads}`.INSERT`${helper.insertQuads}`
-      .WHERE`${helper.deleteQuads}`.build();
+      .WHERE`${helper.whereQuads}`.build();
   }
 }
