@@ -16,6 +16,14 @@ import { encode } from "../encoder.ts";
 import { type Entity } from "./types.ts";
 import { UpdateHelper } from "./update_helper.ts";
 
+enum Flags {
+  None = 0,
+  ExcludeOptional = 1 << 0,
+  UnwrapOptional = 1 << 1,
+  IncludeTypes = 1 << 2,
+  IgnoreInverse = 1 << 3,
+}
+
 export class QueryBuilder {
   private readonly schema: Schema;
   private readonly context: Context;
@@ -44,11 +52,12 @@ export class QueryBuilder {
     return ([] as RDF.Quad[]).concat(...quadArrays);
   }
 
-  private getShape(
-    includeOptional = false,
-    wrapOptional = true,
-    omitRootTypes = false,
-  ) {
+  private getShape(flags: Flags) {
+    const includeOptional = (flags & Flags.ExcludeOptional) === 0;
+    const wrapOptional = (flags & Flags.UnwrapOptional) === 0;
+    const omitRootTypes = (flags & Flags.IncludeTypes) === 0;
+    const ignoreInverse = (flags & Flags.IgnoreInverse) === Flags.IgnoreInverse;
+
     const mainVar = "iri";
     const conditions: (RDF.Quad | ReturnType<typeof $>)[] = [];
 
@@ -77,13 +86,24 @@ export class QueryBuilder {
         if (wrapOptional && isOptional) {
           conditions.push($`\nOPTIONAL {`);
         }
-        conditions.push(
-          this.df.quad(
-            this.df.variable!(varPrefix),
-            this.df.namedNode(property["@id"]),
-            this.df.variable!(`${varPrefix}_${index}`),
-          ),
-        );
+        const isInverse = property["@inverse"];
+        if (ignoreInverse || !isInverse) {
+          conditions.push(
+            this.df.quad(
+              this.df.variable!(varPrefix),
+              this.df.namedNode(property["@id"]),
+              this.df.variable!(`${varPrefix}_${index}`),
+            ),
+          );
+        } else {
+          conditions.push(
+            this.df.quad(
+              this.df.variable!(`${varPrefix}_${index}`),
+              this.df.namedNode(property["@id"]),
+              this.df.variable!(varPrefix),
+            ),
+          );
+        }
         if (typeof property["@context"] === "object") {
           populateConditionsRecursive(
             property["@context"] as Schema,
@@ -101,7 +121,7 @@ export class QueryBuilder {
   }
 
   countQuery() {
-    const quads = this.getShape();
+    const quads = this.getShape(Flags.ExcludeOptional | Flags.IncludeTypes);
     return SELECT`(count(?iri) as ?count)`.WHERE`${quads}`.build();
   }
 
@@ -109,18 +129,18 @@ export class QueryBuilder {
     const selectSubQuery = SELECT.DISTINCT`
       ${this.df.variable!("iri")}
     `.WHERE`
-      ${this.getShape(false, true)}
+      ${this.getShape(Flags.ExcludeOptional | Flags.IncludeTypes)} 
       ${where}
     `.LIMIT(limit).OFFSET(offset).build();
 
     const query = CONSTRUCT`
       ${this.getResourceSignature()}
-      ${this.getShape(true, false, true)}
+      ${this.getShape(Flags.UnwrapOptional | Flags.IgnoreInverse)}
     `.WHERE`
-      ${this.getShape(true, true, true)}
       {
         ${selectSubQuery}
       }
+      ${this.getShape(Flags.None)}
     `.build();
 
     return query;
@@ -129,12 +149,12 @@ export class QueryBuilder {
   getByIrisQuery(iris: Iri[]) {
     const query = CONSTRUCT`
       ${this.getResourceSignature()}
-      ${this.getShape(true, false, true)}
+      ${this.getShape(Flags.UnwrapOptional | Flags.IgnoreInverse)}
     `.WHERE`
       VALUES ?iri {
         ${iris.map(this.df.namedNode)}
       }
-      ${this.getShape(true, true, false)}
+      ${this.getShape(Flags.IncludeTypes)}
     `.build();
 
     return query;

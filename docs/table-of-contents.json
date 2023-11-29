@@ -24,7 +24,8 @@
     "title": "Version 2 (not yet released)",
     "pages": [
       ["pagination", "Pagination"],
-      ["working-with-arrays", "Working with arrays"]
+      ["working-with-arrays", "Working with arrays"],
+      ["inverse-properties", "Inverse properties"]
     ]
   }
 }

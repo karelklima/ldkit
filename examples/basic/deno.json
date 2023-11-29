@@ -2,7 +2,8 @@
   "importMap": "../import_map.json",
   "tasks": {
     "main": "deno run --allow-net --allow-env ./main.ts",
-    "arrays": "deno run -A ./arrays.ts"
+    "arrays": "deno run -A ./arrays.ts",
+    "inverse": "deno run -A ./inverse.ts"
   },
   "lock": false
 }

@@ -363,6 +363,42 @@ Deno.test("Schema / Multilang", () => {
   assertEquals(expandSchema(Prototype), PrototypeSchema);
 });
 
+Deno.test("Schema / Inverse", () => {
+  const Prototype = {
+    isPropertyOf: {
+      "@id": x.property,
+      "@inverse": true,
+    },
+  } as const;
+
+  type PrototypeInterface = {
+    $id: string;
+    isPropertyOf: string;
+  };
+
+  type PrototypeUpdateInterface = {
+    $id: string;
+    isPropertyOf?: string;
+  };
+
+  const PrototypeSchema: Schema = {
+    "@type": [],
+    isPropertyOf: {
+      "@id": x.property,
+      "@type": xsd.string,
+      "@inverse": true,
+    },
+  };
+
+  type I = SchemaInterface<typeof Prototype>;
+  type U = SchemaUpdateInterface<typeof Prototype>;
+
+  assertTypeSafe<Equals<I, PrototypeInterface>>();
+  assertTypeSafe<Equals<U, PrototypeUpdateInterface>>();
+
+  assertEquals(expandSchema(Prototype), PrototypeSchema);
+});
+
 Deno.test("Schema / Nested schema", () => {
   const Prototype = {
     nested: {
@@ -424,8 +460,8 @@ Deno.test("Schema / should have at least one property or @type restriction", () 
 
 Deno.test("Schema / should expand @type shortcut definition", () => {
   const schema = {
-    "type": "@type",
-  };
+    type: "@type",
+  } as const;
   const expandedSchema = expandSchema(schema);
   assertEquals((expandedSchema["type"] as Property)["@id"], rdf.type);
 });
@@ -433,7 +469,34 @@ Deno.test("Schema / should expand @type shortcut definition", () => {
 Deno.test("Schema / should expand @type property definition", () => {
   const schema = {
     "type": { "@id": "@type" },
-  };
+  } as const;
   const expandedSchema = expandSchema(schema);
   assertEquals((expandedSchema["type"] as Property)["@id"], rdf.type);
+});
+
+Deno.test("Schema / should throw if @inverse @multilang is defined", () => {
+  const schema = {
+    property: {
+      "@id": x.property,
+      "@inverse": true,
+      "@multilang": true,
+    },
+  } as const;
+  assertThrows(() => {
+    expandSchema(schema);
+  });
+});
+
+Deno.test("Schema / should throw if two properties with the same @id are defined", () => {
+  const schema = {
+    property: {
+      "@id": x.property,
+    },
+    property2: {
+      "@id": x.property,
+    },
+  } as const;
+  assertThrows(() => {
+    expandSchema(schema);
+  });
 });

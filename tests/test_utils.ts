@@ -112,5 +112,10 @@ export const initStore = () => {
   const empty = async () => {
     await emptyStore(store);
   };
-  return { store, context, assertStore, empty };
+  const setStore = async (turtle: string) => {
+    await empty();
+    const content = ttl(turtle);
+    store.addQuads(content);
+  };
+  return { store, context, assertStore, empty, setStore };
 };
