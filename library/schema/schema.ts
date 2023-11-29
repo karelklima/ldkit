@@ -9,6 +9,7 @@ export type PropertyPrototype = {
   "@optional"?: true;
   "@array"?: true;
   "@multilang"?: true;
+  "@inverse"?: true;
 };
 
 export type SchemaPrototypeProperties = {
@@ -28,6 +29,7 @@ export type Property = {
   "@optional"?: true;
   "@array"?: true;
   "@multilang"?: true;
+  "@inverse"?: true;
 };
 
 export type Schema = {

@@ -43,6 +43,14 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
       throw new Error(`Invalid schema, "@id" key for property missing`);
     }
 
+    if (
+      property["@inverse"] && (property["@array"] || property["@multilang"])
+    ) {
+      throw new Error(
+        `Invalid schema, "@inverse" property cannot be used with "@array" or "@multilang"`,
+      );
+    }
+
     const validKeys = [
       "@context",
       "@id",
@@ -50,6 +58,7 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
       "@array",
       "@optional",
       "@multilang",
+      "@inverse",
     ] as const;
 
     const baseProperty: Record<string, unknown> = {
@@ -75,16 +84,26 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
   };
 
   const baseSchema: Schema = {
-    "@type": [],
+    "@type": [] as string[],
   };
+
+  const existingPropertyMap = {} as Record<string, true | undefined>;
 
   return Object.keys(schemaPrototype).reduce((acc, key) => {
     if (key === "@type") {
       acc[key] = expandArray(schemaPrototype[key]!);
     } else {
-      acc[key] = expandSchemaProperty(
+      const expandedProperty = expandSchemaProperty(
         schemaPrototype[key] as string | PropertyPrototype,
       );
+      if (existingPropertyMap[expandedProperty["@id"]]) {
+        throw new Error(
+          `Invalid schema, duplicate property "${expandedProperty["@id"]}"`,
+        );
+      } else {
+        existingPropertyMap[expandedProperty["@id"]] = true;
+      }
+      acc[key] = expandedProperty;
     }
     return acc;
   }, baseSchema);
