@@ -43,11 +43,9 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
       throw new Error(`Invalid schema, "@id" key for property missing`);
     }
 
-    if (
-      property["@inverse"] && (property["@array"] || property["@multilang"])
-    ) {
+    if (property["@inverse"] && property["@multilang"]) {
       throw new Error(
-        `Invalid schema, "@inverse" property cannot be used with "@array" or "@multilang"`,
+        `Invalid schema, "@inverse" property cannot be used with "@multilang"`,
       );
     }
 

@@ -474,19 +474,6 @@ Deno.test("Schema / should expand @type property definition", () => {
   assertEquals((expandedSchema["type"] as Property)["@id"], rdf.type);
 });
 
-Deno.test("Schema / should throw if @inverse @array is defined", () => {
-  const schema = {
-    property: {
-      "@id": x.property,
-      "@inverse": true,
-      "@array": true,
-    },
-  } as const;
-  assertThrows(() => {
-    expandSchema(schema);
-  });
-});
-
 Deno.test("Schema / should throw if @inverse @multilang is defined", () => {
   const schema = {
     property: {
