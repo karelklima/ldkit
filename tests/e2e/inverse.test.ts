@@ -22,13 +22,18 @@ Deno.test("E2E / Inverse / Read simple inverse property", async () => {
     x:A x:property x:B .
   `);
 
+  const expected = {
+    $id: x.B,
+    isPropertyOf: x.A,
+  };
+
   const entities = await Entities.find();
 
   assertEquals(entities.length, 1);
-  assertEquals(entities[0], {
-    $id: x.B,
-    isPropertyOf: x.A,
-  });
+  assertEquals(entities[0], expected);
+
+  const entityByIri = await Entities.findByIri(x.B);
+  assertEquals(entityByIri, expected);
 });
 
 Deno.test("E2E / Inverse / Read complex inverse property", async () => {
@@ -52,6 +57,14 @@ Deno.test("E2E / Inverse / Read complex inverse property", async () => {
     x:A x:property x:B .
   `);
 
+  const expected = {
+    $id: x.B,
+    isPropertyOf: {
+      $id: x.A,
+      property: x.B,
+    },
+  };
+
   const entities = await Entities.find();
 
   assertEquals(entities.length, 1);
@@ -62,6 +75,9 @@ Deno.test("E2E / Inverse / Read complex inverse property", async () => {
       property: x.B,
     },
   });
+
+  const entityByIri = await Entities.findByIri(x.B);
+  assertEquals(entityByIri, expected);
 });
 
 Deno.test("E2E / Inverse / Read missing optional inverse property", async () => {

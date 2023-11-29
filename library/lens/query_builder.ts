@@ -149,7 +149,7 @@ export class QueryBuilder {
   getByIrisQuery(iris: Iri[]) {
     const query = CONSTRUCT`
       ${this.getResourceSignature()}
-      ${this.getShape(Flags.UnwrapOptional)}
+      ${this.getShape(Flags.UnwrapOptional | Flags.IgnoreInverse)}
     `.WHERE`
       VALUES ?iri {
         ${iris.map(this.df.namedNode)}
