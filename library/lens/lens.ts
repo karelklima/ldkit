@@ -11,7 +11,7 @@ import {
 import { decode } from "../decoder.ts";
 
 import { QueryBuilder } from "./query_builder.ts";
-import type { Entity } from "./types.ts";
+import type { Entity, Unite } from "./types.ts";
 import { QueryEngineProxy } from "../engine/query_engine_proxy.ts";
 
 /**
@@ -58,7 +58,7 @@ export class Lens<
   }
 
   private decode(graph: Graph) {
-    return decode(graph, this.schema, this.context) as unknown as I[];
+    return decode(graph, this.schema, this.context) as unknown as Unite<I>[];
   }
 
   async count() {

@@ -1,16 +1,7 @@
 import type { SupportedDataTypes } from "./data_types.ts";
 import type { PropertyPrototype, SchemaPrototype } from "./schema.ts";
 
-type Prettify<T> =
-  & {
-    [K in keyof T]: T[K];
-  }
-  // deno-lint-ignore ban-types
-  & {};
-
-type Unite<T> = T extends Record<string, unknown> ? {
-    [Key in keyof T]: T[Key];
-  }
+type Unite<T> = T extends Record<string, unknown> ? { [Key in keyof T]: T[Key] }
   : T;
 
 type IsOptional<Property extends PropertyPrototype> = Property extends {
