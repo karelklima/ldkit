@@ -4,6 +4,7 @@ export type {
   SchemaInterface,
   SchemaInterfaceIdentity,
   SchemaInterfaceType,
+  SchemaSearchInterface,
   SchemaUpdateInterface,
 } from "./interface.ts";
 

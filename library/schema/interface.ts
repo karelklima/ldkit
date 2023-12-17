@@ -19,6 +19,11 @@ type IsMultilang<Property extends PropertyPrototype> = Property extends {
 } ? true
   : false;
 
+type IsInverse<Property extends PropertyPrototype> = Property extends {
+  "@inverse": true;
+} ? true
+  : false;
+
 type ValidPropertyDefinition = PropertyPrototype | string;
 
 type ConvertPropertyType<T extends PropertyPrototype> = T extends
@@ -107,3 +112,28 @@ export type SchemaUpdateInterface<T extends SchemaPrototype> =
       ? ConvertUpdateProperty<T[X]>
       : never;
   };
+
+type CreateSearchInterface<T> = T | { $equals?: T };
+
+type ConvertSearchPropertyContext<T extends PropertyPrototype> = T extends
+  { "@context": SchemaPrototype } ? Unite<SchemaSearchInterface<T["@context"]>>
+  : IsInverse<T> extends true ? never
+  : CreateSearchInterface<ConvertPropertyType<T>>;
+
+type ConvertSearchProperty<T extends ValidPropertyDefinition> = T extends
+  PropertyPrototype ? ConvertSearchPropertyContext<T>
+  : CreateSearchInterface<string>;
+
+type InversePropertiesMap<T extends SchemaPrototype> = {
+  [X in keyof T]: T[X] extends { "@inverse": true } ? X : never;
+};
+
+type InverseProperties<T extends SchemaPrototype> = InversePropertiesMap<
+  T
+>[keyof InversePropertiesMap<T>];
+
+export type SchemaSearchInterface<T extends SchemaPrototype> = {
+  [X in Exclude<keyof T, "@type" | InverseProperties<T>>]?: T[X] extends
+    ValidPropertyDefinition ? ConvertSearchProperty<T[X]>
+    : never;
+};
