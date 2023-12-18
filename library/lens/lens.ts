@@ -6,6 +6,7 @@ import {
   type SchemaInterface,
   type SchemaInterfaceIdentity,
   type SchemaPrototype,
+  type SchemaSearchInterface,
   type SchemaUpdateInterface,
 } from "../schema/mod.ts";
 import { decode } from "../decoder.ts";
@@ -44,6 +45,7 @@ export class Lens<
   S extends SchemaPrototype,
   I = SchemaInterface<S>,
   U = SchemaUpdateInterface<S>,
+  X = SchemaSearchInterface<S>,
 > {
   private readonly schema: Schema;
   private readonly context: Context;
@@ -72,19 +74,25 @@ export class Lens<
 
   async query(sparqlConstructQuery: string) {
     const graph = await this.engine.queryGraph(sparqlConstructQuery);
+    console.log("GRAPH", graph);
     return this.decode(graph);
   }
 
   async find(
-    options: { where?: string | RDF.Quad[]; take?: number; skip?: number } = {},
+    options: { where?: X | string | RDF.Quad[]; take?: number; skip?: number } =
+      {},
   ) {
     const { where, take, skip } = {
       take: 1000,
       skip: 0,
       ...options,
     };
-    const q = this.queryBuilder.getQuery(where, take, skip);
-    // TODO: console.log(q);
+    const isRegularQuery = typeof where === "string" ||
+      typeof where === "undefined" || Array.isArray(where);
+
+    const q = isRegularQuery
+      ? this.queryBuilder.getQuery(where, take, skip)
+      : this.queryBuilder.getSearchQuery(where ?? {}, take, skip);
     const graph = await this.engine.queryGraph(q);
     return this.decode(graph);
   }

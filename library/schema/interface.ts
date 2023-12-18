@@ -1,5 +1,6 @@
 import type { SupportedDataTypes } from "./data_types.ts";
 import type { PropertyPrototype, SchemaPrototype } from "./schema.ts";
+import type { CreateSearchInterface } from "./search.ts";
 
 type Unite<T> = T extends Record<string, unknown> ? { [Key in keyof T]: T[Key] }
   : T;
@@ -112,8 +113,6 @@ export type SchemaUpdateInterface<T extends SchemaPrototype> =
       ? ConvertUpdateProperty<T[X]>
       : never;
   };
-
-type CreateSearchInterface<T> = T | { $equals?: T };
 
 type ConvertSearchPropertyContext<T extends PropertyPrototype> = T extends
   { "@context": SchemaPrototype } ? Unite<SchemaSearchInterface<T["@context"]>>
