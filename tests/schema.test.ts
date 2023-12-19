@@ -16,6 +16,7 @@ import {
   type SchemaUpdateInterface,
 } from "../library/schema/mod.ts";
 import { rdf, xsd } from "../namespaces.ts";
+import { type SparqlValue } from "../library/sparql/mod.ts";
 
 type ArrayUpdate<T> = {
   $set?: T[];
@@ -23,7 +24,20 @@ type ArrayUpdate<T> = {
   $remove?: T[];
 } | T[];
 
-type PropertySearch<T> = T | { $equals?: T };
+type PropertySearch<T> = T | {
+  $equals?: T;
+  $not?: T;
+  $contains?: T;
+  $strStarts?: T;
+  $strEnds?: T;
+  $gt?: T;
+  $gte?: T;
+  $lt?: T;
+  $lte?: T;
+  $regex?: string;
+  $langMatches?: string;
+  $filter?: SparqlValue;
+};
 
 Deno.test("Schema / Full schema", () => {
   type ThingType = {
