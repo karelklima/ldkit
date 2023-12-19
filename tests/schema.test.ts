@@ -12,15 +12,32 @@ import {
   type Schema,
   type SchemaInterface,
   type SchemaPrototype,
+  type SchemaSearchInterface,
   type SchemaUpdateInterface,
 } from "../library/schema/mod.ts";
 import { rdf, xsd } from "../namespaces.ts";
+import { type SparqlValue } from "../library/sparql/mod.ts";
 
 type ArrayUpdate<T> = {
   $set?: T[];
   $add?: T[];
   $remove?: T[];
 } | T[];
+
+type PropertySearch<T> = T | {
+  $equals?: T;
+  $not?: T;
+  $contains?: T;
+  $strStarts?: T;
+  $strEnds?: T;
+  $gt?: T;
+  $gte?: T;
+  $lt?: T;
+  $lte?: T;
+  $regex?: string;
+  $langMatches?: string;
+  $filter?: SparqlValue;
+};
 
 Deno.test("Schema / Full schema", () => {
   type ThingType = {
@@ -52,6 +69,20 @@ Deno.test("Schema / Full schema", () => {
     nested?: {
       $id: string;
       nestedValue?: string;
+    };
+  };
+
+  type ThingSearchType = {
+    required?: PropertySearch<string>;
+    optional?: PropertySearch<string>;
+    array?: PropertySearch<string>;
+    multilang?: PropertySearch<string>;
+    multilangArray?: PropertySearch<string>;
+    number?: PropertySearch<number>;
+    boolean?: PropertySearch<boolean>;
+    date?: PropertySearch<Date>;
+    nested?: {
+      nestedValue?: PropertySearch<string>;
     };
   };
 
@@ -150,9 +181,11 @@ Deno.test("Schema / Full schema", () => {
 
   type I = SchemaInterface<typeof Thing>;
   type U = SchemaUpdateInterface<typeof Thing>;
+  type S = SchemaSearchInterface<typeof Thing>;
 
   assertTypeSafe<Equals<I, ThingType>>();
   assertTypeSafe<Equals<U, ThingUpdateType>>();
+  assertTypeSafe<Equals<S, ThingSearchType>>();
 
   assertEquals(expandedSchema, ThingSchema);
 });
@@ -196,6 +229,14 @@ Deno.test("Schema / Basic datatypes", () => {
     date?: Date;
   };
 
+  type PrototypeSearchInterface = {
+    default?: PropertySearch<string>;
+    string?: PropertySearch<string>;
+    number?: PropertySearch<number>;
+    boolean?: PropertySearch<boolean>;
+    date?: PropertySearch<Date>;
+  };
+
   const PrototypeSchema: Schema = {
     "@type": [],
     default: {
@@ -222,9 +263,11 @@ Deno.test("Schema / Basic datatypes", () => {
 
   type I = SchemaInterface<typeof Prototype>;
   type U = SchemaUpdateInterface<typeof Prototype>;
+  type S = SchemaSearchInterface<typeof Prototype>;
 
   assertTypeSafe<Equals<I, PrototypeInterface>>();
   assertTypeSafe<Equals<U, PrototypeUpdateInterface>>();
+  assertTypeSafe<Equals<S, PrototypeSearchInterface>>();
 
   assertEquals(expandSchema(Prototype), PrototypeSchema);
 });
@@ -247,6 +290,10 @@ Deno.test("Schema / Optional", () => {
     optional?: string | null;
   };
 
+  type PrototypeSearchInterface = {
+    optional?: PropertySearch<string>;
+  };
+
   const PrototypeSchema: Schema = {
     "@type": [],
     optional: {
@@ -258,9 +305,11 @@ Deno.test("Schema / Optional", () => {
 
   type I = SchemaInterface<typeof Prototype>;
   type U = SchemaUpdateInterface<typeof Prototype>;
+  type S = SchemaSearchInterface<typeof Prototype>;
 
   assertTypeSafe<Equals<I, PrototypeInterface>>();
   assertTypeSafe<Equals<U, PrototypeUpdateInterface>>();
+  assertTypeSafe<Equals<S, PrototypeSearchInterface>>();
 
   assertEquals(expandSchema(Prototype), PrototypeSchema);
 });
@@ -290,6 +339,11 @@ Deno.test("Schema / Array", () => {
     optionalArray?: ArrayUpdate<string>;
   };
 
+  type PrototypeSearchInterface = {
+    array?: PropertySearch<string>;
+    optionalArray?: PropertySearch<string>;
+  };
+
   const PrototypeSchema: Schema = {
     "@type": [],
     array: {
@@ -307,9 +361,11 @@ Deno.test("Schema / Array", () => {
 
   type I = SchemaInterface<typeof Prototype>;
   type U = SchemaUpdateInterface<typeof Prototype>;
+  type S = SchemaSearchInterface<typeof Prototype>;
 
   assertTypeSafe<Equals<I, PrototypeInterface>>();
   assertTypeSafe<Equals<U, PrototypeUpdateInterface>>();
+  assertTypeSafe<Equals<S, PrototypeSearchInterface>>();
 
   assertEquals(expandSchema(Prototype), PrototypeSchema);
 });
@@ -339,6 +395,11 @@ Deno.test("Schema / Multilang", () => {
     multilangArray?: Record<string, ArrayUpdate<string>>;
   };
 
+  type PrototypeSearchInterface = {
+    multilang?: PropertySearch<string>;
+    multilangArray?: PropertySearch<string>;
+  };
+
   const PrototypeSchema: Schema = {
     "@type": [],
     multilang: {
@@ -356,9 +417,11 @@ Deno.test("Schema / Multilang", () => {
 
   type I = SchemaInterface<typeof Prototype>;
   type U = SchemaUpdateInterface<typeof Prototype>;
+  type S = SchemaSearchInterface<typeof Prototype>;
 
   assertTypeSafe<Equals<I, PrototypeInterface>>();
   assertTypeSafe<Equals<U, PrototypeUpdateInterface>>();
+  assertTypeSafe<Equals<S, PrototypeSearchInterface>>();
 
   assertEquals(expandSchema(Prototype), PrototypeSchema);
 });
@@ -381,6 +444,9 @@ Deno.test("Schema / Inverse", () => {
     isPropertyOf?: string;
   };
 
+  // deno-lint-ignore ban-types
+  type PrototypeSearchInterface = {};
+
   const PrototypeSchema: Schema = {
     "@type": [],
     isPropertyOf: {
@@ -392,9 +458,11 @@ Deno.test("Schema / Inverse", () => {
 
   type I = SchemaInterface<typeof Prototype>;
   type U = SchemaUpdateInterface<typeof Prototype>;
+  type S = SchemaSearchInterface<typeof Prototype>;
 
   assertTypeSafe<Equals<I, PrototypeInterface>>();
   assertTypeSafe<Equals<U, PrototypeUpdateInterface>>();
+  assertTypeSafe<Equals<S, PrototypeSearchInterface>>();
 
   assertEquals(expandSchema(Prototype), PrototypeSchema);
 });
@@ -426,6 +494,12 @@ Deno.test("Schema / Nested schema", () => {
     };
   };
 
+  type PrototypeSearchInterface = {
+    nested?: {
+      nestedValue?: PropertySearch<string>;
+    };
+  };
+
   const PrototypeSchema: Schema = {
     "@type": [],
     nested: {
@@ -442,9 +516,11 @@ Deno.test("Schema / Nested schema", () => {
 
   type I = SchemaInterface<typeof Prototype>;
   type U = SchemaUpdateInterface<typeof Prototype>;
+  type S = SchemaSearchInterface<typeof Prototype>;
 
   assertTypeSafe<Equals<I, PrototypeInterface>>();
   assertTypeSafe<Equals<U, PrototypeUpdateInterface>>();
+  assertTypeSafe<Equals<S, PrototypeSearchInterface>>();
 
   assertEquals(expandSchema(Prototype), PrototypeSchema);
 });

@@ -1,4 +1,10 @@
-import { type Context, IQueryEngine, quadsToGraph, type RDF } from "../rdf.ts";
+import {
+  type Context,
+  IQueryEngine,
+  N3,
+  quadsToGraph,
+  type RDF,
+} from "../rdf.ts";
 import { resolveContext, resolveEngine } from "../global.ts";
 import { type AsyncIterator } from "../asynciterator.ts";
 
@@ -29,7 +35,8 @@ export class QueryEngineProxy {
       this.context,
     ) as unknown as AsyncIterator<RDF.Quad>;
     const quads = await (quadStream.toArray());
-    return quadsToGraph(quads);
+    const store = new N3.Store(quads);
+    return quadsToGraph(store);
   }
 
   queryVoid(query: string) {

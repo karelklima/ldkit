@@ -1,5 +1,6 @@
 import type { SupportedDataTypes } from "./data_types.ts";
 import type { PropertyPrototype, SchemaPrototype } from "./schema.ts";
+import type { SearchFilters } from "./search.ts";
 
 type Unite<T> = T extends Record<string, unknown> ? { [Key in keyof T]: T[Key] }
   : T;
@@ -16,6 +17,11 @@ type IsArray<Property extends PropertyPrototype> = Property extends {
 
 type IsMultilang<Property extends PropertyPrototype> = Property extends {
   "@multilang": true;
+} ? true
+  : false;
+
+type IsInverse<Property extends PropertyPrototype> = Property extends {
+  "@inverse": true;
 } ? true
   : false;
 
@@ -107,3 +113,26 @@ export type SchemaUpdateInterface<T extends SchemaPrototype> =
       ? ConvertUpdateProperty<T[X]>
       : never;
   };
+
+type ConvertSearchPropertyContext<T extends PropertyPrototype> = T extends
+  { "@context": SchemaPrototype } ? Unite<SchemaSearchInterface<T["@context"]>>
+  : IsInverse<T> extends true ? never
+  : SearchFilters<ConvertPropertyType<T>>;
+
+type ConvertSearchProperty<T extends ValidPropertyDefinition> = T extends
+  PropertyPrototype ? ConvertSearchPropertyContext<T>
+  : SearchFilters<string>;
+
+type InversePropertiesMap<T extends SchemaPrototype> = {
+  [X in keyof T]: T[X] extends { "@inverse": true } ? X : never;
+};
+
+type InverseProperties<T extends SchemaPrototype> = InversePropertiesMap<
+  T
+>[keyof InversePropertiesMap<T>];
+
+export type SchemaSearchInterface<T extends SchemaPrototype> = {
+  [X in Exclude<keyof T, "@type" | InverseProperties<T>>]?: T[X] extends
+    ValidPropertyDefinition ? ConvertSearchProperty<T[X]>
+    : never;
+};

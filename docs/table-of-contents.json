@@ -23,6 +23,7 @@
   "v2": {
     "title": "Version 2 (not yet released)",
     "pages": [
+      ["filtering", "Filtering"],
       ["pagination", "Pagination"],
       ["working-with-arrays", "Working with arrays"],
       ["inverse-properties", "Inverse properties"]

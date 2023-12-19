@@ -38,7 +38,7 @@ export type Node = Map<Iri, RDF.Term[]>;
 
 export type Graph = Map<Iri, Node>;
 
-export const quadsToGraph = (quads: RDF.Quad[]) => {
+export const quadsToGraph = (quads: Iterable<RDF.Quad>) => {
   const graph: Graph = new Map();
   for (const quad of quads) {
     const s = quad.subject.value;

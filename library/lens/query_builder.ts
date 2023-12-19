@@ -1,11 +1,16 @@
-import { type Schema } from "../schema/mod.ts";
-import { getSchemaProperties } from "../schema/mod.ts";
+import {
+  getSchemaProperties,
+  type Property,
+  type Schema,
+  type SearchSchema,
+} from "../schema/mod.ts";
 import {
   CONSTRUCT,
   DELETE,
   INSERT,
   SELECT,
   sparql as $,
+  type SparqlValue,
 } from "../sparql/mod.ts";
 import { type Context, DataFactory, type Iri, type RDF } from "../rdf.ts";
 import ldkit from "../namespaces/ldkit.ts";
@@ -15,6 +20,7 @@ import { encode } from "../encoder.ts";
 
 import { type Entity } from "./types.ts";
 import { UpdateHelper } from "./update_helper.ts";
+import { SearchHelper } from "./search_helper.ts";
 
 enum Flags {
   None = 0,
@@ -52,16 +58,33 @@ export class QueryBuilder {
     return ([] as RDF.Quad[]).concat(...quadArrays);
   }
 
-  private getShape(flags: Flags) {
+  private getShape(flags: Flags, searchSchema?: SearchSchema) {
     const includeOptional = (flags & Flags.ExcludeOptional) === 0;
     const wrapOptional = (flags & Flags.UnwrapOptional) === 0;
     const omitRootTypes = (flags & Flags.IncludeTypes) === 0;
     const ignoreInverse = (flags & Flags.IgnoreInverse) === Flags.IgnoreInverse;
 
     const mainVar = "iri";
-    const conditions: (RDF.Quad | ReturnType<typeof $>)[] = [];
+    const conditions: SparqlValue[] = [];
 
-    const populateConditionsRecursive = (s: Schema, varPrefix: string) => {
+    const populateSearchConditions = (
+      property: Property,
+      varName: string,
+      search?: SearchSchema,
+    ) => {
+      if (search === undefined) {
+        return;
+      }
+      const helper = new SearchHelper(property, varName, search);
+      helper.process();
+      conditions.push(helper.sparqlValues);
+    };
+
+    const populateConditionsRecursive = (
+      s: Schema,
+      varPrefix: string,
+      search?: SearchSchema,
+    ) => {
       const rdfType = s["@type"];
       const properties = getSchemaProperties(s);
 
@@ -80,7 +103,8 @@ export class QueryBuilder {
       Object.keys(properties).forEach((prop, index) => {
         const property = properties[prop];
         const isOptional = property["@optional"];
-        if (!includeOptional && isOptional) {
+        const propertySchema = search?.[prop] as SearchSchema | undefined;
+        if (!includeOptional && isOptional && propertySchema === undefined) {
           return;
         }
         if (wrapOptional && isOptional) {
@@ -95,6 +119,11 @@ export class QueryBuilder {
               this.df.variable!(`${varPrefix}_${index}`),
             ),
           );
+          populateSearchConditions(
+            property,
+            `${varPrefix}_${index}`,
+            propertySchema,
+          );
         } else {
           conditions.push(
             this.df.quad(
@@ -108,6 +137,7 @@ export class QueryBuilder {
           populateConditionsRecursive(
             property["@context"] as Schema,
             `${varPrefix}_${index}`,
+            propertySchema,
           );
         }
         if (wrapOptional && isOptional) {
@@ -116,7 +146,7 @@ export class QueryBuilder {
       });
     };
 
-    populateConditionsRecursive(this.schema, mainVar);
+    populateConditionsRecursive(this.schema, mainVar, searchSchema);
     return conditions;
   }
 
@@ -141,6 +171,26 @@ export class QueryBuilder {
         ${selectSubQuery}
       }
       ${this.getShape(Flags.None)}
+    `.build();
+
+    return query;
+  }
+
+  getSearchQuery(where: SearchSchema, limit: number, offset: number) {
+    const selectSubQuery = SELECT.DISTINCT`
+      ${this.df.variable!("iri")}
+    `.WHERE`
+      ${this.getShape(Flags.ExcludeOptional | Flags.IncludeTypes, where)} 
+    `.LIMIT(limit).OFFSET(offset).build();
+
+    const query = CONSTRUCT`
+      ${this.getResourceSignature()}
+      ${this.getShape(Flags.UnwrapOptional | Flags.IgnoreInverse)}
+    `.WHERE`
+      {
+        ${selectSubQuery}
+      }
+      ${this.getShape(Flags.None, where)}
     `.build();
 
     return query;
