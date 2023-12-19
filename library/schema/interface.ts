@@ -1,6 +1,6 @@
 import type { SupportedDataTypes } from "./data_types.ts";
 import type { PropertyPrototype, SchemaPrototype } from "./schema.ts";
-import type { CreateSearchInterface } from "./search.ts";
+import type { SearchFilters } from "./search.ts";
 
 type Unite<T> = T extends Record<string, unknown> ? { [Key in keyof T]: T[Key] }
   : T;
@@ -117,11 +117,11 @@ export type SchemaUpdateInterface<T extends SchemaPrototype> =
 type ConvertSearchPropertyContext<T extends PropertyPrototype> = T extends
   { "@context": SchemaPrototype } ? Unite<SchemaSearchInterface<T["@context"]>>
   : IsInverse<T> extends true ? never
-  : CreateSearchInterface<ConvertPropertyType<T>>;
+  : SearchFilters<ConvertPropertyType<T>>;
 
 type ConvertSearchProperty<T extends ValidPropertyDefinition> = T extends
   PropertyPrototype ? ConvertSearchPropertyContext<T>
-  : CreateSearchInterface<string>;
+  : SearchFilters<string>;
 
 type InversePropertiesMap<T extends SchemaPrototype> = {
   [X in keyof T]: T[X] extends { "@inverse": true } ? X : never;

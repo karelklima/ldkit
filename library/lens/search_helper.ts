@@ -1,6 +1,6 @@
 import { DataFactory, toRdf } from "../rdf.ts";
 import { sparql as $, type SparqlValue } from "../sparql/mod.ts";
-import { type Property, SearchSchema } from "../schema/mod.ts";
+import { type Property, type SearchSchema } from "../schema/mod.ts";
 import xsd from "../namespaces/xsd.ts";
 
 export class SearchHelper {
@@ -29,18 +29,89 @@ export class SearchHelper {
   }
 
   public process() {
-    this.processEquals();
+    this.processOperators();
+    this.processStringFunctions();
+    this.processRegex();
+    this.processLangMatches();
+    this.processFilter();
   }
 
-  private processEquals() {
-    const value = this.searchSchema.$equals;
+  private processOperators() {
+    const map = {
+      $equals: "=",
+      $not: "!=",
+      $gt: ">",
+      $gte: ">=",
+      $lt: "<",
+      $lte: "<=",
+    };
+
+    for (const [key, operator] of Object.entries(map)) {
+      const value = this.searchSchema[key];
+      if (value === undefined) {
+        continue;
+      }
+
+      this.addFilter(
+        $`${this.df.variable(this.varName)} ${operator} ${this.encode(value)}`,
+      );
+    }
+  }
+
+  private processStringFunctions() {
+    const map = {
+      $contains: "CONTAINS",
+      $strStarts: "STRSTARTS",
+      $strEnds: "STRENDS",
+    };
+
+    for (const [key, func] of Object.entries(map)) {
+      const value = this.searchSchema[key];
+      if (value === undefined) {
+        continue;
+      }
+
+      this.addFilter(
+        $`${func}(${this.df.variable(this.varName)}, ${this.encode(value)})`,
+      );
+    }
+  }
+
+  private processRegex() {
+    const value = this.searchSchema.$regex;
     if (value === undefined) {
       return;
     }
 
-    this.sparqlValues.push(
-      $`FILTER (${this.df.variable(this.varName)} = ${this.encode(value)}) .`,
+    this.addFilter(
+      $`REGEX(${this.df.variable(this.varName)}, "${value as string}")`,
     );
+  }
+
+  private processLangMatches() {
+    const value = this.searchSchema.$langMatches;
+    if (value === undefined) {
+      return;
+    }
+
+    this.addFilter(
+      $`LANGMATCHES(LANG(${
+        this.df.variable(this.varName)
+      }), "${value as string}")`,
+    );
+  }
+
+  private processFilter() {
+    const value = this.searchSchema.$filter;
+    if (value === undefined) {
+      return;
+    }
+    const stringified = $`${value as SparqlValue}`;
+    this.addFilter(stringified.replace("?value", `?${this.varName}`));
+  }
+
+  private addFilter(filter: SparqlValue) {
+    this.sparqlValues.push($`FILTER (${filter}) .`);
   }
 
   private encode(value: unknown) {

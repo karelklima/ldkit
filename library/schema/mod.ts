@@ -15,6 +15,6 @@ export type {
   SchemaPrototype,
 } from "./schema.ts";
 
-export type { SearchSchema } from "./search.ts";
+export type { SearchFilters, SearchSchema } from "./search.ts";
 
 export { expandSchema, getSchemaProperties } from "./utils.ts";
