@@ -1,8 +1,8 @@
-import { type Context, createLens } from "ldkit";
+import { createLens, type Options } from "ldkit";
 import { dbo, rdfs, xsd } from "ldkit/namespaces";
 
-// Create a context for query engine
-const context: Context = {
+// Create options for query engine
+const options: Options = {
   sources: ["https://dbpedia.org/sparql"], // SPARQL endpoint
   language: "en", // Preferred language
 };
@@ -19,7 +19,7 @@ const PersonSchema = {
 } as const;
 
 // Create a resource using the data schema and context above
-const Persons = createLens(PersonSchema, context);
+const Persons = createLens(PersonSchema, options);
 
 // List all persons
 const persons = await Persons.find({ take: 10 });

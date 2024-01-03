@@ -2,7 +2,7 @@ import {
   createLens,
   createNamespace,
   type SchemaInterface,
-  setDefaultContext,
+  setGlobalOptions,
 } from "ldkit";
 import { dcterms, skos, xsd } from "ldkit/namespaces";
 
@@ -51,7 +51,7 @@ const SearchSchema = {
   vocabularyTitle: dcterms.title,
 } as const;
 
-setDefaultContext({
+setGlobalOptions({
   sources: [
     {
       type: "sparql",

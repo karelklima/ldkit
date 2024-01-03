@@ -1,4 +1,4 @@
-import { type Context, createLens, createNamespace } from "ldkit";
+import { createLens, createNamespace, type Options } from "ldkit";
 import { DataFactory, N3 } from "ldkit/rdf";
 import { QueryEngine as Comunica } from "npm:@comunica/query-sparql-rdfjs@2.5.2";
 
@@ -23,17 +23,17 @@ const DirectorSchema = {
   },
 } as const;
 
-// Create in memory data store and context for query engine
+// Create in memory data store and options for query engine
 const store = new N3.Store(undefined, {
   factory: new DataFactory(),
 });
-const context: Context = {
+const options: Options = {
+  engine: new Comunica(),
   sources: [store],
 };
-const engine = new Comunica();
 
 // Create a resource using the data schema and context above
-const Directors = createLens(DirectorSchema, context, engine);
+const Directors = createLens(DirectorSchema, options);
 
 // Add a director with a list of some movies
 await Directors.insert({
