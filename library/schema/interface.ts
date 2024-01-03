@@ -36,16 +36,16 @@ type ConvertPropertyType<T extends PropertyPrototype> = T extends
   // no type -> defaults to string
   : string;
 
-type ConvertPropertyContext<T extends PropertyPrototype> = T extends
+type ConvertPropertySchema<T extends PropertyPrototype> = T extends
   { "@schema": SchemaPrototype } ? Unite<SchemaInterface<T["@schema"]>>
   : ConvertPropertyType<T>;
 
 type ConvertPropertyOptional<T extends PropertyPrototype> =
-  IsOptional<T> extends true ? ConvertPropertyContext<T> | null
-    : ConvertPropertyContext<T>;
+  IsOptional<T> extends true ? ConvertPropertySchema<T> | null
+    : ConvertPropertySchema<T>;
 
 type ConvertPropertyArray<T extends PropertyPrototype> = IsArray<T> extends true
-  ? ConvertPropertyContext<T>[]
+  ? ConvertPropertySchema<T>[]
   : ConvertPropertyOptional<T>;
 
 type ConvertPropertyMultilang<T extends PropertyPrototype> =
@@ -76,13 +76,13 @@ export type SchemaInterface<T extends SchemaPrototype> =
       : never;
   };
 
-type ConvertUpdatePropertyContext<T extends PropertyPrototype> = T extends
+type ConvertUpdatePropertySchema<T extends PropertyPrototype> = T extends
   { "@schema": SchemaPrototype } ? Unite<SchemaUpdateInterface<T["@schema"]>>
   : ConvertPropertyType<T>;
 
 type ConvertUpdatePropertyOptional<T extends PropertyPrototype> =
-  IsOptional<T> extends true ? ConvertPropertyContext<T> | null
-    : ConvertUpdatePropertyContext<T>;
+  IsOptional<T> extends true ? ConvertPropertySchema<T> | null
+    : ConvertUpdatePropertySchema<T>;
 
 type CreateArrayUpdateInterface<T extends PropertyPrototype> = {
   $set?: ConvertPropertyType<T>[];
@@ -114,13 +114,13 @@ export type SchemaUpdateInterface<T extends SchemaPrototype> =
       : never;
   };
 
-type ConvertSearchPropertyContext<T extends PropertyPrototype> = T extends
+type ConvertSearchPropertySchema<T extends PropertyPrototype> = T extends
   { "@schema": SchemaPrototype } ? Unite<SchemaSearchInterface<T["@schema"]>>
   : IsInverse<T> extends true ? never
   : SearchFilters<ConvertPropertyType<T>>;
 
 type ConvertSearchProperty<T extends ValidPropertyDefinition> = T extends
-  PropertyPrototype ? ConvertSearchPropertyContext<T>
+  PropertyPrototype ? ConvertSearchPropertySchema<T>
   : SearchFilters<string>;
 
 type InversePropertiesMap<T extends SchemaPrototype> = {
