@@ -47,7 +47,7 @@ Deno.test("E2E / Inverse / Read complex inverse property", async () => {
     isPropertyOf: {
       "@id": x.property,
       "@inverse": true,
-      "@context": SubEntitySchema,
+      "@schema": SubEntitySchema,
     },
   } as const;
 

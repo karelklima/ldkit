@@ -25,7 +25,7 @@ const DirectorSchema = {
     "@id": dbo.director,
     "@inverse": true, // This is cool!
     "@array": true,
-    "@context": MovieSchema,
+    "@schema": MovieSchema,
   },
 } as const;
 

@@ -37,7 +37,7 @@ type ConvertPropertyType<T extends PropertyPrototype> = T extends
   : string;
 
 type ConvertPropertyContext<T extends PropertyPrototype> = T extends
-  { "@context": SchemaPrototype } ? Unite<SchemaInterface<T["@context"]>>
+  { "@schema": SchemaPrototype } ? Unite<SchemaInterface<T["@schema"]>>
   : ConvertPropertyType<T>;
 
 type ConvertPropertyOptional<T extends PropertyPrototype> =
@@ -77,7 +77,7 @@ export type SchemaInterface<T extends SchemaPrototype> =
   };
 
 type ConvertUpdatePropertyContext<T extends PropertyPrototype> = T extends
-  { "@context": SchemaPrototype } ? Unite<SchemaUpdateInterface<T["@context"]>>
+  { "@schema": SchemaPrototype } ? Unite<SchemaUpdateInterface<T["@schema"]>>
   : ConvertPropertyType<T>;
 
 type ConvertUpdatePropertyOptional<T extends PropertyPrototype> =
@@ -115,7 +115,7 @@ export type SchemaUpdateInterface<T extends SchemaPrototype> =
   };
 
 type ConvertSearchPropertyContext<T extends PropertyPrototype> = T extends
-  { "@context": SchemaPrototype } ? Unite<SchemaSearchInterface<T["@context"]>>
+  { "@schema": SchemaPrototype } ? Unite<SchemaSearchInterface<T["@schema"]>>
   : IsInverse<T> extends true ? never
   : SearchFilters<ConvertPropertyType<T>>;
 

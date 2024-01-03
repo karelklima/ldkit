@@ -284,7 +284,7 @@ Deno.test("Decoder / Array subschema property", () => {
     array: {
       "@id": x.array,
       "@array": true as const,
-      "@context": {
+      "@schema": {
         "@type": [],
         value: {
           "@id": x.value,
@@ -435,7 +435,7 @@ Deno.test("Decoder / One resource multiple schemas", () => {
     },
     nested: {
       "@id": x.nested,
-      "@context": {
+      "@schema": {
         "@type": [x.Item],
         nestedProperty: {
           "@id": x.nestedProperty,
@@ -474,7 +474,7 @@ Deno.test("Decoder / Caching", () => {
     "@type": [],
     nested: {
       "@id": x.nested,
-      "@context": {
+      "@schema": {
         "@type": [x.Nested],
       },
     },

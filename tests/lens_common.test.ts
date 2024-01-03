@@ -35,11 +35,11 @@ const Movie = {
   name: x.name,
   director: {
     "@id": x.director,
-    "@context": Director,
+    "@schema": Director,
   },
   released: {
     "@id": x.released,
-    "@context": Instant,
+    "@schema": Instant,
     "@optional": true,
   },
 } as const;

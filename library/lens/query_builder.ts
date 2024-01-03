@@ -133,9 +133,9 @@ export class QueryBuilder {
             ),
           );
         }
-        if (typeof property["@context"] === "object") {
+        if (typeof property["@schema"] === "object") {
           populateConditionsRecursive(
-            property["@context"] as Schema,
+            property["@schema"] as Schema,
             `${varPrefix}_${index}`,
             propertySchema,
           );

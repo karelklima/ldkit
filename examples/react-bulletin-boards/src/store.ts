@@ -59,12 +59,12 @@ const InformationSchema = {
   title: dcterms.title,
   published: {
     "@id": sb504_2004["vyvěšení-informace"],
-    "@context": InstantSchema,
+    "@schema": InstantSchema,
     "@optional": true,
   },
   validUntil: {
     "@id": desky["relevantní-do"],
-    "@context": InstantSchema,
+    "@schema": InstantSchema,
   },
 } as const;
 

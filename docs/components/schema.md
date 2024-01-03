@@ -199,7 +199,7 @@ const Thing = {
   },
   nested: {
     "@id": x.nested,
-    "@context": {
+    "@schema": {
       "@type": x.Nested,
       nestedValue: x.nestedValue,
     },

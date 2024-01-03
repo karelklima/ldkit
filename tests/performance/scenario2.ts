@@ -12,7 +12,7 @@ export const ExtendedBookSchema = {
   ...BookSchema,
   author: {
     "@id": dbp.author,
-    "@context": PersonSchema,
+    "@schema": PersonSchema,
   },
 } as const;
 
