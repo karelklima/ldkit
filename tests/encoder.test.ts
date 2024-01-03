@@ -1,17 +1,17 @@
 import { assertEquals } from "./test_deps.ts";
 import { ttl, x } from "./test_utils.ts";
 
+import type { Options, Schema } from "ldkit";
+import { xsd } from "ldkit/namespaces";
+
 import { encode } from "../library/encoder.ts";
-import type { Schema } from "../library/schema/mod.ts";
-import type { Context } from "../library/rdf.ts";
-import { xsd } from "../library/namespaces/mod.ts";
 
 const evaluate = (
   node: Record<string, unknown>,
   schema: Schema,
   turtle: string,
-  context: Context = { sources: ["dummy"] },
-) => assertEquals(encode(node, schema, context), ttl(turtle));
+  options: Options = {},
+) => assertEquals(encode(node, schema, options), ttl(turtle));
 
 Deno.test("Encoder / Minimal resource", () => {
   const input = {

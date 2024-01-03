@@ -1,12 +1,7 @@
 import { assertEquals } from "./test_deps.ts";
 
-import { DataFactory } from "../library/rdf.ts";
-import {
-  ASK,
-  CONSTRUCT,
-  DESCRIBE,
-  SELECT,
-} from "../library/sparql/sparql_query_builders.ts";
+import { DataFactory } from "ldkit/rdf";
+import { ASK, CONSTRUCT, DESCRIBE, SELECT } from "ldkit/sparql";
 
 const df = new DataFactory();
 const s = df.variable("s");

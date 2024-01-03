@@ -1,10 +1,6 @@
-import { Comunica } from "../test_deps.ts";
-
 import { initStore, ttl, x } from "../test_utils.ts";
 
 import { createLens } from "ldkit";
-
-const engine = new Comunica();
 
 const Director = {
   name: x.name,
@@ -21,9 +17,9 @@ const defaultStoreContent = ttl(`
   `);
 
 const init = () => {
-  const { store, context, assertStore, empty } = initStore();
+  const { store, assertStore, empty, options } = initStore();
   store.addQuads(defaultStoreContent);
-  const Directors = createLens(Director, context, engine);
+  const Directors = createLens(Director, options);
   return { Directors, assertStore, empty };
 };
 

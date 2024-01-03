@@ -6,6 +6,9 @@ import {
 } from "./test_deps.ts";
 import { x } from "./test_utils.ts";
 
+import { rdf, xsd } from "ldkit/namespaces";
+import { type SparqlValue } from "ldkit/sparql";
+
 import {
   expandSchema,
   Property,
@@ -15,8 +18,6 @@ import {
   type SchemaSearchInterface,
   type SchemaUpdateInterface,
 } from "../library/schema/mod.ts";
-import { rdf, xsd } from "../namespaces.ts";
-import { type SparqlValue } from "../library/sparql/mod.ts";
 
 type ArrayUpdate<T> = {
   $set?: T[];

@@ -1,20 +1,19 @@
 import {
-  type Context,
   IQueryEngine,
   N3,
   quadsToGraph,
+  type QueryContext,
   type RDF,
 } from "../rdf.ts";
-import { resolveContext, resolveEngine } from "../global.ts";
 import { type AsyncIterator } from "../asynciterator.ts";
 
 export class QueryEngineProxy {
-  private readonly context: Context;
   private readonly engine: IQueryEngine;
+  private readonly context: QueryContext;
 
-  constructor(context?: Context, engine?: IQueryEngine) {
-    this.context = resolveContext(context);
-    this.engine = resolveEngine(engine);
+  constructor(engine: IQueryEngine, context: QueryContext) {
+    this.engine = engine;
+    this.context = context;
   }
 
   queryBoolean(query: string) {

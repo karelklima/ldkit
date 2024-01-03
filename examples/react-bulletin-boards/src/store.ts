@@ -1,7 +1,7 @@
 import {
-  type Context,
   createLens,
   createNamespace,
+  type QueryContext,
   type SchemaInterface,
 } from "ldkit";
 import { dcterms, schema, xsd } from "ldkit/namespaces";
@@ -76,7 +76,7 @@ export type InformationInterface = SchemaInterface<typeof InformationSchema>;
 const engine = new Comunica();
 
 export const createInfosResource = (iri: string) => {
-  const context: Context = {
+  const context: QueryContext = {
     sources: [{
       type: "file",
       value: iri,

@@ -1,13 +1,11 @@
-import { assertEquals, Comunica } from "../test_deps.ts";
+import { assertEquals } from "../test_deps.ts";
 
 import { initStore, x } from "../test_utils.ts";
 
 import { createLens } from "ldkit";
 
-const engine = new Comunica();
-
 Deno.test("E2E / Inverse / Read simple inverse property", async () => {
-  const { setStore, context } = initStore();
+  const { setStore, options } = initStore();
 
   const EntitySchema = {
     isPropertyOf: {
@@ -16,7 +14,7 @@ Deno.test("E2E / Inverse / Read simple inverse property", async () => {
     },
   } as const;
 
-  const Entities = createLens(EntitySchema, context, engine);
+  const Entities = createLens(EntitySchema, options);
 
   await setStore(`
     x:A x:property x:B .
@@ -37,7 +35,7 @@ Deno.test("E2E / Inverse / Read simple inverse property", async () => {
 });
 
 Deno.test("E2E / Inverse / Read complex inverse property", async () => {
-  const { setStore, context } = initStore();
+  const { setStore, options } = initStore();
 
   const SubEntitySchema = {
     property: x.property,
@@ -51,7 +49,7 @@ Deno.test("E2E / Inverse / Read complex inverse property", async () => {
     },
   } as const;
 
-  const Entities = createLens(EntitySchema, context, engine);
+  const Entities = createLens(EntitySchema, options);
 
   await setStore(`
     x:A x:property x:B .
@@ -81,7 +79,7 @@ Deno.test("E2E / Inverse / Read complex inverse property", async () => {
 });
 
 Deno.test("E2E / Inverse / Read missing optional inverse property", async () => {
-  const { setStore, context } = initStore();
+  const { setStore, options } = initStore();
 
   const EntitySchema = {
     "@type": x.Entity,
@@ -92,7 +90,7 @@ Deno.test("E2E / Inverse / Read missing optional inverse property", async () => 
     },
   } as const;
 
-  const Entities = createLens(EntitySchema, context, engine);
+  const Entities = createLens(EntitySchema, options);
 
   await setStore(`
     x:A a x:Entity .

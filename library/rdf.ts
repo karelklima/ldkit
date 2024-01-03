@@ -21,15 +21,14 @@ export type LDkitContext = {
   take?: number;
 };
 
-export type Context =
-  & LDkitContext
+export type QueryContext =
   & RDF.QueryStringContext
   & RDF.QuerySourceContext<IDataSource>
   & IQueryContextCommon;
 
 export type IQueryEngine = RDF.StringSparqlQueryable<
   RDF.SparqlResultSupport,
-  Context
+  QueryContext
 >;
 
 export type Iri = string;

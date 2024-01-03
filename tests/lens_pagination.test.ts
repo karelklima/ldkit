@@ -1,14 +1,11 @@
-import { assertEquals, Comunica } from "./test_deps.ts";
+import { assertEquals } from "./test_deps.ts";
 
 import { initStore, x } from "./test_utils.ts";
 
-import { createLens } from "../library/lens/mod.ts";
-import { xsd } from "../library/namespaces/mod.ts";
-import { DataFactory } from "../library/rdf.ts";
+import { createLens, type SchemaInterface } from "ldkit";
+import { xsd } from "ldkit/namespaces";
+import { DataFactory } from "ldkit/rdf";
 
-import { type SchemaInterface } from "../library/schema/mod.ts";
-
-const engine = new Comunica();
 const _ = new DataFactory();
 
 const Item = {
@@ -35,9 +32,9 @@ const assertContainsRange = (items: ItemType[], start: number, end: number) => {
 };
 
 const init = () => {
-  const { store, context, assertStore, empty } = initStore();
+  const { store, options, assertStore, empty } = initStore();
   store.addQuads(defaultStoreContent);
-  const items = createLens(Item, context, engine);
+  const items = createLens(Item, options);
   return { items, assertStore, empty };
 };
 

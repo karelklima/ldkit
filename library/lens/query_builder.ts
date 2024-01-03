@@ -1,3 +1,4 @@
+import { type Options } from "../options.ts";
 import {
   getSchemaProperties,
   type Property,
@@ -12,7 +13,7 @@ import {
   sparql as $,
   type SparqlValue,
 } from "../sparql/mod.ts";
-import { type Context, DataFactory, type Iri, type RDF } from "../rdf.ts";
+import { DataFactory, type Iri, type RDF } from "../rdf.ts";
 import ldkit from "../namespaces/ldkit.ts";
 import rdf from "../namespaces/rdf.ts";
 
@@ -32,14 +33,14 @@ enum Flags {
 
 export class QueryBuilder {
   private readonly schema: Schema;
-  private readonly context: Context;
+  private readonly options: Options;
   private readonly takeDefault: number;
   private readonly df: RDF.DataFactory;
 
-  constructor(schema: Schema, context: Context) {
+  constructor(schema: Schema, options: Options) {
     this.schema = schema;
-    this.context = context;
-    this.takeDefault = 1000;
+    this.options = options;
+    this.takeDefault = options.take!;
     this.df = new DataFactory();
   }
 
@@ -53,7 +54,7 @@ export class QueryBuilder {
 
   private entitiesToQuads(entities: Entity[]) {
     const quadArrays = entities.map((entity) =>
-      encode(entity, this.schema, this.context)
+      encode(entity, this.schema, this.options)
     );
     return ([] as RDF.Quad[]).concat(...quadArrays);
   }
@@ -233,7 +234,7 @@ export class QueryBuilder {
   }
 
   updateQuery(entities: Entity[]) {
-    const helper = new UpdateHelper(this.schema, this.context);
+    const helper = new UpdateHelper(this.schema, this.options);
 
     for (const entity of entities) {
       helper.process(entity);

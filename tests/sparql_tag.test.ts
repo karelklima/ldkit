@@ -1,8 +1,8 @@
 import { assertEquals } from "./test_deps.ts";
 
-import { DataFactory } from "../library/rdf.ts";
-import { sparql } from "../library/sparql/sparql_tag.ts";
-import xsd from "../library/namespaces/xsd.ts";
+import { DataFactory } from "ldkit/rdf";
+import { sparql } from "ldkit/sparql";
+import { xsd } from "ldkit/namespaces";
 
 const df = new DataFactory();
 

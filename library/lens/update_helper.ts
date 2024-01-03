@@ -1,4 +1,5 @@
-import type { Context, RDF } from "../rdf.ts";
+import type { Options } from "../options.ts";
+import type { RDF } from "../rdf.ts";
 import { OPTIONAL, type SparqlValue } from "../sparql/mod.ts";
 import {
   getSchemaProperties,
@@ -11,7 +12,7 @@ import type { Entity } from "./types.ts";
 export class UpdateHelper {
   private readonly schema: Schema;
   private readonly properties: Record<string, Property>;
-  private readonly context: Context;
+  private readonly options: Options;
 
   private variableCounter = 0;
 
@@ -21,12 +22,12 @@ export class UpdateHelper {
 
   constructor(
     schema: Schema,
-    context: Context,
+    options: Options,
     variableInitCounter = 0,
   ) {
     this.schema = schema;
     this.properties = getSchemaProperties(schema);
-    this.context = context;
+    this.options = options;
     this.variableCounter = variableInitCounter;
   }
 
@@ -186,7 +187,7 @@ export class UpdateHelper {
     return encode(
       entity,
       this.schema,
-      this.context,
+      this.options,
       false,
       this.variableCounter,
     );

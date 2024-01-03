@@ -1,10 +1,8 @@
-import { assert, Comunica } from "../test_deps.ts";
+import { assert } from "../test_deps.ts";
 
 import { initStore, x } from "../test_utils.ts";
 
 import { createLens } from "ldkit";
-
-const engine = new Comunica();
 
 const EntitySchema = {
   "@type": x.Entity,
@@ -23,8 +21,8 @@ const EntitySchema = {
 } as const;
 
 const init = () => {
-  const { context, assertStore } = initStore();
-  const Entities = createLens(EntitySchema, context, engine);
+  const { options, assertStore } = initStore();
+  const Entities = createLens(EntitySchema, options);
   return { Entities, assertStore };
 };
 

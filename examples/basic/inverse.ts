@@ -1,8 +1,8 @@
-import { type Context, createLens } from "ldkit";
+import { createLens, type Options } from "ldkit";
 import { dbo, rdfs, xsd } from "ldkit/namespaces";
 
 // Create a context for query engine
-const context: Context = {
+const options: Options = {
   sources: ["https://dbpedia.org/sparql"], // SPARQL endpoint
   language: "en", // Preferred language
 };
@@ -30,7 +30,7 @@ const DirectorSchema = {
 } as const;
 
 // Create a resource using the data schema and context above
-const Persons = createLens(DirectorSchema, context);
+const Persons = createLens(DirectorSchema, options);
 
 // Get a particular person identified by IRI
 const tarantino = await Persons.findByIri(

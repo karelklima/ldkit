@@ -1,11 +1,12 @@
 import { assert, assertEquals } from "./test_deps.ts";
+
 import {
   BindingsFactory,
   DataFactory,
   QuadFactory,
   type RDF,
   type RDFJSON,
-} from "../library/rdf.ts";
+} from "ldkit/rdf";
 
 Deno.test("RDF / Quad Factory", () => {
   const df = new DataFactory();

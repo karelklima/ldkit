@@ -1,10 +1,10 @@
-import { assert, assertEquals, Comunica, equal } from "./test_deps.ts";
+import { assert, assertEquals, equal } from "./test_deps.ts";
 
 import { initStore, ttl, x } from "./test_utils.ts";
 
-import { createLens } from "../library/lens/mod.ts";
-import { rdf, xsd } from "../library/namespaces/mod.ts";
-import { DataFactory } from "../library/rdf.ts";
+import { createLens } from "ldkit";
+import { rdf, xsd } from "ldkit/namespaces";
+import { DataFactory } from "ldkit/rdf";
 
 const assertContainsEqual = (haystack: unknown[], needle: unknown) => {
   let found = false;
@@ -73,18 +73,17 @@ const createDirector = ($id: string, name: string) => ({
 const Tarantino = createDirector("QuentinTarantino", "Quentin Tarantino");
 const Kubrick = createDirector("StanleyKubrick", "Stanley Kubrick");
 
-const engine = new Comunica();
 const _ = new DataFactory();
 
 export const init = () => {
-  const { store, context, assertStore, empty } = initStore();
+  const { store, options, assertStore, empty } = initStore();
   store.addQuads(defaultStoreContent);
-  const directors = createLens(Director, context, engine);
-  const movies = createLens(Movie, context, engine);
+  const directors = createLens(Director, options);
+  const movies = createLens(Movie, options);
   return { directors, movies, assertStore, empty };
 };
 
-Deno.test("Resource / Get many resources", async () => {
+Deno.test("Lens / Common / Get many resources", async () => {
   const { directors } = init();
   const result = await directors.find();
 
@@ -93,14 +92,14 @@ Deno.test("Resource / Get many resources", async () => {
   assertContainsEqual(result, Kubrick);
 });
 
-Deno.test("Resource / Get resource by IRI", async () => {
+Deno.test("Lens / Common / Get resource by IRI", async () => {
   const { directors } = init();
   const result = await directors.findByIri(Tarantino.$id);
 
   assertEquals(result, Tarantino);
 });
 
-Deno.test("Resource / Get multiple resources by IRI", async () => {
+Deno.test("Lens / Common / Get multiple resources by IRI", async () => {
   const { directors } = init();
   const result = await directors.findByIris([Tarantino.$id, Kubrick.$id]);
 
@@ -108,7 +107,7 @@ Deno.test("Resource / Get multiple resources by IRI", async () => {
   assertContainsEqual(result, Kubrick);
 });
 
-Deno.test("Resource / Get resource by string condition", async () => {
+Deno.test("Lens / Common / Get resource by string condition", async () => {
   const { directors } = init();
   const condition = `?iri <${x.name}> "Quentin Tarantino" .`;
   const result = await directors.find({ where: condition });
@@ -117,7 +116,7 @@ Deno.test("Resource / Get resource by string condition", async () => {
   assertEquals(result[0], Tarantino);
 });
 
-Deno.test("Resource / Get resource by quad condition", async () => {
+Deno.test("Lens / Common / Get resource by quad condition", async () => {
   const { directors } = init();
   const condition = _.quad(
     _.variable("iri"),
@@ -130,13 +129,13 @@ Deno.test("Resource / Get resource by quad condition", async () => {
   assertEquals(result[0], Tarantino);
 });
 
-Deno.test("Resource / Count resources", async () => {
+Deno.test("Lens / Common / Count resources", async () => {
   const { directors } = init();
   const count = await directors.count();
   assertEquals(count, 2);
 });
 
-Deno.test("Resource / Insert multiple resources", async () => {
+Deno.test("Lens / Common / Insert multiple resources", async () => {
   const { directors, empty, assertStore } = init();
   await empty();
   await directors.insert(Kubrick, Tarantino);
@@ -151,7 +150,7 @@ Deno.test("Resource / Insert multiple resources", async () => {
     `);
 });
 
-Deno.test("Resource / Insert complex resource", async () => {
+Deno.test("Lens / Common / Insert complex resource", async () => {
   const { movies } = init();
   await movies.insert({
     $id: x.IngloriousBasterds,
@@ -166,7 +165,7 @@ Deno.test("Resource / Insert complex resource", async () => {
   assertEquals(result?.released?.date, new Date("2008-01-01"));
 });
 
-Deno.test("Resource / Update multiple resources", async () => {
+Deno.test("Lens / Common / Update multiple resources", async () => {
   const { directors } = init();
   await directors.update(
     {
@@ -199,14 +198,14 @@ Deno.test("Resource / Update multiple resources", async () => {
     expect(result!.released?.date).toEqual(new Date("1994-01-01"));
   }); */
 
-Deno.test("Resource / Delete multiple resources", async () => {
+Deno.test("Lens / Common / Delete multiple resources", async () => {
   const { directors } = init();
   await directors.delete(Tarantino, Kubrick);
   const dirs = await directors.find();
   assertEquals(dirs.length, 0);
 });
 
-Deno.test("Resource / Insert data", async () => {
+Deno.test("Lens / Common / Insert data", async () => {
   const { directors } = init();
   await directors.insert({
     $id: x.ChristopherNolan,
@@ -225,7 +224,7 @@ Deno.test("Resource / Insert data", async () => {
   });
 });
 
-Deno.test("Resource / Delete data", async () => {
+Deno.test("Lens / Common / Delete data", async () => {
   const { directors } = init();
   await directors.insert({
     $id: x.ChristopherNolan,
