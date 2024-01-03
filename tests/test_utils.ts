@@ -1,19 +1,21 @@
-import { assertEquals } from "./test_deps.ts";
+import { assertEquals, Comunica } from "./test_deps.ts";
 
 import {
-  type Context,
   DataFactory,
   N3,
   quadsToGraph,
+  type QueryContext,
   type RDF,
-} from "../library/rdf.ts";
-import { ldkit, schema, xsd } from "../library/namespaces/mod.ts";
+} from "ldkit/rdf";
+import { ldkit, schema, xsd } from "ldkit/namespaces";
 
 export type Equals<A, B> = A extends B ? (B extends A ? true : false) : false;
 
 const X_NAMESPACE = "http://x/";
 
 const dataFactory = new DataFactory();
+
+const comunica = new Comunica();
 
 export const x = new Proxy(
   {},
@@ -89,10 +91,13 @@ export const createStore = () =>
     factory: DF(),
   });
 
-export const createStoreContext = (store: N3.Store, context?: Context) => ({
+export const createStoreContext = (
+  store: N3.Store,
+  context?: QueryContext,
+) => ({
   ...context,
   sources: [store],
-} as Context);
+} as QueryContext);
 
 export const emptyStore = (store: N3.Store) => {
   const stream = store.removeMatches(null, null, null, null);
@@ -117,5 +122,9 @@ export const initStore = () => {
     const content = ttl(turtle);
     store.addQuads(content);
   };
-  return { store, context, assertStore, empty, setStore };
+  const options = {
+    engine: comunica,
+    ...context,
+  };
+  return { store, context, assertStore, empty, setStore, options };
 };

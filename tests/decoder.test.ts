@@ -1,23 +1,23 @@
 import { assertEquals, assertThrows } from "./test_deps.ts";
 import { createGraph, x } from "./test_utils.ts";
 
-import type { Context } from "../library/rdf.ts";
+import { type Options, type Schema } from "ldkit";
+import { rdf, xsd } from "ldkit/namespaces";
+
 import { decode } from "../library/decoder.ts";
-import type { Schema } from "../library/schema/mod.ts";
-import { rdf, xsd } from "../library/namespaces/mod.ts";
 
 const decodeGraph = (
   turtle: string,
   schema: Schema,
-  context: Context = { sources: ["dummy"] },
-) => decode(createGraph(turtle), schema, context);
+  options: Options = {},
+) => decode(createGraph(turtle), schema, options);
 
 const evaluate = (
   turtle: string,
   schema: Schema,
   result: Record<string, unknown>[],
-  context?: Context,
-) => assertEquals(decodeGraph(turtle, schema, context), result);
+  options: Options = {},
+) => assertEquals(decodeGraph(turtle, schema, options), result);
 
 Deno.test("Decoder / Minimal resource", () => {
   const input = `

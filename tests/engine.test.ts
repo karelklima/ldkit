@@ -1,17 +1,17 @@
 import { assertEquals, assertRejects } from "./test_deps.ts";
 
 import { QueryEngine } from "../library/engine/query_engine.ts";
-import { type Context } from "../library/rdf.ts";
+import { type QueryContext } from "../library/rdf.ts";
 
 const engine = new QueryEngine();
-const context: Context = { sources: ["https://dbpedia.org/sparql"] };
+const context: QueryContext = { sources: ["https://dbpedia.org/sparql"] };
 
-Deno.test("Boolean query with TRUE outcome", async () => {
+Deno.test("Engine / Boolean query with TRUE outcome", async () => {
   const response = await engine.queryBoolean("ASK { ?s ?p ?o }", context);
   assertEquals(response, true);
 });
 
-Deno.test("Boolean query with FALSE outcome", async () => {
+Deno.test("Engine / Boolean query with FALSE outcome", async () => {
   const response = await engine.queryBoolean(
     "ASK { ?s <https://probablynonexistentnode> ?o }",
     context,
@@ -19,7 +19,7 @@ Deno.test("Boolean query with FALSE outcome", async () => {
   assertEquals(response, false);
 });
 
-Deno.test("Invalid boolean query", async () => {
+Deno.test("Engine / Invalid boolean query", async () => {
   await assertRejects(() => {
     return engine.queryBoolean(
       "CONSTRUCT WHERE { ?s ?p ?o } LIMIT 1",
@@ -28,7 +28,7 @@ Deno.test("Invalid boolean query", async () => {
   }, "Non-boolean query should fail");
 });
 
-Deno.test("Bindings query", async () => {
+Deno.test("Engine / Bindings query", async () => {
   const q = `SELECT ?x ?y WHERE { BIND("x" as ?x) BIND("y" as ?y) }`;
   const stream = await engine.queryBindings(
     q,
@@ -41,7 +41,7 @@ Deno.test("Bindings query", async () => {
   assertEquals(stream.read(), null);
 });
 
-Deno.test("Invalid bindings query", async () => {
+Deno.test("Engine / Invalid bindings query", async () => {
   await assertRejects(() => {
     return engine.queryBindings(
       "ASK { ?s ?p ?o }",
@@ -50,7 +50,7 @@ Deno.test("Invalid bindings query", async () => {
   }, "Non-bindings query should fail");
 });
 
-Deno.test("Quads query", async () => {
+Deno.test("Engine / Quads query", async () => {
   const q =
     `CONSTRUCT { <https://x/x> <https://x/y> <https://x/z>  } WHERE { ?s ?p ?o } LIMIT 1`;
   const stream = await engine.queryQuads(

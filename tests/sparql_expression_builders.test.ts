@@ -1,8 +1,7 @@
 import { assertEquals } from "./test_deps.ts";
 
-import { DataFactory } from "../library/rdf.ts";
-import { OPTIONAL } from "../library/sparql/sparql_expression_builders.ts";
-import { DELETE } from "../library/sparql/sparql_update_builders.ts";
+import { DataFactory } from "ldkit/rdf";
+import { DELETE, OPTIONAL } from "ldkit/sparql";
 
 const df = new DataFactory();
 const s = df.variable("s");

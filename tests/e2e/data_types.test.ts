@@ -1,14 +1,12 @@
-import { assert, assertTypeSafe, Comunica, Equals } from "../test_deps.ts";
+import { assert, assertTypeSafe, Equals } from "../test_deps.ts";
 
 import { initStore, x } from "../test_utils.ts";
 
 import { createLens } from "ldkit";
 import { xsd } from "ldkit/namespaces";
 
-const engine = new Comunica();
-
 Deno.test("Data Type / Boolean / xsd:boolean", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -16,7 +14,7 @@ Deno.test("Data Type / Boolean / xsd:boolean", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -37,7 +35,7 @@ Deno.test("Data Type / Boolean / xsd:boolean", async () => {
 });
 
 Deno.test("Data Type / Integer / xsd:integer", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -45,7 +43,7 @@ Deno.test("Data Type / Integer / xsd:integer", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -66,7 +64,7 @@ Deno.test("Data Type / Integer / xsd:integer", async () => {
 });
 
 Deno.test("Data Type / Integer / xsd:long", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -74,7 +72,7 @@ Deno.test("Data Type / Integer / xsd:long", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -95,7 +93,7 @@ Deno.test("Data Type / Integer / xsd:long", async () => {
 });
 
 Deno.test("Data Type / Integer / xsd:int", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -103,7 +101,7 @@ Deno.test("Data Type / Integer / xsd:int", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -124,7 +122,7 @@ Deno.test("Data Type / Integer / xsd:int", async () => {
 });
 
 Deno.test("Data Type / Integer / xsd:byte", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -132,7 +130,7 @@ Deno.test("Data Type / Integer / xsd:byte", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -153,7 +151,7 @@ Deno.test("Data Type / Integer / xsd:byte", async () => {
 });
 
 Deno.test("Data Type / Integer / xsd:short", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -161,7 +159,7 @@ Deno.test("Data Type / Integer / xsd:short", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -182,7 +180,7 @@ Deno.test("Data Type / Integer / xsd:short", async () => {
 });
 
 Deno.test("Data Type / Integer / xsd:negativeInteger", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -190,7 +188,7 @@ Deno.test("Data Type / Integer / xsd:negativeInteger", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -211,7 +209,7 @@ Deno.test("Data Type / Integer / xsd:negativeInteger", async () => {
 });
 
 Deno.test("Data Type / Integer / xsd:nonNegativeInteger", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -219,7 +217,7 @@ Deno.test("Data Type / Integer / xsd:nonNegativeInteger", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -240,7 +238,7 @@ Deno.test("Data Type / Integer / xsd:nonNegativeInteger", async () => {
 });
 
 Deno.test("Data Type / Integer / xsd:nonPositiveInteger", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -248,7 +246,7 @@ Deno.test("Data Type / Integer / xsd:nonPositiveInteger", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -269,7 +267,7 @@ Deno.test("Data Type / Integer / xsd:nonPositiveInteger", async () => {
 });
 
 Deno.test("Data Type / Integer / xsd:positiveInteger", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -277,7 +275,7 @@ Deno.test("Data Type / Integer / xsd:positiveInteger", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -298,7 +296,7 @@ Deno.test("Data Type / Integer / xsd:positiveInteger", async () => {
 });
 
 Deno.test("Data Type / Integer / xsd:unsignedByte", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -306,7 +304,7 @@ Deno.test("Data Type / Integer / xsd:unsignedByte", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -327,7 +325,7 @@ Deno.test("Data Type / Integer / xsd:unsignedByte", async () => {
 });
 
 Deno.test("Data Type / Integer / xsd:unsignedInt", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -335,7 +333,7 @@ Deno.test("Data Type / Integer / xsd:unsignedInt", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -356,7 +354,7 @@ Deno.test("Data Type / Integer / xsd:unsignedInt", async () => {
 });
 
 Deno.test("Data Type / Integer / xsd:unsignedLong", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -364,7 +362,7 @@ Deno.test("Data Type / Integer / xsd:unsignedLong", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -385,7 +383,7 @@ Deno.test("Data Type / Integer / xsd:unsignedLong", async () => {
 });
 
 Deno.test("Data Type / Integer / xsd:unsignedShort", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -393,7 +391,7 @@ Deno.test("Data Type / Integer / xsd:unsignedShort", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -414,7 +412,7 @@ Deno.test("Data Type / Integer / xsd:unsignedShort", async () => {
 });
 
 Deno.test("Data Type / Double / xsd:double", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -422,7 +420,7 @@ Deno.test("Data Type / Double / xsd:double", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -443,7 +441,7 @@ Deno.test("Data Type / Double / xsd:double", async () => {
 });
 
 Deno.test("Data Type / Double / xsd:decimal", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -451,7 +449,7 @@ Deno.test("Data Type / Double / xsd:decimal", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -472,7 +470,7 @@ Deno.test("Data Type / Double / xsd:decimal", async () => {
 });
 
 Deno.test("Data Type / Double / xsd:float", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -480,7 +478,7 @@ Deno.test("Data Type / Double / xsd:float", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -501,7 +499,7 @@ Deno.test("Data Type / Double / xsd:float", async () => {
 });
 
 Deno.test("Data Type / String / xsd:string", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -509,7 +507,7 @@ Deno.test("Data Type / String / xsd:string", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -530,7 +528,7 @@ Deno.test("Data Type / String / xsd:string", async () => {
 });
 
 Deno.test("Data Type / String / xsd:normalizedString", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -538,7 +536,7 @@ Deno.test("Data Type / String / xsd:normalizedString", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -559,7 +557,7 @@ Deno.test("Data Type / String / xsd:normalizedString", async () => {
 });
 
 Deno.test("Data Type / String / xsd:anyURI", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -567,7 +565,7 @@ Deno.test("Data Type / String / xsd:anyURI", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -588,7 +586,7 @@ Deno.test("Data Type / String / xsd:anyURI", async () => {
 });
 
 Deno.test("Data Type / String / xsd:base64Binary", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -596,7 +594,7 @@ Deno.test("Data Type / String / xsd:base64Binary", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -617,7 +615,7 @@ Deno.test("Data Type / String / xsd:base64Binary", async () => {
 });
 
 Deno.test("Data Type / String / xsd:language", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -625,7 +623,7 @@ Deno.test("Data Type / String / xsd:language", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -646,7 +644,7 @@ Deno.test("Data Type / String / xsd:language", async () => {
 });
 
 Deno.test("Data Type / String / xsd:Name", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -654,7 +652,7 @@ Deno.test("Data Type / String / xsd:Name", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -675,7 +673,7 @@ Deno.test("Data Type / String / xsd:Name", async () => {
 });
 
 Deno.test("Data Type / String / xsd:NCName", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -683,7 +681,7 @@ Deno.test("Data Type / String / xsd:NCName", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -704,7 +702,7 @@ Deno.test("Data Type / String / xsd:NCName", async () => {
 });
 
 Deno.test("Data Type / String / xsd:NMTOKEN", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -712,7 +710,7 @@ Deno.test("Data Type / String / xsd:NMTOKEN", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -733,7 +731,7 @@ Deno.test("Data Type / String / xsd:NMTOKEN", async () => {
 });
 
 Deno.test("Data Type / String / xsd:token", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -741,7 +739,7 @@ Deno.test("Data Type / String / xsd:token", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -762,7 +760,7 @@ Deno.test("Data Type / String / xsd:token", async () => {
 });
 
 Deno.test("Data Type / String / xsd:hexBinary", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -770,7 +768,7 @@ Deno.test("Data Type / String / xsd:hexBinary", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -791,7 +789,7 @@ Deno.test("Data Type / String / xsd:hexBinary", async () => {
 });
 
 Deno.test("Data Type / String / xsd:time", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -799,7 +797,7 @@ Deno.test("Data Type / String / xsd:time", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -820,7 +818,7 @@ Deno.test("Data Type / String / xsd:time", async () => {
 });
 
 Deno.test("Data Type / String / xsd:duration", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -828,7 +826,7 @@ Deno.test("Data Type / String / xsd:duration", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -849,7 +847,7 @@ Deno.test("Data Type / String / xsd:duration", async () => {
 });
 
 Deno.test("Data Type / Date / xsd:dateTime", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -857,7 +855,7 @@ Deno.test("Data Type / Date / xsd:dateTime", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -881,7 +879,7 @@ Deno.test("Data Type / Date / xsd:dateTime", async () => {
 });
 
 Deno.test("Data Type / Date / xsd:date", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -889,7 +887,7 @@ Deno.test("Data Type / Date / xsd:date", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -913,7 +911,7 @@ Deno.test("Data Type / Date / xsd:date", async () => {
 });
 
 Deno.test("Data Type / Date / xsd:gDay", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -921,7 +919,7 @@ Deno.test("Data Type / Date / xsd:gDay", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -942,7 +940,7 @@ Deno.test("Data Type / Date / xsd:gDay", async () => {
 });
 
 Deno.test("Data Type / Date / xsd:gMonthDay", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -950,7 +948,7 @@ Deno.test("Data Type / Date / xsd:gMonthDay", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -971,7 +969,7 @@ Deno.test("Data Type / Date / xsd:gMonthDay", async () => {
 });
 
 Deno.test("Data Type / Date / xsd:gYear", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -979,7 +977,7 @@ Deno.test("Data Type / Date / xsd:gYear", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,
@@ -1000,7 +998,7 @@ Deno.test("Data Type / Date / xsd:gYear", async () => {
 });
 
 Deno.test("Data Type / Date / xsd:gYearMonth", async () => {
-  const { context, assertStore } = initStore();
+  const { options, assertStore } = initStore();
   const ResourceSchema = {
     property: {
       "@id": x.property,
@@ -1008,7 +1006,7 @@ Deno.test("Data Type / Date / xsd:gYearMonth", async () => {
     },
   };
 
-  const Resource = createLens(ResourceSchema, context, engine);
+  const Resource = createLens(ResourceSchema, options);
 
   await Resource.insert({
     $id: x.Resource,

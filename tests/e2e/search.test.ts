@@ -1,11 +1,9 @@
-import { assertEquals, Comunica } from "../test_deps.ts";
+import { assertEquals } from "../test_deps.ts";
 
 import { initStore, ttl, x } from "../test_utils.ts";
 
 import { createLens } from "ldkit";
 import { xsd } from "ldkit/namespaces";
-
-const engine = new Comunica();
 
 const Director = {
   name: x.name,
@@ -35,9 +33,9 @@ const defaultStoreContent = ttl(`
   `);
 
 const init = () => {
-  const { store, context, assertStore, empty } = initStore();
+  const { store, options, assertStore, empty } = initStore();
   store.addQuads(defaultStoreContent);
-  const Directors = createLens(Director, context, engine);
+  const Directors = createLens(Director, options);
   return { Directors, assertStore, empty, store };
 };
 

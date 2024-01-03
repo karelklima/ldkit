@@ -1,12 +1,12 @@
 import { assert } from "./test_deps.ts";
 
 import {
-  type Context,
   createLens,
   createNamespace,
+  type Options,
   type SchemaInterface,
-} from "../mod.ts";
-import { rdfs, xsd } from "../library/namespaces/mod.ts";
+} from "ldkit";
+import { rdfs, xsd } from "ldkit/namespaces";
 
 export const dbo = createNamespace(
   {
@@ -39,7 +39,7 @@ const ActorSchema = {
 export const createLanguageContext = (language: string) => ({
   sources: ["https://dbpedia.org/sparql"],
   language,
-} as Context);
+} as Options);
 
 export type ActorInterface = SchemaInterface<typeof ActorSchema>;
 

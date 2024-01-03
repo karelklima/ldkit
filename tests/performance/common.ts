@@ -1,4 +1,4 @@
-import { type Context, QueryEngine } from "../../mod.ts";
+import { type QueryContext, QueryEngine } from "../../mod.ts";
 import { createNamespace } from "../../namespaces.ts";
 
 export { createLens } from "../../mod.ts";
@@ -23,7 +23,7 @@ class LoggingQueryEngine extends QueryEngine {
     query: string,
     // deno-lint-ignore no-explicit-any
     responseType: any,
-    context?: Context,
+    context?: QueryContext,
   ) {
     console.log("Query: ", query);
     console.time("Query time");
@@ -36,6 +36,6 @@ class LoggingQueryEngine extends QueryEngine {
 export const engine = new LoggingQueryEngine();
 
 // Create a context for query engine
-export const context: Context = {
+export const context: QueryContext = {
   sources: ["https://dbpedia.org/sparql"], // SPARQL endpoint
 };
