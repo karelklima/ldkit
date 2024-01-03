@@ -43,34 +43,3 @@ export const resolveQueryContext = (options: Options): QueryContext => {
 
   return context as QueryContext;
 };
-
-let defaultContext: QueryContext | undefined = undefined;
-let defaultEngine: IQueryEngine | undefined = undefined;
-
-export const setDefaultContext = (context: QueryContext) => {
-  defaultContext = context;
-};
-
-export const resolveContext = (context?: QueryContext) => {
-  if (!context && !defaultContext) {
-    throw new Error(
-      "No context found. Please create a default context or pass one to createLens function",
-    );
-  }
-  return context || defaultContext!;
-};
-
-export const setDefaultEngine = (engine: IQueryEngine) => {
-  defaultEngine = engine;
-};
-
-export const resolveEngine = (engine?: IQueryEngine) => {
-  if (!engine && !defaultEngine) {
-    setDefaultEngine(new QueryEngine());
-    // TODO: consider the consequences here, maybe log a warning?
-    /*throw new Error(
-      "No engine found. Please create a default engine or pass one to createLens function",
-    );*/
-  }
-  return engine || defaultEngine!;
-};

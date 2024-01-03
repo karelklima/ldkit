@@ -1,4 +1,4 @@
-import type { Graph, IQueryEngine, Iri, RDF } from "../rdf.ts";
+import type { Graph, Iri, RDF } from "../rdf.ts";
 import {
   type Options,
   resolveOptions,
@@ -32,7 +32,6 @@ import { QueryEngineProxy } from "../engine/query_engine_proxy.ts";
 export const createLens = <T extends SchemaPrototype>(
   schema: T,
   options: Options = {},
-  engine?: IQueryEngine,
 ) => new Lens(schema, options);
 
 export class Lens<
