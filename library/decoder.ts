@@ -1,25 +1,34 @@
-import { type Context, fromRdf, Graph, Iri, Node, type RDF } from "./rdf.ts";
+import type { Options } from "./options.ts";
+import { fromRdf, Graph, Iri, Node, type RDF } from "./rdf.ts";
 import type { Property, Schema } from "./schema/mod.ts";
 import ldkit from "./namespaces/ldkit.ts";
 import rdf from "./namespaces/rdf.ts";
+
+export const decode = (
+  graph: Graph,
+  schema: Schema,
+  options: Options,
+) => {
+  return Decoder.decode(graph, schema, options);
+};
 
 type DecodedNode = Record<string, unknown>;
 
 class Decoder {
   private graph: Graph;
   private schema: Schema;
-  private context: Context;
+  private options: Options;
 
   private cache: Map<Schema, Map<Iri, DecodedNode>> = new Map();
 
-  private constructor(graph: Graph, schema: Schema, context: Context) {
+  private constructor(graph: Graph, schema: Schema, options: Options) {
     this.graph = graph;
     this.schema = schema;
-    this.context = context;
+    this.options = options;
   }
 
-  static decode(graph: Graph, schema: Schema, context: Context) {
-    return new Decoder(graph, schema, context).decode();
+  static decode(graph: Graph, schema: Schema, options: Options) {
+    return new Decoder(graph, schema, options).decode();
   }
 
   getCachedNode(nodeIri: Iri, schema: Schema) {
@@ -188,7 +197,7 @@ class Decoder {
       );
     }
 
-    const preferredLanguage = this.context.language;
+    const preferredLanguage = this.options.language;
 
     if (preferredLanguage) {
       // Try to find a term that corresponds to the preferred language
@@ -224,11 +233,3 @@ class Decoder {
     }
   }
 }
-
-export const decode = (
-  graph: Graph,
-  schema: Schema,
-  context: Context,
-) => {
-  return Decoder.decode(graph, schema, context);
-};

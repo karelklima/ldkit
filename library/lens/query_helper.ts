@@ -1,4 +1,4 @@
-import type { Context, RDF } from "../rdf.ts";
+import type { QueryContext, RDF } from "../rdf.ts";
 import type { Property, Schema } from "../schema/mod.ts";
 import { encode } from "../encoder.ts";
 import type { Entity } from "./types.ts";
@@ -10,7 +10,7 @@ import type { Entity } from "./types.ts";
 export class QueryHelper {
   private readonly entity: Entity;
   private readonly schema: Schema;
-  private readonly context: Context;
+  private readonly context: QueryContext;
   private readonly variableInitCounter: number;
 
   private quads?: RDF.Quad[];
@@ -19,7 +19,7 @@ export class QueryHelper {
   constructor(
     entity: Entity,
     schema: Schema,
-    context: Context,
+    context: QueryContext,
     variableInitCounter = 0,
   ) {
     this.entity = entity;

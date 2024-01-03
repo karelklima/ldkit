@@ -1,5 +1,9 @@
-import type { Context, Graph, IQueryEngine, Iri, RDF } from "../rdf.ts";
-import { resolveContext } from "../global.ts";
+import type { Graph, IQueryEngine, Iri, RDF } from "../rdf.ts";
+import {
+  type Options,
+  resolveOptions,
+  resolveQueryContext,
+} from "../options.ts";
 import {
   expandSchema,
   type Schema,
@@ -27,19 +31,9 @@ import { QueryEngineProxy } from "../engine/query_engine_proxy.ts";
  */
 export const createLens = <T extends SchemaPrototype>(
   schema: T,
-  context?: Context,
+  options: Options = {},
   engine?: IQueryEngine,
-) => new Lens(schema, context, engine);
-
-/**
- * @deprecated
- * Use `createLens` instead
- */
-export const createResource = <T extends SchemaPrototype>(
-  schema: T,
-  context?: Context,
-  engine?: IQueryEngine,
-) => new Lens(schema, context, engine);
+) => new Lens(schema, options);
 
 export class Lens<
   S extends SchemaPrototype,
@@ -48,19 +42,20 @@ export class Lens<
   X = SchemaSearchInterface<S>,
 > {
   private readonly schema: Schema;
-  private readonly context: Context;
+  private readonly options: Options;
   private readonly engine: QueryEngineProxy;
   private readonly queryBuilder: QueryBuilder;
 
-  constructor(schema: S, context?: Context, engine?: IQueryEngine) {
+  constructor(schema: S, options?: Options) {
     this.schema = expandSchema(schema);
-    this.context = resolveContext(context);
-    this.engine = new QueryEngineProxy(this.context, engine);
-    this.queryBuilder = new QueryBuilder(this.schema, this.context);
+    this.options = resolveOptions(options);
+    const context = resolveQueryContext(this.options);
+    this.engine = new QueryEngineProxy(this.options.engine!, context);
+    this.queryBuilder = new QueryBuilder(this.schema, this.options);
   }
 
   private decode(graph: Graph) {
-    return decode(graph, this.schema, this.context) as unknown as Unite<I>[];
+    return decode(graph, this.schema, this.options) as unknown as Unite<I>[];
   }
 
   async count() {

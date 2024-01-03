@@ -1,4 +1,5 @@
-import { type Context, DataFactory, type Iri, type RDF, toRdf } from "./rdf.ts";
+import type { Options } from "./options.ts";
+import { DataFactory, type Iri, type RDF, toRdf } from "./rdf.ts";
 import type { Property, Schema } from "./schema/mod.ts";
 import xsd from "./namespaces/xsd.ts";
 import rdf from "./namespaces/rdf.ts";
@@ -10,21 +11,21 @@ type NodeId = RDF.NamedNode | RDF.BlankNode;
 export const encode = (
   node: DecodedNode,
   schema: Schema,
-  context: Context,
+  options: Options,
   includeType = true,
   variableInitCounter = 0,
 ) => {
   return Encoder.encode(
     node,
     schema,
-    context,
+    options,
     includeType,
     variableInitCounter,
   );
 };
 
 class Encoder {
-  private readonly context: Context;
+  private readonly options: Options;
   private readonly includeType: boolean;
 
   private df: DataFactory = new DataFactory({
@@ -36,11 +37,11 @@ class Encoder {
   private output: RDF.Quad[] = [];
 
   private constructor(
-    context: Context,
+    options: Options,
     includeType: boolean,
     variableInitCounter: number,
   ) {
-    this.context = context;
+    this.options = options;
     this.includeType = includeType;
     this.variableCounter = variableInitCounter;
   }
@@ -48,11 +49,11 @@ class Encoder {
   static encode(
     node: DecodedNode,
     schema: Schema,
-    context: Context,
+    options: Options,
     includeType: boolean,
     variableInitCounter: number,
   ) {
-    return new Encoder(context, includeType, variableInitCounter).encode(
+    return new Encoder(options, includeType, variableInitCounter).encode(
       node,
       schema,
     );
@@ -157,12 +158,12 @@ class Encoder {
 
       const propertyType = property["@type"] ? property["@type"] : xsd.string;
 
-      if (typeof val === "string" && this.context.language) {
+      if (typeof val === "string" && this.options.language) {
         if (propertyType === xsd.string || propertyType === rdf.langString) {
           this.push(
             nodeId,
             propertyId,
-            this.df.literal(val, this.context.language),
+            this.df.literal(val, this.options.language),
           );
           return;
         }
