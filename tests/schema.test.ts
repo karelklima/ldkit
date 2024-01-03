@@ -120,7 +120,7 @@ Deno.test("Schema / Full schema", () => {
     },
     nested: {
       "@id": x.nested,
-      "@context": {
+      "@schema": {
         "@type": x.Nested,
         nestedValue: x.nestedValue,
       },
@@ -168,7 +168,7 @@ Deno.test("Schema / Full schema", () => {
     },
     nested: {
       "@id": x.nested,
-      "@context": {
+      "@schema": {
         "@type": [x.Nested],
         nestedValue: {
           "@id": x.nestedValue,
@@ -471,7 +471,7 @@ Deno.test("Schema / Nested schema", () => {
   const Prototype = {
     nested: {
       "@id": x.nested,
-      "@context": {
+      "@schema": {
         "@type": x.Nested,
         nestedValue: x.nestedValue,
       },
@@ -504,7 +504,7 @@ Deno.test("Schema / Nested schema", () => {
     "@type": [],
     nested: {
       "@id": x.nested,
-      "@context": {
+      "@schema": {
         "@type": [x.Nested],
         nestedValue: {
           "@id": x.nestedValue,

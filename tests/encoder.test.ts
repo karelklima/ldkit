@@ -160,7 +160,7 @@ Deno.test("Encoder / Array subschema property", () => {
     array: {
       "@id": x.array,
       "@array": true as const,
-      "@context": {
+      "@schema": {
         "@type": [x.SubItem],
         value: {
           "@id": x.value,
@@ -198,7 +198,7 @@ Deno.test("Encoder / Anonymous subschema property", () => {
     "@type": [x.Item],
     anonymousProperty: {
       "@id": x.anonymousProperty,
-      "@context": {
+      "@schema": {
         "@type": [x.SubSchema],
         value: {
           "@id": x.value,
@@ -240,7 +240,7 @@ Deno.test("Encoder / Anonymous subschema array property", () => {
     anonymousProperty: {
       "@id": x.anonymousProperty,
       "@array": true as const,
-      "@context": {
+      "@schema": {
         "@type": [x.SubSchema],
         value: {
           "@id": x.value,
@@ -365,7 +365,7 @@ Deno.test("Encoder / One resource multiple schemas", () => {
     },
     nested: {
       "@id": x.nested,
-      "@context": {
+      "@schema": {
         "@type": [x.SubItem],
         nestedProperty: {
           "@id": x.nestedProperty,
@@ -411,7 +411,7 @@ Deno.test("Encoder / Resource with null values", () => {
     anonymousProperty: {
       "@id": x.anonymousProperty,
       "@array": true as const,
-      "@context": {
+      "@schema": {
         "@type": [x.SubSchema],
         value: {
           "@id": x.value,

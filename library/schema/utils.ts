@@ -50,7 +50,7 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
     }
 
     const validKeys = [
-      "@context",
+      "@schema",
       "@id",
       "@type",
       "@array",
@@ -64,7 +64,7 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
     };
 
     const expandedProperty = Object.keys(property).reduce((acc, key) => {
-      if (key === "@context") {
+      if (key === "@schema") {
         acc[key] = expandSchema(property[key]!);
       } else if (key === "@id") {
         acc[key] = expandShortcut(property[key]);
@@ -74,7 +74,7 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
       return acc;
     }, baseProperty);
 
-    if (!baseProperty["@type"] && !baseProperty["@context"]) {
+    if (!baseProperty["@type"] && !baseProperty["@schema"]) {
       baseProperty["@type"] = xsd.string;
     }
 

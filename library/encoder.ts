@@ -148,9 +148,9 @@ class Encoder {
     const values = Array.isArray(value) ? value : [value];
 
     values.forEach((val) => {
-      if (property["@context"]) {
+      if (property["@schema"]) {
         const subNodeId = this.getNodeId(val);
-        this.encodeNode(val, property["@context"], subNodeId);
+        this.encodeNode(val, property["@schema"], subNodeId);
         this.push(nodeId, propertyId, subNodeId);
         return;
       }

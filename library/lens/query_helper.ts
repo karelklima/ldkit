@@ -90,7 +90,7 @@ export class QueryHelper {
         throw new Error("Unknown field '${key}' detected in entity");
       }
 
-      if (!property["@context"]) {
+      if (!property["@schema"]) {
         output[key] = null;
         return output;
       }
@@ -100,13 +100,13 @@ export class QueryHelper {
           output[key] = null;
         } else {
           output[key] = (value as Entity[]).map((subEntity) =>
-            this.replaceVariables(subEntity, property["@context"]!)
+            this.replaceVariables(subEntity, property["@schema"]!)
           );
         }
       } else {
         output[key] = this.replaceVariables(
           value as Entity,
-          property["@context"],
+          property["@schema"],
         );
       }
 

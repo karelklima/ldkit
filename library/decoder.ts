@@ -153,7 +153,7 @@ class Decoder {
     }
 
     if (property["@array"]) {
-      if (property["@context"]) {
+      if (property["@schema"]) {
         // Collection of resources specified by sub schema
         return terms.map((term) => {
           if (term.termType !== "NamedNode" && term.termType !== "BlankNode") {
@@ -161,7 +161,7 @@ class Decoder {
               `Property "${propertyKey}" data type mismatch - expected a node, but received ${term.termType} instead on resource <${nodeIri}>`,
             );
           }
-          return this.decodeNode(term.value, property["@context"]!);
+          return this.decodeNode(term.value, property["@schema"]!);
         });
       } else {
         // Collection of literals or named nodes
@@ -177,10 +177,10 @@ class Decoder {
     }
 
     // Single return value expected from this point on
-    if (property["@context"]) {
+    if (property["@schema"]) {
       for (const term of terms) {
         if (term.termType === "NamedNode" || term.termType === "BlankNode") {
-          return this.decodeNode(term.value, property["@context"]!);
+          return this.decodeNode(term.value, property["@schema"]!);
         }
       }
       throw new Error(
