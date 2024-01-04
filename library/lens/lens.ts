@@ -7,9 +7,9 @@ import {
 import {
   type ExpandedSchema,
   expandSchema,
+  type Identity,
   type Schema,
   type SchemaInterface,
-  type SchemaInterfaceIdentity,
   type SchemaSearchInterface,
   type SchemaUpdateInterface,
 } from "../schema/mod.ts";
@@ -34,17 +34,17 @@ export const createLens = <T extends Schema>(
 ) => new Lens(schema, options);
 
 export class Lens<
-  S extends Schema,
-  I = SchemaInterface<S>,
-  U = SchemaUpdateInterface<S>,
-  X = SchemaSearchInterface<S>,
+  T extends Schema,
+  I = SchemaInterface<T>,
+  U = SchemaUpdateInterface<T>,
+  S = SchemaSearchInterface<T>,
 > {
   private readonly schema: ExpandedSchema;
   private readonly options: Options;
   private readonly engine: QueryEngineProxy;
   private readonly queryBuilder: QueryBuilder;
 
-  constructor(schema: S, options?: Options) {
+  constructor(schema: T, options?: Options) {
     this.schema = expandSchema(schema);
     this.options = resolveOptions(options);
     const context = resolveQueryContext(this.options);
@@ -74,7 +74,7 @@ export class Lens<
   }
 
   async find(
-    options: { where?: X | string | RDF.Quad[]; take?: number; skip?: number } =
+    options: { where?: S | string | RDF.Quad[]; take?: number; skip?: number } =
       {},
   ) {
     const { where, take, skip } = {
@@ -125,7 +125,7 @@ export class Lens<
     return this.updateQuery(q);
   }
 
-  delete(...identities: SchemaInterfaceIdentity[] | Iri[]) {
+  delete(...identities: Identity[] | Iri[]) {
     const iris = identities.map((identity) => {
       return typeof identity === "string" ? identity : identity.$id;
     });

@@ -59,16 +59,12 @@ type ConvertProperty<T extends ValidPropertyDefinition> = T extends Property
   ? ConvertPropertyObject<T>
   : string;
 
-export type SchemaInterfaceIdentity = {
+export type Identity = {
   $id: string;
 };
 
-export type SchemaInterfaceType = {
-  $type: string[];
-};
-
 export type SchemaInterface<T extends Schema> =
-  & SchemaInterfaceIdentity
+  & Identity
   & {
     [X in Exclude<keyof T, "@type">]: T[X] extends ValidPropertyDefinition
       ? ConvertProperty<T[X]>
@@ -105,7 +101,7 @@ type ConvertUpdateProperty<T extends ValidPropertyDefinition> = T extends
   Property ? ConvertUpdatePropertyObject<T> : string;
 
 export type SchemaUpdateInterface<T extends Schema> =
-  & SchemaInterfaceIdentity
+  & Identity
   & {
     [X in Exclude<keyof T, "@type">]?: T[X] extends ValidPropertyDefinition
       ? ConvertUpdateProperty<T[X]>

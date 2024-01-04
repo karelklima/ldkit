@@ -12,15 +12,11 @@ export type Property = {
   "@inverse"?: true;
 };
 
-export type SchemaPrototypeProperties = {
+export type Schema = {
+  "@type"?: string | readonly string[];
+} & {
   [key: string]: Property | string | readonly string[];
 };
-
-export type SchemaPrototypeType = {
-  "@type"?: string | readonly string[];
-};
-
-export type Schema = SchemaPrototypeProperties & SchemaPrototypeType;
 
 export type ExpandedProperty = {
   "@id": string;
