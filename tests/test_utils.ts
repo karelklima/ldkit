@@ -1,6 +1,7 @@
 import { assertEquals, Comunica } from "./test_deps.ts";
 
 const NOLOG = Deno.args.includes("--nolog");
+export const logQuery = NOLOG ? () => {} : console.log;
 
 import {
   DataFactory,
@@ -127,7 +128,7 @@ export const initStore = () => {
   };
   const options: Options = {
     engine: comunica,
-    logQuery: NOLOG ? () => {} : console.log,
+    logQuery,
     ...context,
   };
   return { store, context, assertStore, empty, setStore, options };

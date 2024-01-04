@@ -183,21 +183,6 @@ Deno.test("Lens / Common / Update multiple resources", async () => {
   assertContainsEqual(result, { ...Kubrick, name: "Kubrick Stanley" });
 });
 
-/*
-  test.skip("Update nested property in resource", async () => {
-    const result = await run(
-      movies.update({
-        $id: x.PulpFiction,
-        released: {
-          date: new Date("1994-01-01"),
-        },
-      }),
-      movies.findByIri(x.PulpFiction)
-    );
-
-    expect(result!.released?.date).toEqual(new Date("1994-01-01"));
-  }); */
-
 Deno.test("Lens / Common / Delete multiple resources", async () => {
   const { directors } = init();
   await directors.delete(Tarantino, Kubrick);
