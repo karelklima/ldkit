@@ -22,7 +22,7 @@ export type SchemaPrototypeType = {
 
 export type SchemaPrototype = SchemaPrototypeProperties & SchemaPrototypeType;
 
-export type Property = {
+export type ExpandedProperty = {
   "@id": string;
   "@type"?: PropertyType;
   "@schema"?: Schema;
@@ -33,6 +33,6 @@ export type Property = {
 };
 
 export type Schema = {
-  [key: string]: Property | string[];
+  [key: string]: ExpandedProperty | string[];
   "@type": string[];
 };

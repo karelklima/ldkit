@@ -1,6 +1,6 @@
 import type { Options } from "./options.ts";
 import { fromRdf, Graph, Iri, Node, type RDF } from "./rdf.ts";
-import type { Property, Schema } from "./schema/mod.ts";
+import type { ExpandedProperty, Schema } from "./schema/mod.ts";
 import ldkit from "./namespaces/ldkit.ts";
 import rdf from "./namespaces/rdf.ts";
 
@@ -92,7 +92,7 @@ class Decoder {
         nodeIri,
         node,
         key,
-        schema[key] as Property,
+        schema[key] as ExpandedProperty,
       );
       if (result !== undefined) {
         output[key] = result;
@@ -108,7 +108,7 @@ class Decoder {
     nodeIri: Iri,
     node: Node,
     propertyKey: string,
-    property: Property,
+    property: ExpandedProperty,
   ) {
     const allTerms = node.get(property["@id"]);
     const terms = property["@id"] !== rdf.type

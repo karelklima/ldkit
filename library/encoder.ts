@@ -1,6 +1,6 @@
 import type { Options } from "./options.ts";
 import { DataFactory, type Iri, type RDF, toRdf } from "./rdf.ts";
-import type { Property, Schema } from "./schema/mod.ts";
+import type { ExpandedProperty, Schema } from "./schema/mod.ts";
 import xsd from "./namespaces/xsd.ts";
 import rdf from "./namespaces/rdf.ts";
 
@@ -97,7 +97,11 @@ class Encoder {
       if (key === "@type") {
         return;
       }
-      this.encodeNodeProperty(node[key], schema[key] as Property, nodeId);
+      this.encodeNodeProperty(
+        node[key],
+        schema[key] as ExpandedProperty,
+        nodeId,
+      );
     });
   }
 
@@ -109,7 +113,11 @@ class Encoder {
     });
   }
 
-  encodeNodeProperty(value: unknown, property: Property, nodeId: NodeId) {
+  encodeNodeProperty(
+    value: unknown,
+    property: ExpandedProperty,
+    nodeId: NodeId,
+  ) {
     if (value === undefined) {
       return;
     }

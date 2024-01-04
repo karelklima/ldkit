@@ -9,7 +9,7 @@ export type {
 } from "./interface.ts";
 
 export type {
-  Property,
+  ExpandedProperty,
   PropertyPrototype,
   Schema,
   SchemaPrototype,

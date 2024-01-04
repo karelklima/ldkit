@@ -2,7 +2,7 @@ import rdf from "../namespaces/rdf.ts";
 import xsd from "../namespaces/xsd.ts";
 
 import type {
-  Property,
+  ExpandedProperty,
   PropertyPrototype,
   Schema,
   SchemaPrototype,
@@ -78,7 +78,7 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
       baseProperty["@type"] = xsd.string;
     }
 
-    return expandedProperty as Property;
+    return expandedProperty as ExpandedProperty;
   };
 
   const baseSchema: Schema = {
@@ -109,5 +109,5 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
 
 export const getSchemaProperties = (schema: Schema) => {
   const { "@type": _ommitedType, ...properties } = schema;
-  return properties as Record<string, Property>;
+  return properties as Record<string, ExpandedProperty>;
 };

@@ -1,7 +1,7 @@
 import { type Options } from "../options.ts";
 import {
+  type ExpandedProperty,
   getSchemaProperties,
-  type Property,
   type Schema,
   type SearchSchema,
 } from "../schema/mod.ts";
@@ -67,7 +67,7 @@ export class QueryBuilder {
     const conditions: SparqlValue[] = [];
 
     const populateSearchConditions = (
-      property: Property,
+      property: ExpandedProperty,
       varName: string,
       search?: SearchSchema,
     ) => {

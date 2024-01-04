@@ -10,8 +10,8 @@ import { rdf, xsd } from "ldkit/namespaces";
 import { type SparqlValue } from "ldkit/sparql";
 
 import {
+  ExpandedProperty,
   expandSchema,
-  Property,
   type Schema,
   type SchemaInterface,
   type SchemaPrototype,
@@ -540,7 +540,7 @@ Deno.test("Schema / should expand @type shortcut definition", () => {
     type: "@type",
   } as const;
   const expandedSchema = expandSchema(schema);
-  assertEquals((expandedSchema["type"] as Property)["@id"], rdf.type);
+  assertEquals((expandedSchema["type"] as ExpandedProperty)["@id"], rdf.type);
 });
 
 Deno.test("Schema / should expand @type property definition", () => {
@@ -548,7 +548,7 @@ Deno.test("Schema / should expand @type property definition", () => {
     "type": { "@id": "@type" },
   } as const;
   const expandedSchema = expandSchema(schema);
-  assertEquals((expandedSchema["type"] as Property)["@id"], rdf.type);
+  assertEquals((expandedSchema["type"] as ExpandedProperty)["@id"], rdf.type);
 });
 
 Deno.test("Schema / should throw if @inverse @multilang is defined", () => {
