@@ -5,8 +5,8 @@ import {
   resolveQueryContext,
 } from "../options.ts";
 import {
+  type ExpandedSchema,
   expandSchema,
-  type Schema,
   type SchemaInterface,
   type SchemaInterfaceIdentity,
   type SchemaPrototype,
@@ -39,7 +39,7 @@ export class Lens<
   U = SchemaUpdateInterface<S>,
   X = SchemaSearchInterface<S>,
 > {
-  private readonly schema: Schema;
+  private readonly schema: ExpandedSchema;
   private readonly options: Options;
   private readonly engine: QueryEngineProxy;
   private readonly queryBuilder: QueryBuilder;

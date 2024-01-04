@@ -25,14 +25,14 @@ export type SchemaPrototype = SchemaPrototypeProperties & SchemaPrototypeType;
 export type ExpandedProperty = {
   "@id": string;
   "@type"?: PropertyType;
-  "@schema"?: Schema;
+  "@schema"?: ExpandedSchema;
   "@optional"?: true;
   "@array"?: true;
   "@multilang"?: true;
   "@inverse"?: true;
 };
 
-export type Schema = {
+export type ExpandedSchema = {
   [key: string]: ExpandedProperty | string[];
   "@type": string[];
 };

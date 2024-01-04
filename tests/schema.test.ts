@@ -11,8 +11,8 @@ import { type SparqlValue } from "ldkit/sparql";
 
 import {
   ExpandedProperty,
+  type ExpandedSchema,
   expandSchema,
-  type Schema,
   type SchemaInterface,
   type SchemaPrototype,
   type SchemaSearchInterface,
@@ -128,7 +128,7 @@ Deno.test("Schema / Full schema", () => {
     },
   } as const;
 
-  const ThingSchema: Schema = {
+  const ThingSchema: ExpandedSchema = {
     "@type": [x.X],
     required: {
       "@id": x.required,
@@ -238,7 +238,7 @@ Deno.test("Schema / Basic datatypes", () => {
     date?: PropertySearch<Date>;
   };
 
-  const PrototypeSchema: Schema = {
+  const PrototypeSchema: ExpandedSchema = {
     "@type": [],
     default: {
       "@id": x.default,
@@ -295,7 +295,7 @@ Deno.test("Schema / Optional", () => {
     optional?: PropertySearch<string>;
   };
 
-  const PrototypeSchema: Schema = {
+  const PrototypeSchema: ExpandedSchema = {
     "@type": [],
     optional: {
       "@id": x.optional,
@@ -345,7 +345,7 @@ Deno.test("Schema / Array", () => {
     optionalArray?: PropertySearch<string>;
   };
 
-  const PrototypeSchema: Schema = {
+  const PrototypeSchema: ExpandedSchema = {
     "@type": [],
     array: {
       "@id": x.array,
@@ -401,7 +401,7 @@ Deno.test("Schema / Multilang", () => {
     multilangArray?: PropertySearch<string>;
   };
 
-  const PrototypeSchema: Schema = {
+  const PrototypeSchema: ExpandedSchema = {
     "@type": [],
     multilang: {
       "@id": x.multilang,
@@ -448,7 +448,7 @@ Deno.test("Schema / Inverse", () => {
   // deno-lint-ignore ban-types
   type PrototypeSearchInterface = {};
 
-  const PrototypeSchema: Schema = {
+  const PrototypeSchema: ExpandedSchema = {
     "@type": [],
     isPropertyOf: {
       "@id": x.property,
@@ -501,7 +501,7 @@ Deno.test("Schema / Nested schema", () => {
     };
   };
 
-  const PrototypeSchema: Schema = {
+  const PrototypeSchema: ExpandedSchema = {
     "@type": [],
     nested: {
       "@id": x.nested,

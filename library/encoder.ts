@@ -1,6 +1,6 @@
 import type { Options } from "./options.ts";
 import { DataFactory, type Iri, type RDF, toRdf } from "./rdf.ts";
-import type { ExpandedProperty, Schema } from "./schema/mod.ts";
+import type { ExpandedProperty, ExpandedSchema } from "./schema/mod.ts";
 import xsd from "./namespaces/xsd.ts";
 import rdf from "./namespaces/rdf.ts";
 
@@ -10,7 +10,7 @@ type NodeId = RDF.NamedNode | RDF.BlankNode;
 
 export const encode = (
   node: DecodedNode,
-  schema: Schema,
+  schema: ExpandedSchema,
   options: Options,
   includeType = true,
   variableInitCounter = 0,
@@ -48,7 +48,7 @@ class Encoder {
 
   static encode(
     node: DecodedNode,
-    schema: Schema,
+    schema: ExpandedSchema,
     options: Options,
     includeType: boolean,
     variableInitCounter: number,
@@ -59,7 +59,7 @@ class Encoder {
     );
   }
 
-  encode(node: DecodedNode, schema: Schema) {
+  encode(node: DecodedNode, schema: ExpandedSchema) {
     const nodeId = this.getNodeId(node);
     this.encodeNode(node, schema, nodeId);
 
@@ -88,7 +88,7 @@ class Encoder {
     return node.$type ? [node.$type] : [];
   }
 
-  encodeNode(node: DecodedNode, schema: Schema, nodeId: NodeId) {
+  encodeNode(node: DecodedNode, schema: ExpandedSchema, nodeId: NodeId) {
     if (this.includeType) {
       this.encodeNodeType(node, schema["@type"], nodeId);
     }

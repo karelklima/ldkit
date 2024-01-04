@@ -3,8 +3,8 @@ import xsd from "../namespaces/xsd.ts";
 
 import type {
   ExpandedProperty,
+  ExpandedSchema,
   PropertyPrototype,
-  Schema,
   SchemaPrototype,
 } from "./schema.ts";
 
@@ -81,7 +81,7 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
     return expandedProperty as ExpandedProperty;
   };
 
-  const baseSchema: Schema = {
+  const baseSchema: ExpandedSchema = {
     "@type": [] as string[],
   };
 
@@ -107,7 +107,7 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
   }, baseSchema);
 };
 
-export const getSchemaProperties = (schema: Schema) => {
+export const getSchemaProperties = (schema: ExpandedSchema) => {
   const { "@type": _ommitedType, ...properties } = schema;
   return properties as Record<string, ExpandedProperty>;
 };

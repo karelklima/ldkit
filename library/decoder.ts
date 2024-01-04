@@ -1,12 +1,12 @@
 import type { Options } from "./options.ts";
 import { fromRdf, Graph, Iri, Node, type RDF } from "./rdf.ts";
-import type { ExpandedProperty, Schema } from "./schema/mod.ts";
+import type { ExpandedProperty, ExpandedSchema } from "./schema/mod.ts";
 import ldkit from "./namespaces/ldkit.ts";
 import rdf from "./namespaces/rdf.ts";
 
 export const decode = (
   graph: Graph,
-  schema: Schema,
+  schema: ExpandedSchema,
   options: Options,
 ) => {
   return Decoder.decode(graph, schema, options);
@@ -16,29 +16,33 @@ type DecodedNode = Record<string, unknown>;
 
 class Decoder {
   private graph: Graph;
-  private schema: Schema;
+  private schema: ExpandedSchema;
   private options: Options;
 
-  private cache: Map<Schema, Map<Iri, DecodedNode>> = new Map();
+  private cache: Map<ExpandedSchema, Map<Iri, DecodedNode>> = new Map();
 
-  private constructor(graph: Graph, schema: Schema, options: Options) {
+  private constructor(graph: Graph, schema: ExpandedSchema, options: Options) {
     this.graph = graph;
     this.schema = schema;
     this.options = options;
   }
 
-  static decode(graph: Graph, schema: Schema, options: Options) {
+  static decode(graph: Graph, schema: ExpandedSchema, options: Options) {
     return new Decoder(graph, schema, options).decode();
   }
 
-  getCachedNode(nodeIri: Iri, schema: Schema) {
+  getCachedNode(nodeIri: Iri, schema: ExpandedSchema) {
     if (!this.cache.has(schema)) {
       this.cache.set(schema, new Map());
     }
     return this.cache.get(schema)!.get(nodeIri);
   }
 
-  setCachedNode(nodeIri: Iri, schema: Schema, decodedNode: DecodedNode) {
+  setCachedNode(
+    nodeIri: Iri,
+    schema: ExpandedSchema,
+    decodedNode: DecodedNode,
+  ) {
     if (!this.cache.has(schema)) {
       this.cache.set(schema, new Map());
     }
@@ -68,7 +72,7 @@ class Decoder {
     return output;
   }
 
-  decodeNode(nodeIri: Iri, schema: Schema) {
+  decodeNode(nodeIri: Iri, schema: ExpandedSchema) {
     const cachedNode = this.getCachedNode(nodeIri, schema);
     if (cachedNode) {
       return cachedNode;
