@@ -1,20 +1,20 @@
 import { assertEquals, assertThrows } from "./test_deps.ts";
 import { createGraph, x } from "./test_utils.ts";
 
-import { type Options, type Schema } from "ldkit";
+import type { ExpandedSchema, Options } from "ldkit";
 import { rdf, xsd } from "ldkit/namespaces";
 
 import { decode } from "../library/decoder.ts";
 
 const decodeGraph = (
   turtle: string,
-  schema: Schema,
+  schema: ExpandedSchema,
   options: Options = {},
 ) => decode(createGraph(turtle), schema, options);
 
 const evaluate = (
   turtle: string,
-  schema: Schema,
+  schema: ExpandedSchema,
   result: Record<string, unknown>[],
   options: Options = {},
 ) => assertEquals(decodeGraph(turtle, schema, options), result);

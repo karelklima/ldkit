@@ -2,13 +2,13 @@ import rdf from "../namespaces/rdf.ts";
 import xsd from "../namespaces/xsd.ts";
 
 import type {
+  ExpandedProperty,
+  ExpandedSchema,
   Property,
-  PropertyPrototype,
   Schema,
-  SchemaPrototype,
 } from "./schema.ts";
 
-export const expandSchema = (schemaPrototype: SchemaPrototype) => {
+export const expandSchema = (schemaPrototype: Schema) => {
   if (typeof schemaPrototype !== "object") {
     throw new Error(`Invalid schema, expected object`);
   }
@@ -28,7 +28,7 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
   };
 
   const expandSchemaProperty = (
-    stringOrProperty: string | PropertyPrototype,
+    stringOrProperty: string | Property,
   ) => {
     if (typeof stringOrProperty === "string") {
       return {
@@ -68,8 +68,8 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
         acc[key] = expandSchema(property[key]!);
       } else if (key === "@id") {
         acc[key] = expandShortcut(property[key]);
-      } else if (validKeys.includes(key as keyof PropertyPrototype)) {
-        acc[key] = property[key as keyof PropertyPrototype] as unknown;
+      } else if (validKeys.includes(key as keyof Property)) {
+        acc[key] = property[key as keyof Property] as unknown;
       }
       return acc;
     }, baseProperty);
@@ -78,10 +78,10 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
       baseProperty["@type"] = xsd.string;
     }
 
-    return expandedProperty as Property;
+    return expandedProperty as ExpandedProperty;
   };
 
-  const baseSchema: Schema = {
+  const baseSchema: ExpandedSchema = {
     "@type": [] as string[],
   };
 
@@ -92,7 +92,7 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
       acc[key] = expandArray(schemaPrototype[key]!);
     } else {
       const expandedProperty = expandSchemaProperty(
-        schemaPrototype[key] as string | PropertyPrototype,
+        schemaPrototype[key] as string | Property,
       );
       if (existingPropertyMap[expandedProperty["@id"]]) {
         throw new Error(
@@ -107,7 +107,7 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
   }, baseSchema);
 };
 
-export const getSchemaProperties = (schema: Schema) => {
+export const getSchemaProperties = (schema: ExpandedSchema) => {
   const { "@type": _ommitedType, ...properties } = schema;
-  return properties as Record<string, Property>;
+  return properties as Record<string, ExpandedProperty>;
 };

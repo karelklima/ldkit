@@ -1,14 +1,14 @@
 import { assertEquals } from "./test_deps.ts";
 import { ttl, x } from "./test_utils.ts";
 
-import type { Options, Schema } from "ldkit";
+import type { ExpandedSchema, Options } from "ldkit";
 import { xsd } from "ldkit/namespaces";
 
 import { encode } from "../library/encoder.ts";
 
 const evaluate = (
   node: Record<string, unknown>,
-  schema: Schema,
+  schema: ExpandedSchema,
   turtle: string,
   options: Options = {},
 ) => assertEquals(encode(node, schema, options), ttl(turtle));

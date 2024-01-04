@@ -1,8 +1,8 @@
 import { type Options } from "../options.ts";
 import {
+  type ExpandedProperty,
+  type ExpandedSchema,
   getSchemaProperties,
-  type Property,
-  type Schema,
   type SearchSchema,
 } from "../schema/mod.ts";
 import {
@@ -32,11 +32,11 @@ enum Flags {
 }
 
 export class QueryBuilder {
-  private readonly schema: Schema;
+  private readonly schema: ExpandedSchema;
   private readonly options: Options;
   private readonly df: RDF.DataFactory;
 
-  constructor(schema: Schema, options: Options) {
+  constructor(schema: ExpandedSchema, options: Options) {
     this.schema = schema;
     this.options = options;
     this.df = new DataFactory();
@@ -67,7 +67,7 @@ export class QueryBuilder {
     const conditions: SparqlValue[] = [];
 
     const populateSearchConditions = (
-      property: Property,
+      property: ExpandedProperty,
       varName: string,
       search?: SearchSchema,
     ) => {
@@ -80,7 +80,7 @@ export class QueryBuilder {
     };
 
     const populateConditionsRecursive = (
-      s: Schema,
+      s: ExpandedSchema,
       varPrefix: string,
       search?: SearchSchema,
     ) => {
@@ -134,7 +134,7 @@ export class QueryBuilder {
         }
         if (typeof property["@schema"] === "object") {
           populateConditionsRecursive(
-            property["@schema"] as Schema,
+            property["@schema"] as ExpandedSchema,
             `${varPrefix}_${index}`,
             propertySchema,
           );

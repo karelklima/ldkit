@@ -2,16 +2,16 @@ import type { Options } from "../options.ts";
 import type { RDF } from "../rdf.ts";
 import { OPTIONAL, type SparqlValue } from "../sparql/mod.ts";
 import {
+  type ExpandedProperty,
+  type ExpandedSchema,
   getSchemaProperties,
-  type Property,
-  type Schema,
 } from "../schema/mod.ts";
 import { encode } from "../encoder.ts";
 import type { Entity } from "./types.ts";
 
 export class UpdateHelper {
-  private readonly schema: Schema;
-  private readonly properties: Record<string, Property>;
+  private readonly schema: ExpandedSchema;
+  private readonly properties: Record<string, ExpandedProperty>;
   private readonly options: Options;
 
   private variableCounter = 0;
@@ -21,7 +21,7 @@ export class UpdateHelper {
   public readonly whereQuads: SparqlValue[] = [];
 
   constructor(
-    schema: Schema,
+    schema: ExpandedSchema,
     options: Options,
     variableInitCounter = 0,
   ) {
@@ -40,7 +40,7 @@ export class UpdateHelper {
   private processProperty(
     entity: Entity,
     propertyName: string,
-    property: Property,
+    property: ExpandedProperty,
   ) {
     this.variableCounter++;
 
@@ -61,7 +61,7 @@ export class UpdateHelper {
     entity: Entity,
     propertyName: string,
     propertyValue: unknown,
-    property: Property,
+    property: ExpandedProperty,
   ) {
     const deletePattern = {
       $id: entity.$id,

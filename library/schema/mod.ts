@@ -1,18 +1,17 @@
 export type { SupportedDataTypes, SupportedNativeTypes } from "./data_types.ts";
 
 export type {
+  Identity,
   SchemaInterface,
-  SchemaInterfaceIdentity,
-  SchemaInterfaceType,
   SchemaSearchInterface,
   SchemaUpdateInterface,
 } from "./interface.ts";
 
 export type {
+  ExpandedProperty,
+  ExpandedSchema,
   Property,
-  PropertyPrototype,
   Schema,
-  SchemaPrototype,
 } from "./schema.ts";
 
 export type { SearchFilters, SearchSchema } from "./search.ts";
