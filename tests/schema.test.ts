@@ -13,8 +13,8 @@ import {
   ExpandedProperty,
   type ExpandedSchema,
   expandSchema,
+  type Schema,
   type SchemaInterface,
-  type SchemaPrototype,
   type SchemaSearchInterface,
   type SchemaUpdateInterface,
 } from "../library/schema/mod.ts";
@@ -528,10 +528,10 @@ Deno.test("Schema / Nested schema", () => {
 
 Deno.test("Schema / should have at least one property or @type restriction", () => {
   assertThrows(() => {
-    expandSchema(undefined as unknown as SchemaPrototype);
+    expandSchema(undefined as unknown as Schema);
   });
   assertThrows(() => {
-    expandSchema({} as unknown as SchemaPrototype);
+    expandSchema({} as unknown as Schema);
   });
 });
 

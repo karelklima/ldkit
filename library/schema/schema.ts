@@ -5,7 +5,7 @@ type PropertyType = keyof SupportedDataTypes;
 export type Property = {
   "@id": string;
   "@type"?: PropertyType;
-  "@schema"?: SchemaPrototype;
+  "@schema"?: Schema;
   "@optional"?: true;
   "@array"?: true;
   "@multilang"?: true;
@@ -20,7 +20,7 @@ export type SchemaPrototypeType = {
   "@type"?: string | readonly string[];
 };
 
-export type SchemaPrototype = SchemaPrototypeProperties & SchemaPrototypeType;
+export type Schema = SchemaPrototypeProperties & SchemaPrototypeType;
 
 export type ExpandedProperty = {
   "@id": string;

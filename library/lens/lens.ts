@@ -7,9 +7,9 @@ import {
 import {
   type ExpandedSchema,
   expandSchema,
+  type Schema,
   type SchemaInterface,
   type SchemaInterfaceIdentity,
-  type SchemaPrototype,
   type SchemaSearchInterface,
   type SchemaUpdateInterface,
 } from "../schema/mod.ts";
@@ -28,13 +28,13 @@ import { QueryEngineProxy } from "../engine/query_engine_proxy.ts";
  * @param options optional `Options` - contains LDkit and query engine configuration
  * @returns Lens instance
  */
-export const createLens = <T extends SchemaPrototype>(
+export const createLens = <T extends Schema>(
   schema: T,
   options: Options = {},
 ) => new Lens(schema, options);
 
 export class Lens<
-  S extends SchemaPrototype,
+  S extends Schema,
   I = SchemaInterface<S>,
   U = SchemaUpdateInterface<S>,
   X = SchemaSearchInterface<S>,

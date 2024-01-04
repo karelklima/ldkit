@@ -5,10 +5,10 @@ import type {
   ExpandedProperty,
   ExpandedSchema,
   Property,
-  SchemaPrototype,
+  Schema,
 } from "./schema.ts";
 
-export const expandSchema = (schemaPrototype: SchemaPrototype) => {
+export const expandSchema = (schemaPrototype: Schema) => {
   if (typeof schemaPrototype !== "object") {
     throw new Error(`Invalid schema, expected object`);
   }

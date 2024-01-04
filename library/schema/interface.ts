@@ -1,5 +1,5 @@
 import type { SupportedDataTypes } from "./data_types.ts";
-import type { Property, SchemaPrototype } from "./schema.ts";
+import type { Property, Schema } from "./schema.ts";
 import type { SearchFilters } from "./search.ts";
 
 type Unite<T> = T extends Record<string, unknown> ? { [Key in keyof T]: T[Key] }
@@ -36,8 +36,8 @@ type ConvertPropertyType<T extends Property> = T extends { "@type": unknown }
   // no type -> defaults to string
   : string;
 
-type ConvertPropertySchema<T extends Property> = T extends
-  { "@schema": SchemaPrototype } ? Unite<SchemaInterface<T["@schema"]>>
+type ConvertPropertySchema<T extends Property> = T extends { "@schema": Schema }
+  ? Unite<SchemaInterface<T["@schema"]>>
   : ConvertPropertyType<T>;
 
 type ConvertPropertyOptional<T extends Property> = IsOptional<T> extends true
@@ -67,7 +67,7 @@ export type SchemaInterfaceType = {
   $type: string[];
 };
 
-export type SchemaInterface<T extends SchemaPrototype> =
+export type SchemaInterface<T extends Schema> =
   & SchemaInterfaceIdentity
   & {
     [X in Exclude<keyof T, "@type">]: T[X] extends ValidPropertyDefinition
@@ -76,7 +76,7 @@ export type SchemaInterface<T extends SchemaPrototype> =
   };
 
 type ConvertUpdatePropertySchema<T extends Property> = T extends
-  { "@schema": SchemaPrototype } ? Unite<SchemaUpdateInterface<T["@schema"]>>
+  { "@schema": Schema } ? Unite<SchemaUpdateInterface<T["@schema"]>>
   : ConvertPropertyType<T>;
 
 type ConvertUpdatePropertyOptional<T extends Property> = IsOptional<T> extends
@@ -104,7 +104,7 @@ type ConvertUpdatePropertyObject<T extends Property> =
 type ConvertUpdateProperty<T extends ValidPropertyDefinition> = T extends
   Property ? ConvertUpdatePropertyObject<T> : string;
 
-export type SchemaUpdateInterface<T extends SchemaPrototype> =
+export type SchemaUpdateInterface<T extends Schema> =
   & SchemaInterfaceIdentity
   & {
     [X in Exclude<keyof T, "@type">]?: T[X] extends ValidPropertyDefinition
@@ -113,7 +113,7 @@ export type SchemaUpdateInterface<T extends SchemaPrototype> =
   };
 
 type ConvertSearchPropertySchema<T extends Property> = T extends
-  { "@schema": SchemaPrototype } ? Unite<SchemaSearchInterface<T["@schema"]>>
+  { "@schema": Schema } ? Unite<SchemaSearchInterface<T["@schema"]>>
   : IsInverse<T> extends true ? never
   : SearchFilters<ConvertPropertyType<T>>;
 
@@ -121,15 +121,15 @@ type ConvertSearchProperty<T extends ValidPropertyDefinition> = T extends
   Property ? ConvertSearchPropertySchema<T>
   : SearchFilters<string>;
 
-type InversePropertiesMap<T extends SchemaPrototype> = {
+type InversePropertiesMap<T extends Schema> = {
   [X in keyof T]: T[X] extends { "@inverse": true } ? X : never;
 };
 
-type InverseProperties<T extends SchemaPrototype> = InversePropertiesMap<
+type InverseProperties<T extends Schema> = InversePropertiesMap<
   T
 >[keyof InversePropertiesMap<T>];
 
-export type SchemaSearchInterface<T extends SchemaPrototype> = {
+export type SchemaSearchInterface<T extends Schema> = {
   [X in Exclude<keyof T, "@type" | InverseProperties<T>>]?: T[X] extends
     ValidPropertyDefinition ? ConvertSearchProperty<T[X]>
     : never;

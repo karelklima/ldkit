@@ -12,7 +12,7 @@ export type {
   ExpandedProperty,
   ExpandedSchema,
   Property,
-  SchemaPrototype,
+  Schema,
 } from "./schema.ts";
 
 export type { SearchFilters, SearchSchema } from "./search.ts";
