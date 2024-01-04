@@ -2,7 +2,7 @@ import type { SupportedDataTypes } from "./data_types.ts";
 
 type PropertyType = keyof SupportedDataTypes;
 
-export type PropertyPrototype = {
+export type Property = {
   "@id": string;
   "@type"?: PropertyType;
   "@schema"?: SchemaPrototype;
@@ -13,7 +13,7 @@ export type PropertyPrototype = {
 };
 
 export type SchemaPrototypeProperties = {
-  [key: string]: PropertyPrototype | string | readonly string[];
+  [key: string]: Property | string | readonly string[];
 };
 
 export type SchemaPrototypeType = {

@@ -11,7 +11,7 @@ export type {
 export type {
   ExpandedProperty,
   ExpandedSchema,
-  PropertyPrototype,
+  Property,
   SchemaPrototype,
 } from "./schema.ts";
 

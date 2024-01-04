@@ -4,7 +4,7 @@ import xsd from "../namespaces/xsd.ts";
 import type {
   ExpandedProperty,
   ExpandedSchema,
-  PropertyPrototype,
+  Property,
   SchemaPrototype,
 } from "./schema.ts";
 
@@ -28,7 +28,7 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
   };
 
   const expandSchemaProperty = (
-    stringOrProperty: string | PropertyPrototype,
+    stringOrProperty: string | Property,
   ) => {
     if (typeof stringOrProperty === "string") {
       return {
@@ -68,8 +68,8 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
         acc[key] = expandSchema(property[key]!);
       } else if (key === "@id") {
         acc[key] = expandShortcut(property[key]);
-      } else if (validKeys.includes(key as keyof PropertyPrototype)) {
-        acc[key] = property[key as keyof PropertyPrototype] as unknown;
+      } else if (validKeys.includes(key as keyof Property)) {
+        acc[key] = property[key as keyof Property] as unknown;
       }
       return acc;
     }, baseProperty);
@@ -92,7 +92,7 @@ export const expandSchema = (schemaPrototype: SchemaPrototype) => {
       acc[key] = expandArray(schemaPrototype[key]!);
     } else {
       const expandedProperty = expandSchemaProperty(
-        schemaPrototype[key] as string | PropertyPrototype,
+        schemaPrototype[key] as string | Property,
       );
       if (existingPropertyMap[expandedProperty["@id"]]) {
         throw new Error(
