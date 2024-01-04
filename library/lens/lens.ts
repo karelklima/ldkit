@@ -25,8 +25,7 @@ import { QueryEngineProxy } from "../engine/query_engine_proxy.ts";
  * https://ldkit.io/docs/components/lens
  *
  * @param schema data schema which extends `SchemaPrototype`
- * @param context optional `Context` - contains LDkit and query engine configuration
- * @param engine optional Query Engine
+ * @param options optional `Options` - contains LDkit and query engine configuration
  * @returns Lens instance
  */
 export const createLens = <T extends SchemaPrototype>(
@@ -57,18 +56,20 @@ export class Lens<
     return decode(graph, this.schema, this.options) as unknown as Unite<I>[];
   }
 
+  private log(query: string) {
+    this.options.logQuery!(query);
+  }
+
   async count() {
     const q = this.queryBuilder.countQuery();
-    // TODO: console.log(q);
+    this.log(q);
     const bindings = await this.engine.queryBindings(q);
     return parseInt(bindings[0].get("count")!.value);
   }
 
-  //exists(entity: Identity) {}
-
   async query(sparqlConstructQuery: string) {
+    this.log(sparqlConstructQuery);
     const graph = await this.engine.queryGraph(sparqlConstructQuery);
-    console.log("GRAPH", graph);
     return this.decode(graph);
   }
 
@@ -77,7 +78,7 @@ export class Lens<
       {},
   ) {
     const { where, take, skip } = {
-      take: 1000,
+      take: this.options.take!,
       skip: 0,
       ...options,
     };
@@ -87,6 +88,7 @@ export class Lens<
     const q = isRegularQuery
       ? this.queryBuilder.getQuery(where, take, skip)
       : this.queryBuilder.getSearchQuery(where ?? {}, take, skip);
+    this.log(q);
     const graph = await this.engine.queryGraph(q);
     return this.decode(graph);
   }
@@ -98,31 +100,28 @@ export class Lens<
 
   async findByIris(iris: Iri[]) {
     const q = this.queryBuilder.getByIrisQuery(iris);
-    // TODO: console.log(q);
+    this.log(q);
     const graph = await this.engine.queryGraph(q);
     return this.decode(graph);
   }
 
   private updateQuery(query: string) {
-    // TODO: console.log(query);
+    this.log(query);
     return this.engine.queryVoid(query);
   }
 
   insert(...entities: Entity<I>[]) {
     const q = this.queryBuilder.insertQuery(entities);
-
     return this.updateQuery(q);
   }
 
   insertData(...quads: RDF.Quad[]) {
     const q = this.queryBuilder.insertDataQuery(quads);
-
     return this.updateQuery(q);
   }
 
   update(...entities: U[]) {
     const q = this.queryBuilder.updateQuery(entities as Entity[]);
-    // TODO: console.log(q);
     return this.updateQuery(q);
   }
 
@@ -132,13 +131,11 @@ export class Lens<
     });
 
     const q = this.queryBuilder.deleteQuery(iris);
-
     return this.updateQuery(q);
   }
 
   deleteData(...quads: RDF.Quad[]) {
     const q = this.queryBuilder.deleteDataQuery(quads);
-
     return this.updateQuery(q);
   }
 }

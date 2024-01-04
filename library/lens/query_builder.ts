@@ -34,13 +34,11 @@ enum Flags {
 export class QueryBuilder {
   private readonly schema: Schema;
   private readonly options: Options;
-  private readonly takeDefault: number;
   private readonly df: RDF.DataFactory;
 
   constructor(schema: Schema, options: Options) {
     this.schema = schema;
     this.options = options;
-    this.takeDefault = options.take!;
     this.df = new DataFactory();
   }
 
@@ -156,7 +154,11 @@ export class QueryBuilder {
     return SELECT`(count(?iri) as ?count)`.WHERE`${quads}`.build();
   }
 
-  getQuery(where?: string | RDF.Quad[], limit = this.takeDefault, offset = 0) {
+  getQuery(
+    where: string | RDF.Quad[] | undefined,
+    limit: number,
+    offset: number,
+  ) {
     const selectSubQuery = SELECT.DISTINCT`
       ${this.df.variable!("iri")}
     `.WHERE`

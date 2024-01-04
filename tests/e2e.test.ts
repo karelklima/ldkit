@@ -58,7 +58,6 @@ Deno.test("E2E / Query single remote entity", async () => {
   const BradId = "http://dbpedia.org/resource/Brad_Pitt";
   const BradName = "Brad Pitt";
   const actor = await Actors.findByIri(favouriteActors[0]);
-  console.log(actor);
   assert(actor);
   assert(actor.$id === BradId);
   assert(actor.name === BradName);
@@ -66,6 +65,5 @@ Deno.test("E2E / Query single remote entity", async () => {
 
 Deno.test("E2E / Query count", async () => {
   const count = await Actors.count();
-  console.log(count);
   assert(count > 0);
 });

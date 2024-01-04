@@ -1,5 +1,7 @@
 import { assertEquals, Comunica } from "./test_deps.ts";
 
+const NOLOG = Deno.args.includes("--nolog");
+
 import {
   DataFactory,
   N3,
@@ -8,6 +10,7 @@ import {
   type RDF,
 } from "ldkit/rdf";
 import { ldkit, schema, xsd } from "ldkit/namespaces";
+import { Options } from "ldkit";
 
 export type Equals<A, B> = A extends B ? (B extends A ? true : false) : false;
 
@@ -122,8 +125,9 @@ export const initStore = () => {
     const content = ttl(turtle);
     store.addQuads(content);
   };
-  const options = {
+  const options: Options = {
     engine: comunica,
+    logQuery: NOLOG ? () => {} : console.log,
     ...context,
   };
   return { store, context, assertStore, empty, setStore, options };

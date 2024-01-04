@@ -4,7 +4,7 @@
     "fmt:fix": "deno fmt library/ tests/ www/ docs/",
     "fmt:check": "deno fmt --check library/ tests/ www/ docs/",
     "lint": "deno lint library/ tests/ www/ docs/",
-    "test": "deno test -A ./tests",
+    "test": "deno test -A ./tests -- --nolog",
     "dnt": "deno run -A --importmap ./scripts/dnt_import_map.json ./scripts/dnt.ts"
   },
   "compilerOptions": {

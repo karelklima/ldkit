@@ -2,16 +2,18 @@ import type { IQueryEngine, QueryContext } from "./rdf.ts";
 import { QueryEngine } from "./engine/mod.ts";
 
 type LDkitOptions = {
-  engine?: IQueryEngine;
-  language?: string;
-  take?: number;
+  engine: IQueryEngine;
+  language: string;
+  take: number;
+  logQuery: (query: string) => void;
 };
 
-export type Options = LDkitOptions & Partial<QueryContext>;
+export type Options = Partial<LDkitOptions> & Partial<QueryContext>;
 
 const defaultOptions = {
   engine: new QueryEngine(),
   take: 1000,
+  logQuery: () => {},
 };
 
 let globalOptions: Options = {};
