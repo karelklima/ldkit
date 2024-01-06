@@ -68,7 +68,7 @@ const createTitle = (props: PageProps<Data>) => {
 export default function ApiPage(props: PageProps<Data>) {
   return (
     <App title={createTitle(props)}>
-      <div class="mx-auto max-w-screen-lg flex flex-col md:flex-row-reverse gap-6">
+      <div class="mx-auto max-w-screen-lg flex flex-col md:flex-row-reverse gap-6 py-6">
         <Content {...props} />
         <Sidebar {...props} />
       </div>
