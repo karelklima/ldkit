@@ -1,4 +1,4 @@
-import { createNamespace } from "./namespace.ts";
+import { createNamespace } from "../library/namespace.ts";
 
 /**
  * DCMI Metadata Terms

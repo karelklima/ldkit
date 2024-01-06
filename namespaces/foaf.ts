@@ -1,4 +1,4 @@
-import { createNamespace } from "./namespace.ts";
+import { createNamespace } from "../library/namespace.ts";
 
 /**
  * The Friend of a Friend (FOAF) vocabulary, described using W3C RDF Schema and the Web Ontology Language.

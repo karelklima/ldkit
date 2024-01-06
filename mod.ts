@@ -6,6 +6,6 @@ export * from "./library/schema/mod.ts";
 
 export * from "./library/lens/mod.ts";
 
-export { createNamespace } from "./library/namespaces/namespace.ts";
+export { createNamespace } from "./library/namespace.ts";
 
 export { QueryEngine } from "./library/engine/mod.ts";

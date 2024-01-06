@@ -1,4 +1,4 @@
-import { createNamespace } from "./namespace.ts";
+import { createNamespace } from "../library/namespace.ts";
 
 /**
  * Dublin Core Metadata Element Set, Version 1.1

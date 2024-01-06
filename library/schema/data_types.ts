@@ -1,5 +1,5 @@
-import { xsd } from "../namespaces/xsd.ts";
-import { rdf } from "../namespaces/rdf.ts";
+import { xsd } from "../../namespaces/xsd.ts";
+import { rdf } from "../../namespaces/rdf.ts";
 
 const SupportedDataTypesPrototype = {
   [xsd.dateTime]: new Date(),

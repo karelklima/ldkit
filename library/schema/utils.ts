@@ -1,5 +1,5 @@
-import { rdf } from "../namespaces/rdf.ts";
-import { xsd } from "../namespaces/xsd.ts";
+import { rdf } from "../../namespaces/rdf.ts";
+import { xsd } from "../../namespaces/xsd.ts";
 
 import type {
   ExpandedProperty,

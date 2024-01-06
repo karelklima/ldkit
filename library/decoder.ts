@@ -1,8 +1,8 @@
 import type { Options } from "./options.ts";
 import { fromRdf, Graph, Iri, Node, type RDF } from "./rdf.ts";
 import type { ExpandedProperty, ExpandedSchema } from "./schema/mod.ts";
-import { ldkit } from "./namespaces/ldkit.ts";
-import { rdf } from "./namespaces/rdf.ts";
+import { ldkit } from "../namespaces/ldkit.ts";
+import { rdf } from "../namespaces/rdf.ts";
 
 export const decode = (
   graph: Graph,
