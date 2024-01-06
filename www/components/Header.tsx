@@ -27,34 +27,12 @@ function Logo() {
   );
 }
 
-const menuItems = [
-  {
-    title: "Home",
-    url: "/",
-  },
-  {
-    title: "Documentation",
-    url: "/docs",
-  },
-  //{
-  //  title: "Showcase",
-  //  url: "/showcase",
-  //},
-  {
-    title: "GitHub",
-    url: "https://github.com/karelklima/ldkit",
-  },
-] as const;
-
-type Writeable<T> = { -readonly [P in keyof T]: T[P] };
-type Unpacked<T> = T extends (infer U)[] ? U : T;
-export type ActiveLink = Unpacked<Writeable<typeof menuItems>>["url"];
-
 function Menu() {
   return (
     <ul class="flex-0-1-auto flex overflow-x-auto">
       <Link url="/">Home</Link>
       <Link url="/docs">Documentation</Link>
+      <Link url="/api">API</Link>
       <Link url="https://github.com/karelklima/ldkit">
         <IconGitHub />
       </Link>

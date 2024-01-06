@@ -2,22 +2,26 @@
 // This file SHOULD be checked into source version control.
 // This file is automatically updated during development when running `dev.ts`.
 
-import * as $0 from "./routes/[name].tsx";
-import * as $1 from "./routes/_404.tsx";
-import * as $2 from "./routes/docs/[...slug].tsx";
-import * as $3 from "./routes/gfm.css.ts";
-import * as $4 from "./routes/index.tsx";
+import * as $_name_ from "./routes/[name].tsx";
+import * as $_404 from "./routes/_404.tsx";
+import * as $api_slug_ from "./routes/api/[...slug].tsx";
+import * as $docs_slug_ from "./routes/docs/[...slug].tsx";
+import * as $gfm_css from "./routes/gfm.css.ts";
+import * as $index from "./routes/index.tsx";
+
+import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
   routes: {
-    "./routes/[name].tsx": $0,
-    "./routes/_404.tsx": $1,
-    "./routes/docs/[...slug].tsx": $2,
-    "./routes/gfm.css.ts": $3,
-    "./routes/index.tsx": $4,
+    "./routes/[name].tsx": $_name_,
+    "./routes/_404.tsx": $_404,
+    "./routes/api/[...slug].tsx": $api_slug_,
+    "./routes/docs/[...slug].tsx": $docs_slug_,
+    "./routes/gfm.css.ts": $gfm_css,
+    "./routes/index.tsx": $index,
   },
   islands: {},
   baseUrl: import.meta.url,
-};
+} satisfies Manifest;
 
 export default manifest;
