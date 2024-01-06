@@ -1,8 +1,8 @@
 import type { Options } from "./options.ts";
 import { DataFactory, type Iri, type RDF, toRdf } from "./rdf.ts";
 import type { ExpandedProperty, ExpandedSchema } from "./schema/mod.ts";
-import xsd from "./namespaces/xsd.ts";
-import rdf from "./namespaces/rdf.ts";
+import { xsd } from "./namespaces/xsd.ts";
+import { rdf } from "./namespaces/rdf.ts";
 
 type DecodedNode = Record<string, unknown>;
 

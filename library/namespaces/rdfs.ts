@@ -1,6 +1,11 @@
 import { createNamespace } from "./namespace.ts";
 
-export default createNamespace(
+/**
+ * The RDF Schema vocabulary (RDFS)
+ *
+ * `@rdfs: <http://www.w3.org/2000/01/rdf-schema#>`,
+ */
+export const rdfs = createNamespace(
   {
     iri: "http://www.w3.org/2000/01/rdf-schema#",
     prefix: "rdfs:",

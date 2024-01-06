@@ -1,6 +1,11 @@
 import { createNamespace } from "./namespace.ts";
 
-export default createNamespace(
+/**
+ * XML Schema Definition Language (XSD)
+ *
+ * `@xsd: <http://www.w3.org/2001/XMLSchema#>`,
+ */
+export const xsd = createNamespace(
   {
     iri: "http://www.w3.org/2001/XMLSchema#",
     prefix: "xsd:",

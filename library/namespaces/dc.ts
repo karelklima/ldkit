@@ -1,6 +1,11 @@
 import { createNamespace } from "./namespace.ts";
 
-export default createNamespace(
+/**
+ * Dublin Core Metadata Element Set, Version 1.1
+ *
+ * `@dc: <http://purl.org/dc/elements/1.1/>`,
+ */
+export const dc = createNamespace(
   {
     iri: "http://purl.org/dc/elements/1.1/",
     prefix: "dc:",

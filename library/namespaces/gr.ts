@@ -1,6 +1,11 @@
 import { createNamespace } from "./namespace.ts";
 
-export default createNamespace(
+/**
+ * GoodRelations Ontology
+ *
+ * `@gr: <http://purl.org/goodrelations/v1#>`,
+ */
+export const gr = createNamespace(
   {
     iri: "http://purl.org/goodrelations/v1#",
     prefix: "gr:",

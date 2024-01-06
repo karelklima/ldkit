@@ -1,8 +1,13 @@
 import { createNamespace } from "./namespace.ts";
 
-export default createNamespace(
+/**
+ * LDkit Ontology
+ *
+ * `@ldkit: <http://ldkit.io/ontology/>`,
+ */
+export const ldkit = createNamespace(
   {
-    iri: "http://ldkit/",
+    iri: "https://ldkit.io/ontology/",
     prefix: "ldkit:",
     terms: ["Resource"],
   } as const,

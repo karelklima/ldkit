@@ -1,6 +1,11 @@
 import { createNamespace } from "./namespace.ts";
 
-export default createNamespace(
+/**
+ * SKOS - Simple Knowledge Organization System
+ *
+ * `@skos: <http://www.w3.org/2004/02/skos/core#>`,
+ */
+export const skos = createNamespace(
   {
     iri: "http://www.w3.org/2004/02/skos/core#",
     prefix: "skos:",

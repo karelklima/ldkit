@@ -1,6 +1,11 @@
 import { createNamespace } from "./namespace.ts";
 
-export default createNamespace(
+/**
+ * The Friend of a Friend (FOAF) vocabulary, described using W3C RDF Schema and the Web Ontology Language.
+ *
+ * `@foaf: <http://xmlns.com/foaf/0.1/>`,
+ */
+export const foaf = createNamespace(
   {
     iri: "http://xmlns.com/foaf/0.1/",
     prefix: "foaf:",

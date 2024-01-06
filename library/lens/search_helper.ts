@@ -1,7 +1,7 @@
 import { DataFactory, toRdf } from "../rdf.ts";
 import { sparql as $, type SparqlValue } from "../sparql/mod.ts";
 import { type ExpandedProperty, type SearchSchema } from "../schema/mod.ts";
-import xsd from "../namespaces/xsd.ts";
+import { xsd } from "../namespaces/xsd.ts";
 
 export class SearchHelper {
   private readonly property: ExpandedProperty;

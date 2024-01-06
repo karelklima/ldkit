@@ -1,6 +1,11 @@
 import { createNamespace } from "./namespace.ts";
 
-export default createNamespace(
+/**
+ * DCMI Metadata Terms
+ *
+ * `@dcterms: <http://purl.org/dc/terms/>`,
+ */
+export const dcterms = createNamespace(
   {
     iri: "http://purl.org/dc/terms/",
     prefix: "dcterms:",

@@ -1,5 +1,5 @@
 import { DataFactory, type RDF } from "../rdf.ts";
-import xsd from "../namespaces/xsd.ts";
+import { xsd } from "../namespaces/xsd.ts";
 
 import { stringify } from "./stringify.ts";
 

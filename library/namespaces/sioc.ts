@@ -1,6 +1,11 @@
 import { createNamespace } from "./namespace.ts";
 
-export default createNamespace(
+/**
+ * SIOC Core Ontology Namespace
+ *
+ * `@sioc: <http://rdfs.org/sioc/ns#>`,
+ */
+export const sioc = createNamespace(
   {
     iri: "http://rdfs.org/sioc/ns#",
     prefix: "sioc:",

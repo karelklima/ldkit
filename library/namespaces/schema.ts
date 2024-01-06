@@ -1,6 +1,11 @@
 import { createNamespace } from "./namespace.ts";
 
-export default createNamespace(
+/**
+ * Schema.org vocabulary
+ *
+ * `@schema: <http://schema.org/>`,
+ */
+export const schema = createNamespace(
   {
     iri: "http://schema.org/",
     prefix: "schema:",

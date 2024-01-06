@@ -14,8 +14,8 @@ import {
   type SparqlValue,
 } from "../sparql/mod.ts";
 import { DataFactory, type Iri, type RDF } from "../rdf.ts";
-import ldkit from "../namespaces/ldkit.ts";
-import rdf from "../namespaces/rdf.ts";
+import { ldkit } from "../namespaces/ldkit.ts";
+import { rdf } from "../namespaces/rdf.ts";
 
 import { encode } from "../encoder.ts";
 
