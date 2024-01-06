@@ -1,14 +1,15 @@
-import type { IQueryEngine, QueryContext } from "./rdf.ts";
-import { QueryEngine } from "./engine/mod.ts";
+import {
+  type IQueryEngine,
+  type QueryContext,
+  QueryEngine,
+} from "./engine/mod.ts";
 
-type LDkitOptions = {
-  engine: IQueryEngine;
-  language: string;
-  take: number;
-  logQuery: (query: string) => void;
-};
-
-export type Options = Partial<LDkitOptions> & Partial<QueryContext>;
+export type Options = {
+  engine?: IQueryEngine;
+  language?: string;
+  take?: number;
+  logQuery?: (query: string) => void;
+} & Partial<QueryContext>;
 
 const defaultOptions = {
   engine: new QueryEngine(),
@@ -18,19 +19,19 @@ const defaultOptions = {
 
 let globalOptions: Options = {};
 
-export const setGlobalOptions = (options: Options) => {
+export function setGlobalOptions(options: Options): void {
   globalOptions = options;
-};
+}
 
-export const resolveOptions = (options: Options = {}) => {
+export function resolveOptions(options: Options = {}) {
   return {
     ...defaultOptions,
     ...globalOptions,
     ...options,
   };
-};
+}
 
-export const resolveQueryContext = (options: Options): QueryContext => {
+export function resolveQueryContext(options: Options): QueryContext {
   const { engine: _engine, language: _language, take: _take, ...context } =
     options;
 
@@ -44,4 +45,4 @@ export const resolveQueryContext = (options: Options): QueryContext => {
   }
 
   return context as QueryContext;
-};
+}

@@ -1,4 +1,6 @@
-import { type IQueryEngine, type QueryContext, type RDF } from "../rdf.ts";
+import { type RDF } from "../rdf.ts";
+
+import { type IQueryEngine, type QueryContext } from "./types.ts";
 import {
   getResponseTypes,
   resolve,

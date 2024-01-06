@@ -1,11 +1,18 @@
-export { type IQueryEngine, type QueryContext } from "./library/rdf.ts";
-
 export { type Options, setGlobalOptions } from "./library/options.ts";
 
-export * from "./library/schema/mod.ts";
+export type {
+  Identity,
+  Property,
+  Schema,
+  SchemaInterface,
+  SchemaSearchInterface,
+  SchemaUpdateInterface,
+  SupportedDataTypes,
+  SupportedNativeTypes,
+} from "./library/schema/mod.ts";
 
 export * from "./library/lens/mod.ts";
 
-export { createNamespace } from "./library/namespace.ts";
+export * from "./library/namespace.ts";
 
-export { QueryEngine } from "./library/engine/mod.ts";
+export * from "./library/engine/mod.ts";

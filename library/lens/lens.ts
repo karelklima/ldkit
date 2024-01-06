@@ -28,10 +28,12 @@ import { QueryEngineProxy } from "../engine/query_engine_proxy.ts";
  * @param options optional `Options` - contains LDkit and query engine configuration
  * @returns Lens instance
  */
-export const createLens = <T extends Schema>(
+export function createLens<T extends Schema>(
   schema: T,
   options: Options = {},
-) => new Lens(schema, options);
+) {
+  return new Lens(schema, options);
+}
 
 export class Lens<
   T extends Schema,

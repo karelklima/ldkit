@@ -1,10 +1,11 @@
 import { assertEquals } from "./test_deps.ts";
 import { ttl, x } from "./test_utils.ts";
 
-import type { ExpandedSchema, Options } from "ldkit";
+import type { Options } from "ldkit";
 import { xsd } from "ldkit/namespaces";
 
 import { encode } from "../library/encoder.ts";
+import type { ExpandedSchema } from "../library/schema/mod.ts";
 
 const evaluate = (
   node: Record<string, unknown>,

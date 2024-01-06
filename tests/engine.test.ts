@@ -1,7 +1,6 @@
 import { assertEquals, assertRejects } from "./test_deps.ts";
 
-import { QueryEngine } from "../library/engine/query_engine.ts";
-import { type QueryContext } from "../library/rdf.ts";
+import { type QueryContext, QueryEngine } from "ldkit";
 
 const engine = new QueryEngine();
 const context: QueryContext = { sources: ["https://dbpedia.org/sparql"] };
