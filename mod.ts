@@ -8,7 +8,6 @@ export type {
   SchemaSearchInterface,
   SchemaUpdateInterface,
   SupportedDataTypes,
-  SupportedNativeTypes,
 } from "./library/schema/mod.ts";
 
 export * from "./library/lens/mod.ts";

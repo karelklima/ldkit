@@ -19,6 +19,19 @@ const toRemoteSourceUrl = (target: string, line?: number) => {
   return `${prefix}${rootModule}${suffix}`;
 };
 
+const ignoredSymbols = [
+  "Date",
+  "Iterable",
+  "Partial",
+  "Promise",
+  "Response",
+  "Unite",
+  "T",
+  "QueryEngineProxy",
+  "QueryBuilder",
+  "ExpandedSchema",
+];
+
 export default {
   resolveHref(current, symbol, _namespace, property) {
     const path = toApiPath(current);
@@ -27,6 +40,9 @@ export default {
       : `${path}`;
   },
   lookupHref(current, namespace, symbol) {
+    if (ignoredSymbols.includes(symbol)) {
+      return undefined;
+    }
     const path = toApiPath(current);
     return namespace ? `${path}~${namespace}.${symbol}` : `${path}~${symbol}`;
   },

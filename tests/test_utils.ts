@@ -3,7 +3,7 @@ import { assertEquals, Comunica } from "./test_deps.ts";
 const NOLOG = Deno.args.includes("--nolog");
 export const logQuery = NOLOG ? () => {} : console.log;
 
-import { DataFactory, N3, quadsToGraph, type RDF } from "ldkit/rdf";
+import { DataFactory, N3, type RDF } from "ldkit/rdf";
 import { ldkit, schema, xsd } from "ldkit/namespaces";
 import { Options, type QueryContext } from "ldkit";
 
@@ -77,11 +77,6 @@ export const ttl = (turtle: string) => {
   }).parse(escapedTurtle);
   const quads = escapedQuads.map(convertPseudoVariables);
   return quads;
-};
-
-export const createGraph = (turtle: string) => {
-  const quads = ttl(turtle);
-  return quadsToGraph(quads);
 };
 
 export const createStore = () =>

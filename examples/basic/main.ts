@@ -21,7 +21,7 @@ const PersonSchema = {
 // Create a resource using the data schema and context above
 const Persons = createLens(PersonSchema, options);
 
-// List all persons
+// List some persons
 const persons = await Persons.find({ take: 10 });
 for (const person of persons) {
   console.log(person.name); // string
