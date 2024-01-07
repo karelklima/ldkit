@@ -70,6 +70,26 @@ class SparqlUpdateBuilder extends SparqlBuilder {
   }
 }
 
+/**
+ * SPARQL INSERT query fluent interface
+ *
+ * @example
+ * ```typescript
+ * import { INSERT } from "ldkit/sparql";
+ * import { foaf } from "ldkit/namespaces";
+ * import { DataFactory } from "ldkit/rdf";
+ *
+ * const df = new DataFactory();
+ * const firstName = df.namedNode(foaf.firstName);
+ *
+ * const query = INSERT`?person ${firstName} "Paul"`
+ *   .WHERE`?person ${firstName} "Jean"`
+ *   .build();
+ * console.log(query);
+ * // INSERT { ?person <http://xmlns.com/foaf/0.1/firstName> "Paul" }
+ * // WHERE { ?person <http://xmlns.com/foaf/0.1/firstName> "Jean" }
+ * ```
+ */
 export const INSERT = Object.assign((
   strings: TemplateStringsArray,
   ...values: SparqlValue[]
@@ -80,6 +100,28 @@ export const INSERT = Object.assign((
   ) => new SparqlUpdateBuilder().INSERT_DATA(strings, ...values),
 });
 
+/**
+ * SPARQL DELETE query fluent interface
+ *
+ * @example
+ * ```typescript
+ * import { DELETE } from "ldkit/sparql";
+ * import { foaf } from "ldkit/namespaces";
+ * import { DataFactory } from "ldkit/rdf";
+ *
+ * const df = new DataFactory();
+ * const firstName = df.namedNode(foaf.firstName);
+ *
+ * const query = DELETE`?person ${firstName} "Jean"`
+ *   .INSERT`?person ${firstName} "Paul"`
+ *   .WHERE`?person ${firstName} "Jean"`
+ *   .build();
+ * console.log(query);
+ * // DELETE { ?person <http://xmlns.com/foaf/0.1/firstName> "Jean" }
+ * // INSERT { ?person <http://xmlns.com/foaf/0.1/firstName> "Paul" }
+ * // WHERE { ?person <http://xmlns.com/foaf/0.1/firstName> "Jean" }
+ * ```
+ */
 export const DELETE = Object.assign((
   strings: TemplateStringsArray,
   ...values: SparqlValue[]
@@ -94,6 +136,30 @@ export const DELETE = Object.assign((
   ) => new SparqlUpdateBuilder().DELETE_WHERE(strings, ...values),
 });
 
+/**
+ * SPARQL WITH query fluent interface
+ *
+ * @example
+ * ```typescript
+ * import { DELETE } from "ldkit/sparql";
+ * import { foaf } from "ldkit/namespaces";
+ * import { DataFactory } from "ldkit/rdf";
+ *
+ * const df = new DataFactory();
+ * const firstName = df.namedNode(foaf.firstName);
+ * const graph = df.namedNode("http://example.org/graph");
+ *
+ * const query = WITH(graph).DELETE`?person ${firstName} "Jean"`
+ *   .INSERT`?person ${firstName} "Paul"`
+ *   .WHERE`?person ${firstName} "Jean"`
+ *   .build();
+ * console.log(query);
+ * // WITH <http://example.org/graph>
+ * // DELETE { ?person <http://xmlns.com/foaf/0.1/firstName> "Jean" }
+ * // INSERT { ?person <http://xmlns.com/foaf/0.1/firstName> "Paul" }
+ * // WHERE { ?person <http://xmlns.com/foaf/0.1/firstName> "Jean" }
+ * ```
+ */
 export const WITH = (
   stringOrNamedNode: string | RDF.NamedNode<string>,
 ) => new SparqlUpdateBuilder().WITH(stringOrNamedNode);

@@ -134,6 +134,27 @@ class SparqlQueryBuilder extends SparqlBuilder {
   }
 }
 
+/**
+ * SPARQL SELECT query fluent interface
+ *
+ * @example
+ * ```typescript
+ * import { SELECT } from "ldkit/sparql";
+ *
+ * const query = SELECT`?s`.WHERE`?s ?p ?o`.ORDER_BY`?s`.LIMIT(100).build();
+ * console.log(query);
+ * // SELECT ?s WHERE { ?s ?p ?o } ORDER BY ?s LIMIT 100
+ * ```
+ *
+ * @example
+ * ```typescript
+ * import { SELECT } from "ldkit/sparql";
+ *
+ * const query = SELECT.DISTINCT`?s`.WHERE`?s ?p ?o`.build();
+ * console.log(query);
+ * // SELECT DISTINCT ?s WHERE { ?s ?p ?o }
+ * ```
+ */
 export const SELECT = Object.assign((
   strings: TemplateStringsArray,
   ...values: SparqlValue[]
@@ -151,6 +172,24 @@ export const SELECT = Object.assign((
   },
 });
 
+/**
+ * SPARQL CONSTRUCT query fluent interface
+ *
+ * @example
+ * ```typescript
+ * import { CONSTRUCT } from "ldkit/sparql";
+ * import { DataFactory } from "ldkit/rdf";
+ *
+ * const df = new DataFactory();
+ * const sNode = df.namedNode("http://example.org/datasource");
+ * const pNode = df.namedNode("http://example.org/hasSubject");
+ *
+ * const query = CONSTRUCT`${sNode} ${pNode} ?s`.WHERE`?s ?p ?o`.build();
+ * console.log(query);
+ * // CONSTRUCT { <http://example.org/datasource> <http://example.org/hasSubject> ?s }
+ * // WHERE { ?s ?p ?o }
+ * ```
+ */
 export const CONSTRUCT = Object.assign((
   strings: TemplateStringsArray,
   ...values: SparqlValue[]
@@ -161,6 +200,17 @@ export const CONSTRUCT = Object.assign((
   ) => new SparqlQueryBuilder().CONSTRUCT_WHERE(strings, ...values),
 });
 
+/**
+ * SPARQL ASK query fluent interface
+ *
+ * @example
+ * ```typescript
+ * import { ASK } from "ldkit/sparql";
+ *
+ * const query = ASK`?s ?p ?o`.build();
+ * console.log(query); // ASK { ?s ?p ?o }
+ * ```
+ */
 export const ASK = Object.assign((
   strings: TemplateStringsArray,
   ...values: SparqlValue[]
@@ -177,6 +227,21 @@ export const ASK = Object.assign((
   ) => new SparqlQueryBuilder().ASK_WHERE(strings, ...values),
 });
 
+/**
+ * SPARQL DESCRIBE query fluent interface
+ *
+ * @example
+ * ```typescript
+ * import { DESCRIBE } from "ldkit/sparql";
+ * import { DataFactory } from "ldkit/rdf";
+ *
+ * const df = new DataFactory();
+ * const node = df.namedNode("http://example.org/resource");
+ *
+ * const query = DESCRIBE`${node}`.build();
+ * console.log(query); // DESCRIBE <http://example.org/resource>
+ * ```
+ */
 export const DESCRIBE = (
   strings: TemplateStringsArray,
   ...values: SparqlValue[]
