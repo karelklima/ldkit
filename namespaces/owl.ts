@@ -1,6 +1,11 @@
-import { createNamespace } from "./namespace.ts";
+import { createNamespace } from "../library/namespace.ts";
 
-export default createNamespace(
+/**
+ * OWL Web Ontology Language
+ *
+ * `@owl: <http://www.w3.org/2002/07/owl#>`,
+ */
+export const owl = createNamespace(
   {
     iri: "http://www.w3.org/2002/07/owl#",
     prefix: "owl:",

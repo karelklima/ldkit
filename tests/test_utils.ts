@@ -3,15 +3,11 @@ import { assertEquals, Comunica } from "./test_deps.ts";
 const NOLOG = Deno.args.includes("--nolog");
 export const logQuery = NOLOG ? () => {} : console.log;
 
-import {
-  DataFactory,
-  N3,
-  quadsToGraph,
-  type QueryContext,
-  type RDF,
-} from "ldkit/rdf";
+import { DataFactory, N3, type RDF } from "ldkit/rdf";
 import { ldkit, schema, xsd } from "ldkit/namespaces";
-import { Options } from "ldkit";
+import { Options, type QueryContext } from "ldkit";
+
+import { quadsToGraph } from "../library/rdf.ts";
 
 export type Equals<A, B> = A extends B ? (B extends A ? true : false) : false;
 

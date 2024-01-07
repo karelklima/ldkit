@@ -1,6 +1,11 @@
-import { createNamespace } from "./namespace.ts";
+import { createNamespace } from "../library/namespace.ts";
 
-export default createNamespace(
+/**
+ * DBpedia Ontology
+ *
+ * `@dbo: <http://dbpedia.org/ontology/>`
+ */
+export const dbo = createNamespace(
   {
     iri: "http://dbpedia.org/ontology/",
     prefix: "dbo:",

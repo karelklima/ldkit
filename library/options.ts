@@ -1,14 +1,24 @@
-import type { IQueryEngine, QueryContext } from "./rdf.ts";
-import { QueryEngine } from "./engine/mod.ts";
+import {
+  type IQueryEngine,
+  type QueryContext,
+  QueryEngine,
+} from "./engine/mod.ts";
 
-type LDkitOptions = {
-  engine: IQueryEngine;
-  language: string;
-  take: number;
-  logQuery: (query: string) => void;
-};
-
-export type Options = Partial<LDkitOptions> & Partial<QueryContext>;
+/**
+ * LDkit options and query engine context
+ *
+ * LDkit-specific options are:
+ * - `engine` - a query engine to use for querying data sources
+ * - `language` - a preferred language for literals
+ * - `take` - a default number of results to take (limit of SELECT queries)
+ * - `logQuery` - a function that will be called for each SPARQL query
+ */
+export type Options = {
+  engine?: IQueryEngine;
+  language?: string;
+  take?: number;
+  logQuery?: (query: string) => void;
+} & Partial<QueryContext>;
 
 const defaultOptions = {
   engine: new QueryEngine(),
@@ -18,19 +28,41 @@ const defaultOptions = {
 
 let globalOptions: Options = {};
 
-export const setGlobalOptions = (options: Options) => {
+/**
+ * Sets global configuration {@link Options} for LDkit that will be used
+ * by default in all queries, unless overridden in {@link Lens}.
+ *
+ * LDkit-specific options are:
+ * - `engine` - a query engine to use for querying data sources
+ * - `language` - a preferred language for literals
+ * - `take` - a default number of results to take (limit of SELECT queries)
+ * - `logQuery` - a function that will be called for each SPARQL query
+ *
+ * Default values for these options are:
+ * ```typescript
+ * const defaultOptions = {
+ *   engine: new QueryEngine(),
+ *   take: 1000,
+ *   logQuery: () => {},
+ * };
+ * ```
+ * The default configuration uses built-in {@link QueryEngine}. Language is not set by default.
+ *
+ * @param options LDkit options and query engine context
+ */
+export function setGlobalOptions(options: Options): void {
   globalOptions = options;
-};
+}
 
-export const resolveOptions = (options: Options = {}) => {
+export function resolveOptions(options: Options = {}) {
   return {
     ...defaultOptions,
     ...globalOptions,
     ...options,
   };
-};
+}
 
-export const resolveQueryContext = (options: Options): QueryContext => {
+export function resolveQueryContext(options: Options): QueryContext {
   const { engine: _engine, language: _language, take: _take, ...context } =
     options;
 
@@ -44,4 +76,4 @@ export const resolveQueryContext = (options: Options): QueryContext => {
   }
 
   return context as QueryContext;
-};
+}

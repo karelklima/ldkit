@@ -1,4 +1,4 @@
-import type * as RDF from "npm:rdf-js@4.0.2";
+import type * as RDF from "npm:@rdfjs/types";
 
 export type { RDF };
 
@@ -9,27 +9,6 @@ export { DataFactory, DefaultGraph };
 
 // @deno-types="npm:@types/n3"
 export * as N3 from "npm:n3@1.17.2";
-
-import type {
-  IDataSource,
-  IQueryContextCommon,
-} from "npm:@comunica/types@2.6.8";
-
-export type LDkitContext = {
-  graph?: string;
-  language?: string;
-  take?: number;
-};
-
-export type QueryContext =
-  & RDF.QueryStringContext
-  & RDF.QuerySourceContext<IDataSource>
-  & IQueryContextCommon;
-
-export type IQueryEngine = RDF.StringSparqlQueryable<
-  RDF.SparqlResultSupport,
-  QueryContext
->;
 
 export type Iri = string;
 

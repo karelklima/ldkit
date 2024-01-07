@@ -1,1 +1,1 @@
-export { createLens, type Lens } from "./lens.ts";
+export * from "./lens.ts";

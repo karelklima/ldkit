@@ -1,11 +1,7 @@
-import {
-  IQueryEngine,
-  N3,
-  quadsToGraph,
-  type QueryContext,
-  type RDF,
-} from "../rdf.ts";
+import { N3, quadsToGraph, type RDF } from "../rdf.ts";
 import { type AsyncIterator } from "../asynciterator.ts";
+
+import type { IQueryEngine, QueryContext } from "./types.ts";
 
 export class QueryEngineProxy {
   private readonly engine: IQueryEngine;

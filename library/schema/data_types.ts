@@ -1,5 +1,5 @@
-import xsd from "../namespaces/xsd.ts";
-import rdf from "../namespaces/rdf.ts";
+import { xsd } from "../../namespaces/xsd.ts";
+import { rdf } from "../../namespaces/rdf.ts";
 
 const SupportedDataTypesPrototype = {
   [xsd.dateTime]: new Date(),
@@ -40,6 +40,8 @@ const SupportedDataTypesPrototype = {
   [xsd.duration]: "",
 };
 
+/** Map of supported RDF data types and their JavaScript native counterparts */
 export type SupportedDataTypes = typeof SupportedDataTypesPrototype;
 
+/** List of supported native JavaScript types */
 export type SupportedNativeTypes = SupportedDataTypes[keyof SupportedDataTypes];

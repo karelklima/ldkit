@@ -1,5 +1,5 @@
 import { DefaultGraph, type RDF } from "../rdf.ts";
-import xsd from "../namespaces/xsd.ts";
+import { xsd } from "../../namespaces/xsd.ts";
 import { escape } from "./escape.ts";
 
 export const blankNode = (term: RDF.BlankNode) => {

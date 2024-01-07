@@ -2,7 +2,7 @@ import type { ComponentChildren } from "preact";
 import { asset, Head } from "$fresh/runtime.ts";
 
 import { Footer } from "./Footer.tsx";
-import { type ActiveLink, Header } from "./Header.tsx";
+import { Header } from "./Header.tsx";
 import { Title } from "./Title.tsx";
 
 type AppProps = {

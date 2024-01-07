@@ -16,6 +16,17 @@ class SparqlExpressionBuilder extends SparqlBuilder {
   }
 }
 
+/**
+ * SPARQL OPTIONAL expression fluent interface
+ *
+ * @example
+ * ```typescript
+ * import { OPTIONAL } from "ldkit/sparql";
+ *
+ * const query = OPTIONAL`?s ?p ?o`.build();
+ * console.log(query); // OPTIONAL { ?s ?p ?o }
+ * ```
+ */
 export const OPTIONAL = (
   strings: TemplateStringsArray,
   ...values: SparqlValue[]
