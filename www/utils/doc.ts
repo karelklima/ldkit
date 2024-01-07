@@ -4,10 +4,11 @@ import { load as defaultLoad } from "https://deno.land/x/deno_graph@0.53.0/loade
 
 export function load(specifier: string) {
   if (specifier.startsWith("npm:")) {
-    return Promise.resolve({
+    specifier = `https://esm.sh/${specifier.slice(4)}`;
+    /*return Promise.resolve({
       "kind": "external" as const,
       "specifier": specifier,
-    });
+    });*/
   }
   return defaultLoad(specifier);
 }

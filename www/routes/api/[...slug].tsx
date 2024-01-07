@@ -24,7 +24,7 @@ export const handler: Handlers<Data> = {
     const slug = ctx.params.slug;
 
     const match = slug.match(
-      /^([a-zA-Z_\/.]+)?(~[a-zA-Z_]+)?(\.[a-zA-Z_.]+)?$/,
+      /^([a-zA-Z_\/.]+)?(~[a-zA-Z0-9_]+)?(\.[a-zA-Z_.]+)?$/,
     );
 
     if (match === null) {

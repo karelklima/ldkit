@@ -1,4 +1,4 @@
-import type * as RDF from "npm:rdf-js@4.0.2";
+import type * as RDF from "npm:@rdfjs/types";
 
 export type { RDF };
 

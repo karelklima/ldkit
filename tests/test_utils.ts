@@ -7,6 +7,8 @@ import { DataFactory, N3, type RDF } from "ldkit/rdf";
 import { ldkit, schema, xsd } from "ldkit/namespaces";
 import { Options, type QueryContext } from "ldkit";
 
+import { quadsToGraph } from "../library/rdf.ts";
+
 export type Equals<A, B> = A extends B ? (B extends A ? true : false) : false;
 
 const X_NAMESPACE = "http://x/";
@@ -77,6 +79,11 @@ export const ttl = (turtle: string) => {
   }).parse(escapedTurtle);
   const quads = escapedQuads.map(convertPseudoVariables);
   return quads;
+};
+
+export const createGraph = (turtle: string) => {
+  const quads = ttl(turtle);
+  return quadsToGraph(quads);
 };
 
 export const createStore = () =>

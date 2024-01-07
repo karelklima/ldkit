@@ -7,7 +7,7 @@ const toApiPath = (url: URL) => {
 };
 
 const toRemoteSourceUrl = (target: string, line?: number) => {
-  const prefix = "https://deno.land/x/ldkit/";
+  const prefix = "https://deno.land/x/ldkit/library/";
   const lineSuffix = line ? `#L${line}` : "";
   const suffix = `?source=${lineSuffix}`;
   const chunks = target.split("/library/");
