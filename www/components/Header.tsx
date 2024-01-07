@@ -32,7 +32,7 @@ function Menu() {
     <ul class="flex-0-1-auto flex overflow-x-auto">
       <Link url="/">Home</Link>
       <Link url="/docs">Documentation</Link>
-      <Link url="/api">API</Link>
+      <Link url="/api">API Reference</Link>
       <Link url="https://github.com/karelklima/ldkit">
         <IconGitHub />
       </Link>
