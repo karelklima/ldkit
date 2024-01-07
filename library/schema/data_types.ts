@@ -40,6 +40,8 @@ const SupportedDataTypesPrototype = {
   [xsd.duration]: "",
 };
 
+/** Map of supported RDF data types and their JavaScript native counterparts */
 export type SupportedDataTypes = typeof SupportedDataTypesPrototype;
 
+/** List of supported native JavaScript types */
 export type SupportedNativeTypes = SupportedDataTypes[keyof SupportedDataTypes];

@@ -59,10 +59,17 @@ type ConvertProperty<T extends ValidPropertyDefinition> = T extends Property
   ? ConvertPropertyObject<T>
   : string;
 
+/** Object that contains IRI of an entity */
 export type Identity = {
   $id: string;
 };
 
+/**
+ * Describes a data model of a data entity according to its schema,. as resolved
+ * by LDkit, i.e. the shape of data that LDkit returns when querying for entities.
+ *
+ * See {@link Lens.prototype.find} for usage example.
+ */
 export type SchemaInterface<T extends Schema> =
   & Identity
   & {
@@ -100,6 +107,11 @@ type ConvertUpdatePropertyObject<T extends Property> =
 type ConvertUpdateProperty<T extends ValidPropertyDefinition> = T extends
   Property ? ConvertUpdatePropertyObject<T> : string;
 
+/**
+ * Describes a shape of data for updating an entity, according to its data schema.
+ *
+ * See {@link Lens.prototype.update} for usage example.
+ */
 export type SchemaUpdateInterface<T extends Schema> =
   & Identity
   & {
@@ -125,6 +137,11 @@ type InverseProperties<T extends Schema> = InversePropertiesMap<
   T
 >[keyof InversePropertiesMap<T>];
 
+/**
+ * Describes a shape of data for updating an entity, according to its data schema.
+ *
+ * See {@link Lens.prototype.find} for usage example.
+ */
 export type SchemaSearchInterface<T extends Schema> = {
   [X in Exclude<keyof T, "@type" | InverseProperties<T>>]?: T[X] extends
     ValidPropertyDefinition ? ConvertSearchProperty<T[X]>
