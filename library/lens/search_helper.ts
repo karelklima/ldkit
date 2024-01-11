@@ -34,6 +34,7 @@ export class SearchHelper {
     this.processStringFunctions();
     this.processRegex();
     this.processLangMatches();
+    this.processArrayFunctions();
     this.processFilter();
   }
 
@@ -100,6 +101,25 @@ export class SearchHelper {
         this.df.variable(this.varName)
       }), "${value as string}")`,
     );
+  }
+
+  private processArrayFunctions() {
+    const map = {
+      $in: "IN",
+      $notIn: "NOT IN",
+    };
+
+    for (const [key, func] of Object.entries(map)) {
+      const value = this.searchSchema[key];
+      if (value === undefined) {
+        continue;
+      }
+
+      const values = (value as unknown[]).map((v) => $`${this.encode(v)}`);
+      this.addFilter(
+        $`${this.df.variable(this.varName)} ${func} (${values.join(", ")})`,
+      );
+    }
   }
 
   private processFilter() {
