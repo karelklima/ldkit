@@ -236,6 +236,39 @@ export class Lens<T extends Schema> {
   }
 
   /**
+   * Find one entity that matches the given search criteria.
+   *
+   * The search criteria is a JSON object that may contain properties from the data schema.
+   *
+   * @example
+   * ```typescript
+   * import { createLens } from "ldkit";
+   * import { schema } from "ldkit/namespaces";
+   *
+   * // Create a schema
+   * const PersonSchema = {
+   *   "@type": schema.Person,
+   *   name: schema.name,
+   * } as const;
+   *
+   * // Create a resource using the data schema above
+   * const Persons = createLens(PersonSchema);
+   *
+   * // Find one person with name that starts with "Ada"
+   * const person = await Persons.findOne({
+   *   name: { $strStarts: "Ada" },
+   * });
+   * ```
+   *
+   * @param options Search criteria and pagination options
+   * @returns entities that match the given search criteria
+   */
+  async findOne(where?: SchemaSearchInterface<T>) {
+    const results = await this.find({ where, take: 1 });
+    return results.length > 0 ? results[0] : null;
+  }
+
+  /**
    * Find a single entity that matches the given IRI.
    *
    * @example
