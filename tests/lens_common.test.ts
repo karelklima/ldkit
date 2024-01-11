@@ -129,6 +129,13 @@ Deno.test("Lens / Common / Get resource by quad condition", async () => {
   assertEquals(result[0], Tarantino);
 });
 
+Deno.test("Lens / Common / Get one resource", async () => {
+  const { directors } = init();
+  const result = await directors.findOne();
+
+  assertEquals(result, Kubrick);
+});
+
 Deno.test("Lens / Common / Count resources", async () => {
   const { directors } = init();
   const count = await directors.count();
