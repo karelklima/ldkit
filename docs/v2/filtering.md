@@ -7,7 +7,8 @@ for controlled data retrieval.
 
 LDkit allows various search and filtering operations like `$equals`, `$not`,
 `$contains`, `$strStarts`, `$strEnds`, `$gt`, `$lt`, `$gte`, `$lte`, `$regex`,
-`$langMatches`, and `$filter`. Each is illustrated below with examples.
+`$langMatches`, `$in`, `$notIn`, and `$filter`. Each is illustrated below with
+examples.
 
 ### Simple example
 
@@ -65,6 +66,19 @@ await Persons.find({
       $strEnds: "Lovelace", // FILTER STRENDS(?value, "Lovelace")
       $langMatches: "fr", // FILTER LANGMATCHES(LANG(?value), "fr")
       $regex: "^A(.*)e$", // FILTER REGEX(?value, "^A(.*)e$")
+    },
+  },
+});
+```
+
+### Array functions
+
+```typescript
+await Persons.find({
+  where: {
+    name: {
+      $in: ["Ada", "Alan"], // FILTER (?value IN ("Ada", "Alan"))
+      $notIn: ["Ada", "Alan"], // FILTER (?value NOT IN ("Ada", "Alan"))
     },
   },
 });
