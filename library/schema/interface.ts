@@ -1,3 +1,4 @@
+import { IRI } from "../rdf.ts";
 import type { SupportedDataTypes } from "./data_types.ts";
 import type { Property, Schema } from "./schema.ts";
 import type { SearchFilters } from "./search.ts";
@@ -61,7 +62,7 @@ type ConvertProperty<T extends ValidPropertyDefinition> = T extends Property
 
 /** Object that contains IRI of an entity */
 export type Identity = {
-  $id: string;
+  $id: IRI;
 };
 
 /**
@@ -121,7 +122,7 @@ export type SchemaUpdateInterface<T extends Schema> =
   };
 
 type ConvertSearchPropertySchema<T extends Property> = T extends
-  { "@schema": Schema } ? Unite<SchemaSearchInterface<T["@schema"]>>
+  { "@schema": Schema } ? Unite<SchemaSearchInterfaceProperties<T["@schema"]>>
   : IsInverse<T> extends true ? never
   : SearchFilters<ConvertPropertyType<T>>;
 
@@ -137,13 +138,19 @@ type InverseProperties<T extends Schema> = InversePropertiesMap<
   T
 >[keyof InversePropertiesMap<T>];
 
+type SchemaSearchInterfaceProperties<T extends Schema> = {
+  [X in Exclude<keyof T, "@type" | InverseProperties<T>>]?: T[X] extends
+    ValidPropertyDefinition ? ConvertSearchProperty<T[X]>
+    : never;
+};
+
 /**
  * Describes a shape of data for updating an entity, according to its data schema.
  *
  * See {@link Lens.prototype.find} for usage example.
  */
-export type SchemaSearchInterface<T extends Schema> = {
-  [X in Exclude<keyof T, "@type" | InverseProperties<T>>]?: T[X] extends
-    ValidPropertyDefinition ? ConvertSearchProperty<T[X]>
-    : never;
-};
+export type SchemaSearchInterface<T extends Schema> =
+  & {
+    $id?: IRI | IRI[];
+  }
+  & SchemaSearchInterfaceProperties<T>;

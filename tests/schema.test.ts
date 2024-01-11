@@ -18,6 +18,7 @@ import {
   type SchemaSearchInterface,
   type SchemaUpdateInterface,
 } from "../library/schema/mod.ts";
+import { IRI } from "../library/rdf.ts";
 
 type ArrayUpdate<T> = {
   $set?: T[];
@@ -76,6 +77,7 @@ Deno.test("Schema / Full schema", () => {
   };
 
   type ThingSearchType = {
+    $id?: IRI | IRI[];
     required?: PropertySearch<string>;
     optional?: PropertySearch<string>;
     array?: PropertySearch<string>;
@@ -233,6 +235,7 @@ Deno.test("Schema / Basic datatypes", () => {
   };
 
   type PrototypeSearchInterface = {
+    $id?: IRI | IRI[];
     default?: PropertySearch<string>;
     string?: PropertySearch<string>;
     number?: PropertySearch<number>;
@@ -294,6 +297,7 @@ Deno.test("Schema / Optional", () => {
   };
 
   type PrototypeSearchInterface = {
+    $id?: IRI | IRI[];
     optional?: PropertySearch<string>;
   };
 
@@ -343,6 +347,7 @@ Deno.test("Schema / Array", () => {
   };
 
   type PrototypeSearchInterface = {
+    $id?: IRI | IRI[];
     array?: PropertySearch<string>;
     optionalArray?: PropertySearch<string>;
   };
@@ -399,6 +404,7 @@ Deno.test("Schema / Multilang", () => {
   };
 
   type PrototypeSearchInterface = {
+    $id?: IRI | IRI[];
     multilang?: PropertySearch<string>;
     multilangArray?: PropertySearch<string>;
   };
@@ -447,8 +453,9 @@ Deno.test("Schema / Inverse", () => {
     isPropertyOf?: string;
   };
 
-  // deno-lint-ignore ban-types
-  type PrototypeSearchInterface = {};
+  type PrototypeSearchInterface = {
+    $id?: IRI | IRI[];
+  };
 
   const PrototypeSchema: ExpandedSchema = {
     "@type": [],
@@ -498,6 +505,7 @@ Deno.test("Schema / Nested schema", () => {
   };
 
   type PrototypeSearchInterface = {
+    $id?: IRI | IRI[];
     nested?: {
       nestedValue?: PropertySearch<string>;
     };
