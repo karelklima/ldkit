@@ -180,6 +180,11 @@ export class QueryBuilder {
   }
 
   getSearchQuery(where: SearchSchema, limit: number, offset: number) {
+    if (where.$id) {
+      const ids = Array.isArray(where.$id) ? where.$id : [where.$id];
+      return this.getByIrisQuery(ids, where);
+    }
+
     const selectSubQuery = SELECT.DISTINCT`
       ${this.df.variable!("iri")}
     `.WHERE`
@@ -199,7 +204,7 @@ export class QueryBuilder {
     return query;
   }
 
-  getByIrisQuery(iris: IRI[]) {
+  getByIrisQuery(iris: IRI[], where?: SearchSchema) {
     const query = CONSTRUCT`
       ${this.getResourceSignature()}
       ${this.getShape(Flags.UnwrapOptional | Flags.IgnoreInverse)}
@@ -207,7 +212,7 @@ export class QueryBuilder {
       VALUES ?iri {
         ${iris.map(this.df.namedNode)}
       }
-      ${this.getShape(Flags.IncludeTypes)}
+      ${this.getShape(Flags.IncludeTypes, where)}
     `.build();
 
     return query;
