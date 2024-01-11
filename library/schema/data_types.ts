@@ -1,47 +1,48 @@
 import { xsd } from "../../namespaces/xsd.ts";
 import { rdf } from "../../namespaces/rdf.ts";
-
-const SupportedDataTypesPrototype = {
-  [xsd.dateTime]: new Date(),
-  [xsd.date]: new Date(),
-  [xsd.gDay]: new Date(),
-  [xsd.gMonthDay]: new Date(),
-  [xsd.gYear]: new Date(),
-  [xsd.gYearMonth]: new Date(),
-  [xsd.boolean]: true,
-  [xsd.double]: 0.0,
-  [xsd.decimal]: 0.0,
-  [xsd.float]: 0.0,
-  [xsd.integer]: 0,
-  [xsd.long]: 0,
-  [xsd.int]: 0,
-  [xsd.byte]: 0,
-  [xsd.short]: 0,
-  [xsd.negativeInteger]: 0,
-  [xsd.nonNegativeInteger]: 0,
-  [xsd.nonPositiveInteger]: 0,
-  [xsd.positiveInteger]: 0,
-  [xsd.unsignedByte]: 0,
-  [xsd.unsignedInt]: 0,
-  [xsd.unsignedLong]: 0,
-  [xsd.unsignedShort]: 0,
-  [xsd.string]: "",
-  [xsd.normalizedString]: "",
-  [xsd.anyURI]: "",
-  [xsd.base64Binary]: "",
-  [xsd.language]: "",
-  [xsd.Name]: "",
-  [xsd.NCName]: "",
-  [xsd.NMTOKEN]: "",
-  [xsd.token]: "",
-  [xsd.hexBinary]: "",
-  [rdf.langString]: "",
-  [xsd.time]: "",
-  [xsd.duration]: "",
-};
+import { ldkit } from "../../namespaces/ldkit.ts";
+import { type IRI } from "../rdf.ts";
 
 /** Map of supported RDF data types and their JavaScript native counterparts */
-export type SupportedDataTypes = typeof SupportedDataTypesPrototype;
+export type SupportedDataTypes = {
+  [xsd.dateTime]: Date;
+  [xsd.date]: Date;
+  [xsd.gDay]: Date;
+  [xsd.gMonthDay]: Date;
+  [xsd.gYear]: Date;
+  [xsd.gYearMonth]: Date;
+  [xsd.boolean]: boolean;
+  [xsd.double]: number;
+  [xsd.decimal]: number;
+  [xsd.float]: number;
+  [xsd.integer]: number;
+  [xsd.long]: number;
+  [xsd.int]: number;
+  [xsd.byte]: number;
+  [xsd.short]: number;
+  [xsd.negativeInteger]: number;
+  [xsd.nonNegativeInteger]: number;
+  [xsd.nonPositiveInteger]: number;
+  [xsd.positiveInteger]: number;
+  [xsd.unsignedByte]: number;
+  [xsd.unsignedInt]: number;
+  [xsd.unsignedLong]: number;
+  [xsd.unsignedShort]: number;
+  [xsd.string]: string;
+  [xsd.normalizedString]: string;
+  [xsd.anyURI]: string;
+  [xsd.base64Binary]: string;
+  [xsd.language]: string;
+  [xsd.Name]: string;
+  [xsd.NCName]: string;
+  [xsd.NMTOKEN]: string;
+  [xsd.token]: string;
+  [xsd.hexBinary]: string;
+  [rdf.langString]: string;
+  [xsd.time]: string;
+  [xsd.duration]: string;
+  [ldkit.IRI]: IRI;
+};
 
 /** List of supported native JavaScript types */
 export type SupportedNativeTypes = SupportedDataTypes[keyof SupportedDataTypes];

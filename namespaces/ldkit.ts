@@ -9,6 +9,6 @@ export const ldkit = createNamespace(
   {
     iri: "https://ldkit.io/ontology/",
     prefix: "ldkit:",
-    terms: ["Resource"],
+    terms: ["Resource", "IRI"],
   } as const,
 );

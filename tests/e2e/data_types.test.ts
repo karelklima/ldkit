@@ -2,8 +2,8 @@ import { assert, assertTypeSafe, Equals } from "../test_deps.ts";
 
 import { initStore, x } from "../test_utils.ts";
 
-import { createLens } from "ldkit";
-import { xsd } from "ldkit/namespaces";
+import { createLens, type Schema } from "ldkit";
+import { ldkit, rdf, xsd } from "ldkit/namespaces";
 
 Deno.test("Data Type / Boolean / xsd:boolean", async () => {
   const { options, assertStore } = initStore();
@@ -1024,4 +1024,32 @@ Deno.test("Data Type / Date / xsd:gYearMonth", async () => {
   assertTypeSafe<Equals<typeof record.property, Date>>();
   assert(typeof record.property === "object");
   assert(record.property.getTime() === new Date(2012, 2, 1).getTime());
+});
+
+Deno.test("Data Type / Iri / ldkit:IRI", async () => {
+  const { options, assertStore } = initStore();
+  const ResourceSchema = {
+    type: {
+      "@id": rdf.type,
+      "@type": ldkit.IRI,
+    },
+  } satisfies Schema;
+
+  const Resource = createLens(ResourceSchema, options);
+
+  await Resource.insert({
+    $id: x.Resource,
+    type: x.Resource,
+  });
+
+  assertStore(`
+    x:Resource a x:Resource .
+  `);
+
+  const record = await Resource.findByIri(x.Resource);
+
+  assert(record !== null);
+  assertTypeSafe<Equals<typeof record.type, string>>();
+  assert(typeof record.type === "string");
+  assert(record.type === x.Resource);
 });

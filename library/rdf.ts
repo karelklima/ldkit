@@ -10,11 +10,11 @@ export { DataFactory, DefaultGraph };
 // @deno-types="npm:@types/n3"
 export * as N3 from "npm:n3@1.17.2";
 
-export type Iri = string;
+export type IRI = string;
 
-export type Node = Map<Iri, RDF.Term[]>;
+export type Node = Map<IRI, RDF.Term[]>;
 
-export type Graph = Map<Iri, Node>;
+export type Graph = Map<IRI, Node>;
 
 export const quadsToGraph = (quads: Iterable<RDF.Quad>) => {
   const graph: Graph = new Map();
@@ -38,7 +38,7 @@ export declare namespace RDFJSON {
     datatype?: string;
   };
   type Bindings = Record<string, Term>;
-  type Triple = [Iri, Iri, Term];
+  type Triple = [IRI, IRI, Term];
   type SparqlResultsJsonFormat = {
     head: {
       vars?: string[];
@@ -48,7 +48,7 @@ export declare namespace RDFJSON {
     };
     boolean?: boolean;
   };
-  type RdfJsonFormat = Record<Iri, Record<Iri, Term[]>>;
+  type RdfJsonFormat = Record<IRI, Record<IRI, Term[]>>;
   interface TermFactory {
     fromJson(jsonTerm: Term): RDF.Term;
   }
@@ -205,7 +205,7 @@ export class QuadFactory implements RDFJSON.QuadFactory {
     this.termFactory = termFactory;
   }
 
-  fromJson(jsonRdf: [Iri, Iri, RDFJSON.Term]) {
+  fromJson(jsonRdf: [IRI, IRI, RDFJSON.Term]) {
     const [s, p, o] = jsonRdf;
     return this.dataFactory.quad(
       this.dataFactory.namedNode(s),
