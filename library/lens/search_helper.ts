@@ -1,6 +1,7 @@
-import { DataFactory, toRdf } from "../rdf.ts";
+import { DataFactory } from "../rdf.ts";
 import { sparql as $, type SparqlValue } from "../sparql/mod.ts";
 import { type ExpandedProperty, type SearchSchema } from "../schema/mod.ts";
+import { encodeValue } from "../encoder.ts";
 import { xsd } from "../../namespaces/xsd.ts";
 
 export class SearchHelper {
@@ -115,9 +116,7 @@ export class SearchHelper {
   }
 
   private encode(value: unknown) {
-    return toRdf(value, {
-      datatype: this.df.namedNode(this.propertyType),
-    });
+    return encodeValue(value, this.propertyType, this.df);
   }
 
   private isPlainObject(value: unknown) {

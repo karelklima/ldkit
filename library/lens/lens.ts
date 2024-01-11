@@ -1,4 +1,4 @@
-import type { Graph, Iri, RDF } from "../rdf.ts";
+import type { Graph, IRI, RDF } from "../rdf.ts";
 import {
   type Options,
   resolveOptions,
@@ -260,7 +260,7 @@ export class Lens<T extends Schema> {
    * @param iri IRI of the entity to find
    * @returns Entity if found, null otherwise
    */
-  async findByIri(iri: Iri): Promise<Unite<SchemaInterface<T>> | null> {
+  async findByIri(iri: IRI): Promise<Unite<SchemaInterface<T>> | null> {
     const results = await this.findByIris([iri]);
     return results.length > 0 ? results[0] : null;
   }
@@ -294,7 +294,7 @@ export class Lens<T extends Schema> {
    * @param iris IRIs of the entities to find
    * @returns Array of found entities, empty array if there are no matches
    */
-  async findByIris(iris: Iri[]): Promise<Unite<SchemaInterface<T>>[]> {
+  async findByIris(iris: IRI[]): Promise<Unite<SchemaInterface<T>>[]> {
     const q = this.queryBuilder.getByIrisQuery(iris);
     this.log(q);
     const graph = await this.engine.queryGraph(q);
@@ -442,7 +442,7 @@ export class Lens<T extends Schema> {
    * @param identities Identities or IRIs of the entities to delete
    * @returns Nothing
    */
-  delete(...identities: Identity[] | Iri[]): Promise<void> {
+  delete(...identities: Identity[] | IRI[]): Promise<void> {
     const iris = identities.map((identity) => {
       return typeof identity === "string" ? identity : identity.$id;
     });

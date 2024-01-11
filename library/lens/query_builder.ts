@@ -13,7 +13,7 @@ import {
   sparql as $,
   type SparqlValue,
 } from "../sparql/mod.ts";
-import { DataFactory, type Iri, type RDF } from "../rdf.ts";
+import { DataFactory, type IRI, type RDF } from "../rdf.ts";
 import { ldkit } from "../../namespaces/ldkit.ts";
 import { rdf } from "../../namespaces/rdf.ts";
 
@@ -199,7 +199,7 @@ export class QueryBuilder {
     return query;
   }
 
-  getByIrisQuery(iris: Iri[]) {
+  getByIrisQuery(iris: IRI[]) {
     const query = CONSTRUCT`
       ${this.getResourceSignature()}
       ${this.getShape(Flags.UnwrapOptional | Flags.IgnoreInverse)}
@@ -222,7 +222,7 @@ export class QueryBuilder {
     return INSERT.DATA`${quads}`.build();
   }
 
-  deleteQuery = (iris: Iri[]) => {
+  deleteQuery = (iris: IRI[]) => {
     return DELETE`
       ?s ?p ?o
     `.WHERE`

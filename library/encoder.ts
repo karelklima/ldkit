@@ -1,8 +1,9 @@
 import type { Options } from "./options.ts";
-import { DataFactory, type Iri, type RDF, toRdf } from "./rdf.ts";
+import { DataFactory, type IRI, type RDF, toRdf } from "./rdf.ts";
 import type { ExpandedProperty, ExpandedSchema } from "./schema/mod.ts";
 import { xsd } from "../namespaces/xsd.ts";
 import { rdf } from "../namespaces/rdf.ts";
+import { ldkit } from "../namespaces/ldkit.ts";
 
 type DecodedNode = Record<string, unknown>;
 
@@ -22,6 +23,19 @@ export const encode = (
     includeType,
     variableInitCounter,
   );
+};
+
+export const encodeValue = (
+  value: unknown,
+  datatype: string,
+  df: DataFactory,
+) => {
+  if (datatype === ldkit.IRI) {
+    return df.namedNode(value as string);
+  }
+  return toRdf(value, {
+    datatype: df.namedNode(datatype),
+  });
 };
 
 class Encoder {
@@ -105,7 +119,7 @@ class Encoder {
     });
   }
 
-  encodeNodeType(node: DecodedNode, requiredTypes: Iri[], nodeId: NodeId) {
+  encodeNodeType(node: DecodedNode, requiredTypes: IRI[], nodeId: NodeId) {
     const finalTypes = new Set([...this.getNodeTypes(node), ...requiredTypes]);
 
     finalTypes.forEach((type) => {
@@ -177,9 +191,7 @@ class Encoder {
         }
       }
 
-      const rdfValue = toRdf(val, {
-        datatype: this.df.namedNode(propertyType),
-      });
+      const rdfValue = encodeValue(val, propertyType, this.df);
       this.push(nodeId, propertyId, rdfValue);
     });
   }

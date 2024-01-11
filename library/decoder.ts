@@ -1,5 +1,5 @@
 import type { Options } from "./options.ts";
-import { fromRdf, Graph, Iri, Node, type RDF } from "./rdf.ts";
+import { fromRdf, Graph, IRI, Node, type RDF } from "./rdf.ts";
 import type { ExpandedProperty, ExpandedSchema } from "./schema/mod.ts";
 import { ldkit } from "../namespaces/ldkit.ts";
 import { rdf } from "../namespaces/rdf.ts";
@@ -19,7 +19,7 @@ class Decoder {
   private schema: ExpandedSchema;
   private options: Options;
 
-  private cache: Map<ExpandedSchema, Map<Iri, DecodedNode>> = new Map();
+  private cache: Map<ExpandedSchema, Map<IRI, DecodedNode>> = new Map();
 
   private constructor(graph: Graph, schema: ExpandedSchema, options: Options) {
     this.graph = graph;
@@ -31,7 +31,7 @@ class Decoder {
     return new Decoder(graph, schema, options).decode();
   }
 
-  getCachedNode(nodeIri: Iri, schema: ExpandedSchema) {
+  getCachedNode(nodeIri: IRI, schema: ExpandedSchema) {
     if (!this.cache.has(schema)) {
       this.cache.set(schema, new Map());
     }
@@ -39,7 +39,7 @@ class Decoder {
   }
 
   setCachedNode(
-    nodeIri: Iri,
+    nodeIri: IRI,
     schema: ExpandedSchema,
     decodedNode: DecodedNode,
   ) {
@@ -72,7 +72,7 @@ class Decoder {
     return output;
   }
 
-  decodeNode(nodeIri: Iri, schema: ExpandedSchema) {
+  decodeNode(nodeIri: IRI, schema: ExpandedSchema) {
     const cachedNode = this.getCachedNode(nodeIri, schema);
     if (cachedNode) {
       return cachedNode;
@@ -109,7 +109,7 @@ class Decoder {
   }
 
   decodeNodeProperty(
-    nodeIri: Iri,
+    nodeIri: IRI,
     node: Node,
     propertyKey: string,
     property: ExpandedProperty,
