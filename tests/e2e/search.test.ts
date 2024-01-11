@@ -217,3 +217,34 @@ Deno.test("E2E / Search / $filter", async () => {
   assertEquals(results.length, 1);
   assertEquals(results[0].name, "Quentin Tarantino");
 });
+
+Deno.test("E2E / Search / $in", async () => {
+  const { Directors } = init();
+
+  const results = await Directors.find({
+    where: {
+      name: {
+        $in: ["Quentin Tarantino", "Steven Spielberg"],
+      },
+    },
+  });
+
+  assertEquals(results.length, 2);
+  assertEquals(results[0].name, "Quentin Tarantino");
+  assertEquals(results[1].name, "Steven Spielberg");
+});
+
+Deno.test("E2E / Search / $notIn", async () => {
+  const { Directors } = init();
+
+  const results = await Directors.find({
+    where: {
+      name: {
+        $notIn: ["Quentin Tarantino", "Steven Spielberg"],
+      },
+    },
+  });
+
+  assertEquals(results.length, 1);
+  assertEquals(results[0].name, "Stanley Kubrick");
+});

@@ -37,6 +37,8 @@ type PropertySearch<T> = T | {
   $lte?: T;
   $regex?: string;
   $langMatches?: string;
+  $in?: T[];
+  $notIn?: T[];
   $filter?: SparqlValue;
 };
 
