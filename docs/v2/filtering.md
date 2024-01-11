@@ -7,8 +7,8 @@ for controlled data retrieval.
 
 LDkit allows various search and filtering operations like `$equals`, `$not`,
 `$contains`, `$strStarts`, `$strEnds`, `$gt`, `$lt`, `$gte`, `$lte`, `$regex`,
-`$langMatches`, `$in`, `$notIn`, and `$filter`. Each is illustrated below with
-examples.
+`$langMatches`, `$in`, `$notIn`, `$filter`, and `$id`. Each is illustrated below
+with examples.
 
 ### Simple example
 
@@ -96,6 +96,23 @@ await Persons.find({
   where: {
     name: {
       $filter: "STRLEN(?value) > 10", // FILTER (STRLEN(?value) > 10)
+    },
+  },
+});
+```
+
+### Restricting the results to specific entities
+
+Sometimes it is useful to query for specific entities by their IRI, and also
+restrict the results further by filtering out some properties. For example,
+query for an entity, but match only its label with a specific language.
+
+```typescript
+await Persons.find({
+  where: {
+    $id: "https://example.org/Ada_Lovelace", // the only entity matched
+    name: {
+      $langMatches: "en", // FILTER LANGMATCHES(LANG(?value), "en")
     },
   },
 });
