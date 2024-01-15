@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.1.1",
+    "ldkit": "^2",
     "next": "14.0.4",
     "react": "^18",
     "react-dom": "^18"
