@@ -8,20 +8,19 @@ data easily.
 In background, Lens handle building and executing SPARQL queries, data retrieval
 and transformation according to the data Schema.
 
-## Creating a resource
+## Creating a Lens instance
 
-A Lens requires a [Schema](./schema), a [Context](./context), and a
-[Query Engine](./query-engine). If you do not specify context or engine, default
-ones will be used.
+A Lens requires a [Schema](./schema) and an [Options](./options) object. You can
+pass options either directly, or you can set up default global options.
 
 ```ts
-import { type Context, createLens } from "ldkit";
+import { createLens, type Options } from "ldkit";
 
-const context: Context = {
+const options = {
   sources: ["https://example.com/sparql"],
-};
+} satisfies Options;
 
-const MyLens = createLens(MySchema, context); // will use default query engine
+const MyLens = createLens(MySchema, options); // will use default query engine
 ```
 
 ## Lens usage
@@ -32,12 +31,12 @@ of entities of type _dbo:Person_ that have a name, an abstract and a birth date.
 ### Create a Lens instance to query persons
 
 ```ts
-import { type Context, createLens } from "ldkit";
+import { createLens, type Options } from "ldkit";
 import { dbo, rdfs, xsd } from "ldkit/namespaces";
 
-const context: Context = {
+const options = {
   sources: ["https://example.com/sparql"],
-};
+} satisfies Options;
 
 // Create a schema
 const PersonSchema = {
@@ -47,8 +46,8 @@ const PersonSchema = {
   birthDate: { "@id": dbo.birthDate, "@type": xsd.date },
 } as const;
 
-// Create a resource using the data schema and context above
-const Persons = createLens(PersonSchema, context);
+// Create a resource using the data schema and options object above
+const Persons = createLens(PersonSchema, options);
 ```
 
 ### List all matched persons
