@@ -10,7 +10,7 @@
     "pages": [
       ["schema", "Schema"],
       ["lens", "Lens"],
-      ["context", "Context"],
+      ["options", "Options"],
       ["namespaces", "Namespaces"],
       ["query-engine", "Query Engine"],
       ["power-tools", "Power Tools"]

@@ -9,12 +9,12 @@ LDkit lets you access, display and modify any RDF data, and it works in browser,
 
 The typical LDkit workflow to access Linked Data comprises of these protocols:
 
-- You define a data source and other options through
-  [Context](./components/context).
+- You define a data source and other settings through
+  [Options](./components/options).
 - You define a [Namespace](./components/namespaces) for the data to be
   retrieved, or use an existing one.
 - You define a data [Schema](./components/schema) with the help of namespaces.
-- You create a data [Lens](./components/lens) and pass it the schema and context
+- You create a data [Lens](./components/lens) and pass it the schema and options
   to query data.
 - Optionally, you can tweak the [Query Engine](./components/query-engine).
 
