@@ -16,13 +16,10 @@
       ["power-tools", "Power Tools"]
     ]
   },
-  "how-to": {
-    "title": "How To",
-    "pages": [["query-with-comunica", "Query with Comunica"]]
-  },
-  "v2": {
-    "title": "Version 2 (not yet released)",
+  "features": {
+    "title": "Features",
     "pages": [
+      ["query-with-comunica", "Query with Comunica"],
       ["filtering", "Filtering"],
       ["pagination", "Pagination"],
       ["working-with-arrays", "Working with arrays"],
