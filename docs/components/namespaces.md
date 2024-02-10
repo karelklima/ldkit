@@ -45,7 +45,13 @@ console.log(schema.Person); // prints http://schema.org/Person
 > namespaces like this:
 >
 > ```ts
-> import { rdf, schema } from "https://deno.land/x/ldkit@$VERSION/mod.ts";
+> import { rdf, schema } from "https://deno.land/x/ldkit@$VERSION/namespaces.ts";
+> ```
+>
+> or directly like:
+>
+> ```ts
+> import { rdf } from "https://deno.land/x/ldkit@$VERSION/namespaces/rdf.ts";
 > ```
 
 ### List of included namespaces
@@ -57,6 +63,7 @@ console.log(schema.Person); // prints http://schema.org/Person
 | **dcterms** | DCMI Metadata Terms                         | http://purl.org/dc/terms/                   |
 | **foaf**    | FOAF ontology                               | http://xmlns.com/foaf/0.1/                  |
 | **gr**      | Good Relations                              | http://purl.org/goodrelations/v1#           |
+| **owl**     | OWL Web Ontology Language                   | http://www.w3.org/2002/07/owl#              |
 | **rdf**     | RDF vocabulary                              | http://www.w3.org/1999/02/22-rdf-syntax-ns# |
 | **rdfs**    | RDF Schema 1.1                              | http://www.w3.org/2000/01/rdf-schema#       |
 | **schema**  | Schema.org                                  | https://schema.org/                         |
