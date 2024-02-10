@@ -23,12 +23,12 @@ The `QueryEngine` follows
 The `QueryEngine` is configurable through [Options](./options) object.
 
 ```ts
-import { type Context, QueryEngine } from "ldkit";
+import { type Options, QueryEngine } from "ldkit";
 
-const context: Context = {
+const options = {
   sources: ["https://example.com/sparql"], // required, must include one SPARQL endpoint
   fetch: customFetchFunction, // optional, must follow standard fetch interface
-};
+} satisfies Options;
 const engine = new QueryEngine();
 
 const response = await engine.queryBoolean("ASK { ?s ?p ?o }", context);
