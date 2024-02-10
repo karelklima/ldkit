@@ -37,7 +37,7 @@ const response = await engine.queryBoolean("ASK { ?s ?p ?o }", context);
 > Note: The default query engine supports all SPARQL endpoints that conform to
 > the SPARQL 1.1 specification and can return data of MIME
 > `application/sparql-results+json` for `SELECT` and `ASK` queries, and
-> `application/rdf+json` for `CONSTRUCT` queries.
+> `text/turtle` or `application/rdf+json` for `CONSTRUCT` queries.
 
 ## Custom query engine
 
