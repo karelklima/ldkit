@@ -13,31 +13,31 @@ files.
 > browser.
 
 To use Comunica with LDkit, simply pass its instance to a
-[Lens](../components/lens), or set it as the default engine. The example below
-shows a setup how to query in-memory data using
+[Lens](../components/lens), or set it as the default engine using global
+options. The example below shows a setup how to query in-memory data using
 [N3](https://github.com/rdfjs/N3.js/) store. This particular example uses the
 `@comunica/query-sparql-rdfjs` engine.
 
 ```ts
-import { type Context, createLens } from "ldkit";
+import { createLens, type Options } from "ldkit";
 import { QueryEngine as Comunica } from "@comunica/query-sparql-rdfjs";
 import { Store } from "n3";
 
 const store = new Store();
-
-const context: Context = {
-  sources: [store],
-};
-
 const engine = new Comunica();
 
-const resource = createLens(MySchema, context, engine);
+const options = {
+  sources: [store],
+  engine,
+} satisfies Options;
+
+const resource = createLens(MySchema, options);
 ```
 
-The [context](../components/context) format for LDkit is the same as for
-Comunica. The context that you pass to a resource, or a
-[default context](../components/context) (if you set it up) eventually gets
-passed to Comunica engine instance.
+The [Options](../components/options) object schema for LDkit is the superset of
+the _Context_ for Comunica. The _Options_ that you pass to a resource, or a
+[default options](../components/options) object (if you set it up) eventually
+gets passed to Comunica engine instance.
 
 ## Using Comunica as a server
 
