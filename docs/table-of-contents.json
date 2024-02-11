@@ -23,7 +23,8 @@
       ["filtering", "Filtering"],
       ["pagination", "Pagination"],
       ["working-with-arrays", "Working with arrays"],
-      ["inverse-properties", "Inverse properties"]
+      ["inverse-properties", "Inverse properties"],
+      ["supported-data-types", "Supported data types"]
     ]
   }
 }
