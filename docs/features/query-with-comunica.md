@@ -7,10 +7,10 @@ Comunica lets you access RDF data from multiple sources and various source
 types, including Solid pods, RDF files, Triple/Quad Pattern Fragments, HDT
 files.
 
-> Note: If you need to access data through a SPARQL endpoint, it is recommended
-> to use the default [Query Engine](../components/query-engine) shipped with
-> LDkit. The built-in engine is lightweight and optimized for being used in
-> browser.
+> Note: If you need to access data through a single SPARQL endpoint, it is
+> recommended to use the default [Query Engine](../components/query-engine)
+> shipped with LDkit. The built-in engine is lightweight and optimized for being
+> used in browser.
 
 To use Comunica with LDkit, simply pass its instance to a
 [Lens](../components/lens), or set it as the default engine using global
