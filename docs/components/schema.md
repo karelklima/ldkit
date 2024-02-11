@@ -160,6 +160,35 @@ const MySchema = {
 };
 ```
 
+### Explicitly infer resulting TypeScript type of entities
+
+If you need, to explicitly use the resulting type of entities, that is, the
+corresponding native TypeScript type of RDF data converted to JavaScript, you
+can use the `SchemaInterface` helper type.
+
+```ts
+import { type SchemaInterface } from "ldkit";
+import { dbo, rdfs, xsd } from "ldkit/namespaces";
+
+const PersonSchema = {
+  "@type": dbo.Person,
+  name: rdfs.label,
+  birthDate: {
+    "@id": dbo.birthDate,
+    "@type": xsd.date,
+  },
+} as const;
+
+type PersonType = SchemaInterface<typeof PersonSchema>;
+/**
+ * {
+ *   $id: IRI, // string alias
+ *   name: string,
+ *   birthDate: Date
+ * }
+ */
+```
+
 ## Complete schema reference
 
 The following schema showcases all possible supported variations.
