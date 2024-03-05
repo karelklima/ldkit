@@ -20,15 +20,15 @@ The `QueryEngine` follows
 [RDF/JS Query specification](https://rdf.js.org/query-spec/) and implements the
 `StringSparqlQueryable` interface.
 
-The `QueryEngine` is configurable through [context](./context).
+The `QueryEngine` is configurable through [Options](./options) object.
 
 ```ts
-import { type Context, QueryEngine } from "ldkit";
+import { type Options, QueryEngine } from "ldkit";
 
-const context: Context = {
+const options = {
   sources: ["https://example.com/sparql"], // required, must include one SPARQL endpoint
   fetch: customFetchFunction, // optional, must follow standard fetch interface
-};
+} satisfies Options;
 const engine = new QueryEngine();
 
 const response = await engine.queryBoolean("ASK { ?s ?p ?o }", context);
@@ -37,7 +37,7 @@ const response = await engine.queryBoolean("ASK { ?s ?p ?o }", context);
 > Note: The default query engine supports all SPARQL endpoints that conform to
 > the SPARQL 1.1 specification and can return data of MIME
 > `application/sparql-results+json` for `SELECT` and `ASK` queries, and
-> `application/rdf+json` for `CONSTRUCT` queries.
+> `text/turtle` or `application/rdf+json` for `CONSTRUCT` queries.
 
 ## Custom query engine
 
@@ -53,16 +53,16 @@ Comunica, or a custom engine derived from that - see
 
 A query engine instance needs to be passed to a data [Lens](./lens) as a
 parameter in order to query data, and there are two ways how to handle that.
-Either you can pass the engine directly as an argument when creating the `Lens`,
-or you can set an engine instance as a default one. If there is a default engine
-instance, then the `Lens` will use that engine, if you do not provide one
-directly.
+Either you can pass the engine directly as part of options argument when
+creating the `Lens` instance, or you can set an engine instance as a default
+one. If there is a default engine instance, then the `Lens` will use that
+engine, if you do not provide one directly.
 
 ```ts
-import { createLens, setDefaultEngine } from "ldkit";
+import { createLens, setGlobalOptions } from "ldkit";
 
 const engine = new MyCustomQueryEngine();
-setDefaultEngine(engine);
+setGlobalOptions({ engine });
 
 const MyLens = createLens(MySchema); // will use the custom engine, which is now default
 ```

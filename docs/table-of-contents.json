@@ -10,23 +10,21 @@
     "pages": [
       ["schema", "Schema"],
       ["lens", "Lens"],
-      ["context", "Context"],
+      ["options", "Options"],
       ["namespaces", "Namespaces"],
       ["query-engine", "Query Engine"],
       ["power-tools", "Power Tools"]
     ]
   },
-  "how-to": {
-    "title": "How To",
-    "pages": [["query-with-comunica", "Query with Comunica"]]
-  },
-  "v2": {
-    "title": "Version 2 (not yet released)",
+  "features": {
+    "title": "Features",
     "pages": [
+      ["query-with-comunica", "Query with Comunica"],
       ["filtering", "Filtering"],
       ["pagination", "Pagination"],
       ["working-with-arrays", "Working with arrays"],
-      ["inverse-properties", "Inverse properties"]
+      ["inverse-properties", "Inverse properties"],
+      ["supported-data-types", "Supported data types"]
     ]
   }
 }

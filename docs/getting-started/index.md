@@ -16,7 +16,7 @@ import * as ldkit from "https://deno.land/x/ldkit/mod.ts";
 ### Create data schema and set up RDF source
 
 ```ts
-import { type Context, createLens } from "ldkit";
+import { createLens, type Options } from "ldkit";
 import { dbo, rdfs, xsd } from "ldkit/namespaces";
 
 // Create a schema
@@ -30,14 +30,14 @@ const PersonSchema = {
   },
 } as const;
 
-// Create a context for query engine
-const context: Context = {
+// Create a options for query engine
+const options = {
   sources: ["https://dbpedia.org/sparql"], // SPARQL endpoint
   language: "en", // Preferred language
-};
+} satisfies Options;
 
-// Create a resource using the data schema and context above
-const Persons = createLens(PersonSchema, context);
+// Create a resource using the data schema and options object above
+const Persons = createLens(PersonSchema, options);
 ```
 
 ### List all available data

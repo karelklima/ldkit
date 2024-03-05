@@ -41,13 +41,13 @@ export default function Home() {
 }
 
 const step1Markdown = `
-import { type Context, setDefaultContext } from "ldkit";
+import { type Options, setGlobalOptions } from "ldkit";
 
-const context: Context = {
+const options = {
   sources: ["https://dbpedia.org/sparql"],
-};
+} satisfies Options;
 
-setDefaultContext(context);
+setGlobalOptions(options);
 `;
 
 const step2Markdown = `

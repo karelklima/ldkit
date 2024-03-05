@@ -42,7 +42,6 @@ following type:
 ```ts
 type PersonType = {
   $id: string; // IRI
-  $type: string[]; // defined in `@type`
   name: string;
   birthDate: Date;
 };
@@ -61,7 +60,8 @@ When defining a schema, you can specify:
 
 ### Entity type
 
-Each schema must have at least one entity type defined.
+You can define one or more entity RDF type to narrow the search results. Setting
+the RDF type is recommended for optimal performance.
 
 ```ts
 const MySchema = {
@@ -89,12 +89,13 @@ const MySchema = {
     "@optional": true, // if present, the property is optional
     "@array": true, // if present, the resulting property is always an array
     "@multilang": true, // if present, the resulting property is a map of languages and literals
+    "@schema": SomeSubschema, // if present, uses a nested schema
   },
 } as const;
 ```
 
 Unless specified otherwise, it is assumed that any property is of type
-`xsd:string`, required, and not an array. You can override these default
+`xsd:string`, required, and not an array. You can override these defaults
 per-property.
 
 In addition, there is a shortcut to specify default properties. The following
@@ -139,7 +140,6 @@ const schema = {
 
 const convertedData = {
   $id: x.A,
-  $type: [x.Item],
   multilangProperty: {
     cs: "CS",
     en: "EN",
@@ -158,6 +158,35 @@ const MySchema = {
   "@type": schema.Person,
   [schema.name]: schema.name,
 };
+```
+
+### Explicitly infer resulting TypeScript type of entities
+
+If you need, to explicitly use the resulting type of entities, that is, the
+corresponding native TypeScript type of RDF data converted to JavaScript, you
+can use the `SchemaInterface` helper type.
+
+```ts
+import { type SchemaInterface } from "ldkit";
+import { dbo, rdfs, xsd } from "ldkit/namespaces";
+
+const PersonSchema = {
+  "@type": dbo.Person,
+  name: rdfs.label,
+  birthDate: {
+    "@id": dbo.birthDate,
+    "@type": xsd.date,
+  },
+} as const;
+
+type PersonType = SchemaInterface<typeof PersonSchema>;
+/**
+ * {
+ *   $id: IRI, // string alias
+ *   name: string,
+ *   birthDate: Date
+ * }
+ */
 ```
 
 ## Complete schema reference
@@ -212,7 +241,6 @@ And the resulting type will be:
 ```ts
 type ThingType = {
   $id: string;
-  $type: string[];
   required: string;
   optional: string | undefined;
   array: string[];
@@ -223,7 +251,6 @@ type ThingType = {
   date: Date;
   nested: {
     $id: string;
-    $type: string[];
     nestedValue: string;
   };
 };
