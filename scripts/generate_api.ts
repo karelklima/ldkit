@@ -32,4 +32,4 @@ export async function getApi() {
 export const api = await getApi();
 
 const apiFile = new URL(import.meta.resolve("../docs/api.json"));
-Deno.writeTextFileSync(apiFile, JSON.stringify(api, null, 2), { create: true });
+Deno.writeTextFileSync(apiFile, JSON.stringify(api) + "\n", { create: true });
