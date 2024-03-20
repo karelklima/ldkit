@@ -6,7 +6,9 @@ export default function App({ Component }: PageProps) {
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>www</title>
+        <title>
+          LDkit · Linked Data query toolkit for TypeScript developers
+        </title>
       </head>
       <body>
         <Component />
