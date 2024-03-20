@@ -1,5 +1,4 @@
 import { doc } from "https://deno.land/x/deno_doc@0.86.0/mod.ts";
-import type { DocNode } from "https://deno.land/x/deno_doc@0.86.0/types.d.ts";
 import { load as defaultLoad } from "https://deno.land/x/deno_graph@0.53.0/loader.ts";
 
 export function load(specifier: string) {
@@ -32,4 +31,6 @@ export async function getApi() {
 export const api = await getApi();
 
 const apiFile = new URL(import.meta.resolve("../docs/api.json"));
-Deno.writeTextFileSync(apiFile, JSON.stringify(api) + "\n", { create: true });
+Deno.writeTextFileSync(apiFile, JSON.stringify(api, null, 2) + "\n", {
+  create: true,
+});
