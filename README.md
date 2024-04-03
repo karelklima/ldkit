@@ -110,6 +110,16 @@ Persons.delete("http://dbpedia.org/resource/Alan_Turing");
 
 More complex examples can be found in [documentation](https://ldkit.io/docs).
 
+## Specification Compliance
+
+LDkit complies with the following specifications:
+
+- [RDF/JS: Data model specification](https://rdf.js.org/data-model-spec/)
+- [RDF/JS: Query specification](https://rdf.js.org/query-spec/)
+- [SPARQL 1.1 Query Language](https://www.w3.org/TR/sparql11-query/)
+- [SPARQL 1.1 Update](https://www.w3.org/TR/2013/REC-sparql11-update-20130321/)
+- [SPARQL 1.1 Protocol](https://www.w3.org/TR/2013/REC-sparql11-protocol-20130321/)
+
 ## License
 
 [MIT License](./LICENSE.md)
