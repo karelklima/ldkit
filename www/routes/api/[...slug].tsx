@@ -21,7 +21,7 @@ export const handler: Handlers<Data> = {
   GET(_req, ctx) {
     const base = new URL(_req.url);
     base.pathname = "/api";
-    const slug = ctx.params.slug;
+    const slug = ctx.params.slug !== undefined ? ctx.params.slug : "";
 
     const match = slug.match(
       /^([a-zA-Z_\/.]+)?(~[a-zA-Z0-9_]+)?(\.[a-zA-Z_.]+)?$/,

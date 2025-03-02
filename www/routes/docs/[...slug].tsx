@@ -22,7 +22,7 @@ interface Page extends TableOfContentsEntry {
 
 export const handler: Handlers<Data> = {
   async GET(_req, ctx) {
-    const slug = ctx.params.slug;
+    const slug = ctx.params.slug !== undefined ? ctx.params.slug : "";
     if (slug === "") {
       return new Response("", {
         status: 307,
