@@ -112,7 +112,7 @@ export const initStore = () => {
   const assertStore = (turtle: string) => {
     const storeQuads = store.getQuads(null, null, null, null);
     const expectedQuads = ttl(turtle);
-    assertEquals(storeQuads, expectedQuads);
+    assertEquals(storeQuads as RDF.Quad[], expectedQuads);
   };
   const empty = async () => {
     await emptyStore(store);

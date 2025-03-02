@@ -58,6 +58,8 @@ Deno.test("E2E / DBpedia / Query multiple random remote entities", async () => {
 });
 
 Deno.test("E2E / DBpedia / Query count", async () => {
+  // Wait a bit before executing a heavy query
+  await new Promise((resolve) => setTimeout(resolve, 5000));
   const count = await Actors.count();
   assert(count > 0);
 });
