@@ -57,7 +57,7 @@ Deno.test("E2E / DBpedia / Query multiple random remote entities", async () => {
   assert(actors.length == 7);
 });
 
-Deno.test.only("E2E / DBpedia / Query count", async () => {
+Deno.test("E2E / DBpedia / Query count", async () => {
   const count = await Actors.count(100);
   assert(count > 0);
 });
