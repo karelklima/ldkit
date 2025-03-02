@@ -1,10 +1,10 @@
-import { AsyncIterator } from "npm:asynciterator@3.8.0";
+import { AsyncIterator } from "npm:asynciterator@^3.9.0";
 
 export {
   ArrayIterator,
   type AsyncIterator,
   MappingIterator,
-} from "npm:asynciterator@3.8.0";
+} from "npm:asynciterator@^3.9.0";
 
 type TreeNode<T> = {
   [property: string]: T[] | TreeNode<T>;
@@ -38,7 +38,7 @@ export class TreeIterator<T> extends AsyncIterator<[...string[], T]> {
     this.readable = true;
   }
 
-  read() {
+  override read() {
     if (this.closed) {
       return null;
     }

@@ -149,9 +149,12 @@ export class QueryBuilder {
     return conditions;
   }
 
-  countQuery() {
+  countQuery(max?: number) {
     const quads = this.getShape(Flags.ExcludeOptional | Flags.IncludeTypes);
-    return SELECT`(count(?iri) as ?count)`.WHERE`${quads}`.build();
+    const innerQuery = max === undefined
+      ? quads
+      : SELECT`?iri`.WHERE`${quads}`.LIMIT(max);
+    return SELECT`(count(?iri) as ?count)`.WHERE`${innerQuery}`.build();
   }
 
   getQuery(

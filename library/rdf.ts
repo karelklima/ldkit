@@ -1,14 +1,14 @@
-import type * as RDF from "npm:@rdfjs/types";
+import type * as RDF from "npm:@rdfjs/types@^2.0.0";
 
 export type { RDF };
 
-export { fromRdf, toRdf } from "npm:rdf-literal@1.3.1";
+export { fromRdf, toRdf } from "npm:rdf-literal@^2.0.0";
 
-import { DataFactory, DefaultGraph } from "npm:rdf-data-factory@1.1.1";
+import { DataFactory, DefaultGraph } from "npm:rdf-data-factory@^2.0.2";
 export { DataFactory, DefaultGraph };
 
-// @deno-types="npm:@types/n3"
-export * as N3 from "npm:n3@1.17.2";
+// @deno-types="npm:@types/n3@^1.21.1"
+export * as N3 from "npm:n3@^1.23.1";
 
 export type IRI = string;
 

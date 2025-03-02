@@ -1,7 +1,7 @@
 import type {
-  IDataSource,
   IQueryContextCommon,
-} from "npm:@comunica/types@2.6.8";
+  QuerySourceUnidentified,
+} from "npm:@comunica/types@^4.1.0";
 
 import { RDF } from "../rdf.ts";
 
@@ -23,7 +23,7 @@ import { RDF } from "../rdf.ts";
  */
 export type QueryContext =
   & RDF.QueryStringContext
-  & RDF.QuerySourceContext<IDataSource>
+  & RDF.QuerySourceContext<QuerySourceUnidentified>
   & IQueryContextCommon;
 
 /**
