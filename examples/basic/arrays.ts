@@ -1,6 +1,6 @@
 import { createLens, createNamespace, type Options } from "ldkit";
 import { DataFactory, N3 } from "ldkit/rdf";
-import { QueryEngine as Comunica } from "npm:@comunica/query-sparql-rdfjs@2.5.2";
+import { QueryEngine as Comunica } from "npm:@comunica/query-sparql-rdfjs@4.1.0";
 
 // Create a custom namespace
 const ns = createNamespace(

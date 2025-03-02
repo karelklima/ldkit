@@ -1,4 +1,4 @@
-import { type Context, createLens, type SchemaInterface } from "ldkit";
+import { type Options, createLens, type SchemaInterface } from "ldkit";
 import { dbo, rdfs, xsd } from "ldkit/namespaces";
 
 const ActorSchema = {
@@ -16,7 +16,7 @@ const ActorSchema = {
 export const createLanguageContext = (language: string) => ({
   sources: ["https://dbpedia.org/sparql"],
   language,
-} as Context);
+} as Options);
 
 export type ActorInterface = SchemaInterface<typeof ActorSchema>;
 

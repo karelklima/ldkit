@@ -1,5 +1,5 @@
 import {
-  type Context,
+  type Options,
   createLens,
   createNamespace,
   type SchemaInterface,
@@ -7,7 +7,7 @@ import {
 import { xsd } from "ldkit/namespaces";
 import { QueryEngine as Comunica } from "@comunica/query-sparql-rdfjs";
 
-import { Store } from "n3";
+import { N3 } from "ldkit/rdf";
 
 const t = createNamespace(
   {
@@ -26,17 +26,17 @@ const TodoSchema = {
   },
 } as const;
 
-export const store = new Store();
+export const store = new N3.Store();
 
-const context: Context = {
+const options: Options = {
   sources: [store],
+  engine: new Comunica(),
+  logQuery: (query) => console.log(query)
 };
-
-const engine = new Comunica();
 
 export type TodoInterface = SchemaInterface<typeof TodoSchema>;
 
-export const Todos = createLens(TodoSchema, context, engine);
+export const Todos = createLens(TodoSchema, options);
 
 export const getRandomId = () =>
   `https://todos/${1000 + Math.floor(Math.random() * 1000)}`;
