@@ -91,7 +91,7 @@ function Sidebar(props: PageProps<Data>) {
 }
 
 function Content(props: PageProps<Data>) {
-  const { base, current, currentSymbol, currentProperty } = props.data;
+  const { current, currentSymbol, currentProperty } = props.data;
 
   const url = new URL("https://deno.land/x/ldkit");
 
