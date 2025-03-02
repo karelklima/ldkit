@@ -51,7 +51,7 @@ export const Add: React.FC = () => {
           description: inputValue,
           done: false,
         }).then(() => {
-          queryClient.invalidateQueries(["todos"]);
+          queryClient.invalidateQueries({ queryKey: ["todos"] });
         });
         inputRef.current.value = "";
       }
