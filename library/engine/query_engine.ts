@@ -59,7 +59,7 @@ export class QueryEngine implements IQueryEngine {
   }
 
   protected query(
-    query: string,
+    body: { query: string } | { update: string },
     responseType: string,
     context?: QueryContext,
   ): Promise<Response> {
@@ -71,9 +71,7 @@ export class QueryEngine implements IQueryEngine {
         "accept": responseType,
         "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
       },
-      body: new URLSearchParams({
-        query,
-      }),
+      body: new URLSearchParams(body),
     });
   }
 
@@ -84,7 +82,7 @@ export class QueryEngine implements IQueryEngine {
   ) {
     const responseType = getResponseTypes(type).join(", ");
     const response = await this.query(
-      query,
+      { query },
       responseType,
       context,
     );
@@ -152,6 +150,10 @@ export class QueryEngine implements IQueryEngine {
     query: string,
     context?: QueryContext,
   ): Promise<void> {
-    await this.query(query, "application/sparql-results+json", context);
+    await this.query(
+      { update: query },
+      "application/sparql-results+json",
+      context,
+    );
   }
 }
