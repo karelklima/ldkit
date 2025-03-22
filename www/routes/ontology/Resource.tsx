@@ -15,7 +15,7 @@ export default function OntologyResource() {
         <p>
           <code>ldkit:Resource</code>{" "}
           is a term that is used internally in the LDkit library when building
-          entities from the RDF graph into shapes defined by data schema. Each
+          entities from RDF graphs into shapes defined by data schema. Each
           entity to be decoded from the graph must be of type{" "}
           <code>ldkit:Resource</code> in order to be processed correctly.
         </p>
@@ -33,7 +33,7 @@ export default function OntologyResource() {
         <h2>Links</h2>
         <ul>
           <li>
-            <a href="/ontology">LDkit Ontology</a>
+            <a href="/ontology">LDkit ontology</a>
           </li>
           <li>
             <a href="/ontology/IRI">ldkit:IRI</a>

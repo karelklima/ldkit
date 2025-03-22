@@ -32,7 +32,7 @@ export default function OntologyIRI() {
         <h2>Links</h2>
         <ul>
           <li>
-            <a href="/ontology">LDkit Ontology</a>
+            <a href="/ontology">LDkit ontology</a>
           </li>
           <li>
             <a href="/ontology/Resource">ldkit:Resource</a>
