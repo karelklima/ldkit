@@ -9,6 +9,9 @@ import * as $api_slug_ from "./routes/api/[...slug].tsx";
 import * as $docs_slug_ from "./routes/docs/[...slug].tsx";
 import * as $gfm_css from "./routes/gfm.css.ts";
 import * as $index from "./routes/index.tsx";
+import * as $ontology_IRI from "./routes/ontology/IRI.tsx";
+import * as $ontology_Resource from "./routes/ontology/Resource.tsx";
+import * as $ontology_index from "./routes/ontology/index.tsx";
 
 import { type Manifest } from "$fresh/server.ts";
 
@@ -21,6 +24,9 @@ const manifest = {
     "./routes/docs/[...slug].tsx": $docs_slug_,
     "./routes/gfm.css.ts": $gfm_css,
     "./routes/index.tsx": $index,
+    "./routes/ontology/IRI.tsx": $ontology_IRI,
+    "./routes/ontology/Resource.tsx": $ontology_Resource,
+    "./routes/ontology/index.tsx": $ontology_index,
   },
   islands: {},
   baseUrl: import.meta.url,

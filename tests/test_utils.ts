@@ -39,6 +39,8 @@ export const DF = () => {
     variable: df.variable.bind(df),
     quad: df.quad.bind(df),
     defaultGraph: df.defaultGraph.bind(df),
+    fromTerm: df.fromTerm.bind(df),
+    fromQuad: df.fromQuad.bind(df),
   };
 };
 
