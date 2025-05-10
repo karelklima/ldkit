@@ -4,6 +4,8 @@ export type { RDF };
 
 export { fromRdf, toRdf } from "npm:rdf-literal@^2.0.0";
 
+import { quadToStringQuad } from "npm:rdf-string@^2.0.0";
+
 import { DataFactory, DefaultGraph } from "npm:rdf-data-factory@^2.0.2";
 export { DataFactory, DefaultGraph };
 
@@ -16,18 +18,33 @@ export type Node = Map<IRI, RDF.Term[]>;
 
 export type Graph = Map<IRI, Node>;
 
-export const quadsToGraph = (quads: Iterable<RDF.Quad>) => {
-  const graph: Graph = new Map();
-  for (const quad of quads) {
-    const s = quad.subject.value;
-    const p = quad.predicate.value;
+export const quadsToGraph = (quadStream: RDF.ResultStream<RDF.Quad>) => {
+  return new Promise<Graph>((resolve, reject) => {
+    const graph: Graph = new Map();
+    const included: Record<string, true> = {};
 
-    const predicateMap = graph.get(s) || graph.set(s, new Map()).get(s)!;
-    const termArray = predicateMap.get(p) || predicateMap.set(p, []).get(p)!;
+    quadStream.on("data", (quad) => {
+      const hash = Object.values(quadToStringQuad(quad)).join(" ");
 
-    termArray.push(quad.object);
-  }
-  return graph;
+      if (included[hash]) {
+        return;
+      }
+
+      included[hash] = true;
+
+      const s = quad.subject.value;
+      const p = quad.predicate.value;
+
+      const predicateMap = graph.get(s) || graph.set(s, new Map()).get(s)!;
+      const termArray = predicateMap.get(p) || predicateMap.set(p, []).get(p)!;
+
+      termArray.push(quad.object);
+    });
+
+    quadStream.on("end", () => resolve(graph));
+
+    quadStream.on("error", reject);
+  });
 };
 
 export declare namespace RDFJSON {

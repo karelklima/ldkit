@@ -7,7 +7,7 @@ import { DataFactory, N3, type RDF } from "ldkit/rdf";
 import { ldkit, schema, xsd } from "ldkit/namespaces";
 import { Options, type QueryContext } from "ldkit";
 
-import { quadsToGraph } from "../library/rdf.ts";
+import { Graph } from "../library/rdf.ts";
 
 export type Equals<A, B> = A extends B ? (B extends A ? true : false) : false;
 
@@ -83,9 +83,23 @@ export const ttl = (turtle: string) => {
   return quads;
 };
 
+export const quadsToGraphSync = (quads: Iterable<RDF.Quad>) => {
+  const graph: Graph = new Map();
+  for (const quad of quads) {
+    const s = quad.subject.value;
+    const p = quad.predicate.value;
+
+    const predicateMap = graph.get(s) || graph.set(s, new Map()).get(s)!;
+    const termArray = predicateMap.get(p) || predicateMap.set(p, []).get(p)!;
+
+    termArray.push(quad.object);
+  }
+  return graph;
+};
+
 export const createGraph = (turtle: string) => {
   const quads = ttl(turtle);
-  return quadsToGraph(quads);
+  return quadsToGraphSync(quads);
 };
 
 export const createStore = () =>
