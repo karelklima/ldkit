@@ -1,0 +1,12 @@
+{
+  "imports": {
+    "ldkit": "../../mod.ts",
+    "ldkit/namespaces": "../../namespaces.ts"
+  },
+  "tasks": {
+    "scenario1": "deno run --allow-net --allow-env ./scenario1.ts",
+    "scenario2": "deno run --allow-net --allow-env ./scenario2.ts",
+    "scenario3": "deno run --allow-net --allow-env ./scenario3.ts"
+  },
+  "lock": false
+}
