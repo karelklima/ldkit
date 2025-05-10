@@ -1,3 +1,5 @@
+import { readableFromWeb } from "../utils.ts";
+
 import { BindingsFactory, N3, QuadFactory, type RDF, RDFJSON } from "../rdf.ts";
 import {
   ArrayIterator,
@@ -74,10 +76,15 @@ class QuadsJsonResolver extends QueryResolver<"quads"> {
 
 class QuadsTurtleResolver extends QueryResolver<"quads"> {
   async resolve(response: Response) {
-    const text = await response.text();
+    if (response.body === null) {
+      throw new Error(
+        "Response body is null, but it should contain quads from the SPARQL query",
+      );
+    }
 
-    const quads = new N3.Parser({ format: "turtle" }).parse(text);
-    return new ArrayIterator(quads);
+    const stream = readableFromWeb(response.body);
+    const parser = new N3.StreamParser({ format: "turtle" });
+    return await parser.import(stream);
   }
 }
 
