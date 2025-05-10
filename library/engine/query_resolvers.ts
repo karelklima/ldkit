@@ -46,11 +46,10 @@ class BindingsJsonResolver extends QueryResolver<"bindings"> {
       json.results!.bindings,
     );
 
-    // TODO: review the unknown type cast
     return new MappingIterator(
       bindingsIterator,
       (i) => bindingsFactory.fromJson(i),
-    ) as unknown as RDF.ResultStream<RDF.Bindings>;
+    );
   }
 }
 
@@ -66,25 +65,46 @@ class QuadsJsonResolver extends QueryResolver<"quads"> {
 
     const treeIterator = new TreeIterator<RDFJSON.Term>(json);
 
-    // TODO: review the unknown type cast
     return new MappingIterator(
       treeIterator,
       (i) => quadFactory.fromJson(i as [string, string, RDFJSON.Term]),
-    ) as unknown as RDF.ResultStream<RDF.Quad>;
+    );
+  }
+}
+
+const createN3Stream = async (response: Response, format: string) => {
+  if (response.body === null) {
+    throw new Error(
+      "Response body is null, but it should contain quads from the SPARQL query",
+    );
+  }
+
+  const stream = readableFromWeb(response.body);
+  const parser = new N3.StreamParser({ format });
+  return await parser.import(stream);
+};
+
+class QuadsNTriplesResolver extends QueryResolver<"quads"> {
+  resolve(response: Response) {
+    return createN3Stream(response, "N-Triples");
+  }
+}
+
+class QuadsNQuadsResolver extends QueryResolver<"quads"> {
+  resolve(response: Response) {
+    return createN3Stream(response, "N-Quads");
   }
 }
 
 class QuadsTurtleResolver extends QueryResolver<"quads"> {
-  async resolve(response: Response) {
-    if (response.body === null) {
-      throw new Error(
-        "Response body is null, but it should contain quads from the SPARQL query",
-      );
-    }
+  resolve(response: Response) {
+    return createN3Stream(response, "Turtle");
+  }
+}
 
-    const stream = readableFromWeb(response.body);
-    const parser = new N3.StreamParser({ format: "turtle" });
-    return await parser.import(stream);
+class QuadsTrigResolver extends QueryResolver<"quads"> {
+  resolve(response: Response) {
+    return createN3Stream(response, "TriG");
   }
 }
 
@@ -101,7 +121,10 @@ const resolvers: ResolversMap = {
   },
   "quads": {
     "application/rdf+json": new QuadsJsonResolver(),
+    "application/n-triples": new QuadsNTriplesResolver(),
+    "application/n-quads": new QuadsNQuadsResolver(),
     "text/turtle": new QuadsTurtleResolver(),
+    "application/trig": new QuadsTrigResolver(),
   },
 };
 
