@@ -1,0 +1,10 @@
+{
+  "imports": {
+    "ldkit": "../../mod.ts"
+  },
+  "tasks": {
+    "test": "deno run --allow-net --allow-env --allow-write ./test.ts",
+    "populate": "deno run --allow-net --allow-env ./populate.ts"
+  },
+  "lock": false
+}
