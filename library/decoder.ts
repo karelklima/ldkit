@@ -1,8 +1,9 @@
 import type { Options } from "./options.ts";
-import { fromRdf, Graph, IRI, Node, type RDF } from "./rdf.ts";
+import { Graph, IRI, Node, type RDF } from "./rdf.ts";
 import type { ExpandedProperty, ExpandedSchema } from "./schema/mod.ts";
 import { ldkit } from "../namespaces/ldkit.ts";
 import { rdf } from "../namespaces/rdf.ts";
+import { translateFromRdf } from "./translator.ts";
 
 export const decode = (
   graph: Graph,
@@ -231,7 +232,7 @@ class Decoder {
     if (term.termType === "NamedNode") {
       return term.value;
     } else if (term.termType === "Literal") {
-      return fromRdf(term);
+      return translateFromRdf(term);
     } else {
       throw new Error(`Unsupported term type to resolve: ${term.termType}`);
     }

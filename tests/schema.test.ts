@@ -6,6 +6,13 @@ import {
 } from "./test_deps.ts";
 import { x } from "./test_utils.ts";
 
+import {
+  createNamespace,
+  type Schema,
+  type SchemaInterface,
+  type SchemaSearchInterface,
+  type SchemaUpdateInterface,
+} from "ldkit";
 import { rdf, xsd } from "ldkit/namespaces";
 import { type SparqlValue } from "ldkit/sparql";
 
@@ -13,12 +20,24 @@ import {
   ExpandedProperty,
   type ExpandedSchema,
   expandSchema,
-  type Schema,
-  type SchemaInterface,
-  type SchemaSearchInterface,
-  type SchemaUpdateInterface,
 } from "../library/schema/mod.ts";
 import { IRI } from "../library/rdf.ts";
+
+const ex = createNamespace(
+  {
+    iri: "http://example.org/",
+    prefix: "ex:",
+    terms: [
+      "bigint",
+    ],
+  } as const,
+);
+
+declare module "ldkit" {
+  interface CustomDataTypes {
+    [ex.bigint]: bigint;
+  }
+}
 
 type ArrayUpdate<T> = {
   $set?: T[];
@@ -264,6 +283,48 @@ Deno.test("Schema / Basic datatypes", () => {
     date: {
       "@id": x.date,
       "@type": xsd.date,
+    },
+  };
+
+  type I = SchemaInterface<typeof Prototype>;
+  type U = SchemaUpdateInterface<typeof Prototype>;
+  type S = SchemaSearchInterface<typeof Prototype>;
+
+  assertTypeSafe<Equals<I, PrototypeInterface>>();
+  assertTypeSafe<Equals<U, PrototypeUpdateInterface>>();
+  assertTypeSafe<Equals<S, PrototypeSearchInterface>>();
+
+  assertEquals(expandSchema(Prototype), PrototypeSchema);
+});
+
+Deno.test("Schema / Custom datatypes", () => {
+  const Prototype = {
+    bigint: {
+      "@id": x.bigint,
+      "@type": ex.bigint,
+    },
+  } as const;
+
+  type PrototypeInterface = {
+    $id: string;
+    bigint: bigint;
+  };
+
+  type PrototypeUpdateInterface = {
+    $id: string;
+    bigint?: bigint;
+  };
+
+  type PrototypeSearchInterface = {
+    $id?: IRI | IRI[];
+    bigint?: PropertySearch<bigint>;
+  };
+
+  const PrototypeSchema: ExpandedSchema = {
+    "@type": [],
+    bigint: {
+      "@id": x.bigint,
+      "@type": ex.bigint,
     },
   };
 

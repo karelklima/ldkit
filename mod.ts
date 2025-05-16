@@ -1,6 +1,7 @@
 export { type Options, setGlobalOptions } from "./library/options.ts";
 
 export type {
+  CustomDataTypes,
   Identity,
   Property,
   Schema,
@@ -9,6 +10,8 @@ export type {
   SchemaUpdateInterface,
   SupportedDataTypes,
 } from "./library/schema/mod.ts";
+
+export { registerDataHandler } from "./library/translator.ts";
 
 export * from "./library/lens/mod.ts";
 

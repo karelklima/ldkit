@@ -3,8 +3,8 @@ import { rdf } from "../../namespaces/rdf.ts";
 import { ldkit } from "../../namespaces/ldkit.ts";
 import { type IRI } from "../rdf.ts";
 
-/** Map of supported RDF data types and their JavaScript native counterparts */
-export type SupportedDataTypes = {
+/** Map of default RDF data types and their JavaScript native counterparts */
+type DefaultDataTypes = {
   [xsd.dateTime]: Date;
   [xsd.date]: Date;
   [xsd.gDay]: Date;
@@ -43,6 +43,19 @@ export type SupportedDataTypes = {
   [xsd.duration]: string;
   [ldkit.IRI]: IRI;
 };
+
+/** Custom data types definition. Keys are type IRIs, values are JavaScript native types */
+// deno-lint-ignore no-empty-interface
+export interface CustomDataTypes {}
+
+/**
+ * Map of supported RDF data types and their JavaScript native counterparts,
+ * combines default data types with custom data types.
+ * The keys are the IRIs of the data types, and the values are the corresponding JavaScript types.
+ */
+export type SupportedDataTypes =
+  & Omit<DefaultDataTypes, keyof CustomDataTypes>
+  & CustomDataTypes;
 
 /** List of supported native JavaScript types */
 export type SupportedNativeTypes = SupportedDataTypes[keyof SupportedDataTypes];
