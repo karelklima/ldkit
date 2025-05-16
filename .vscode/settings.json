@@ -9,5 +9,6 @@
     "examples/react-bulletin-boards",
     "examples/react-dbpedia-actors",
     "examples/react-query-todo-app"
-  ]
+  ],
+  "files.eol": "\n"
 }
