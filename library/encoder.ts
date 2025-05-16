@@ -1,9 +1,10 @@
 import type { Options } from "./options.ts";
-import { DataFactory, type IRI, type RDF, toRdf } from "./rdf.ts";
+import { DataFactory, type IRI, type RDF } from "./rdf.ts";
 import type { ExpandedProperty, ExpandedSchema } from "./schema/mod.ts";
 import { xsd } from "../namespaces/xsd.ts";
 import { rdf } from "../namespaces/rdf.ts";
 import { ldkit } from "../namespaces/ldkit.ts";
+import { translateToRdf } from "./translator.ts";
 
 type DecodedNode = Record<string, unknown>;
 
@@ -33,9 +34,7 @@ export const encodeValue = (
   if (datatype === ldkit.IRI) {
     return df.namedNode(value as string);
   }
-  return toRdf(value, {
-    datatype: df.namedNode(datatype),
-  });
+  return translateToRdf(value, datatype);
 };
 
 class Encoder {

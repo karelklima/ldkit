@@ -11,6 +11,8 @@ export type {
   SupportedDataTypes,
 } from "./library/schema/mod.ts";
 
+export { registerDataHandler } from "./library/translator.ts";
+
 export * from "./library/lens/mod.ts";
 
 export * from "./library/namespace.ts";
