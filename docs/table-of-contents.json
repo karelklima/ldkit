@@ -24,7 +24,8 @@
       ["pagination", "Pagination"],
       ["working-with-arrays", "Working with arrays"],
       ["inverse-properties", "Inverse properties"],
-      ["supported-data-types", "Supported data types"]
+      ["supported-data-types", "Supported data types"],
+      ["custom-data-types", "Custom data types"]
     ]
   }
 }
