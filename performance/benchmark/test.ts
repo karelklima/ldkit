@@ -44,7 +44,7 @@ console.log("Running simple and object properties test...");
 await test([1, 0, 1], [1, 0, 1]);
 
 console.log("Running simple and object and array mixed properties test...");
-await test([10, 1, 10], [0, 1, 0]);
+await test([1, 1, 1], [1, 1, 1]);
 
 console.log("RESULTS", results);
 Deno.writeTextFileSync("results.json", JSON.stringify(results, null, 2));
