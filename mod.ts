@@ -1,6 +1,7 @@
 export { type Options, setGlobalOptions } from "./library/options.ts";
 
 export type {
+  CustomDataTypes,
   Identity,
   Property,
   Schema,

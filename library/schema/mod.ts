@@ -1,4 +1,8 @@
-export type { SupportedDataTypes, SupportedNativeTypes } from "./data_types.ts";
+export type {
+  CustomDataTypes,
+  SupportedDataTypes,
+  SupportedNativeTypes,
+} from "./data_types.ts";
 
 export type {
   Identity,
