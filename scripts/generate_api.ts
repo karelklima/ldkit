@@ -1,18 +1,22 @@
-import { doc } from "https://deno.land/x/deno_doc@0.86.0/mod.ts";
-import { load as defaultLoad } from "https://deno.land/x/deno_graph@0.53.0/loader.ts";
-
-export function load(specifier: string) {
-  if (specifier.startsWith("npm:")) {
-    specifier = `https://esm.sh/${specifier.slice(4)}`;
-  }
-  return defaultLoad(specifier);
-}
+// This script generates the API documentation for the library by using Deno's built-in
+// documentation generation tool. It loads the modules, generates the documentation,
+// and saves it to a JSON file. The generated documentation includes information about
+// the modules, classes, functions, and types defined in the library.
 
 const modules = ["mod", "namespaces", "rdf", "sparql"];
 
 async function loadDoc(module: string) {
-  const file = import.meta.resolve(`../${module}.ts`);
-  return await doc(file, { printImportMapDiagnostics: true, load });
+  const command = new Deno.Command(Deno.execPath(), {
+    args: ["doc", "--json", `./${module}.ts`],
+    stdout: "piped",
+    stderr: "piped",
+  });
+
+  const { stdout } = await command.output();
+  const value = new TextDecoder().decode(stdout);
+  const json = JSON.parse(value);
+
+  return json.nodes;
 }
 
 export async function getApi() {

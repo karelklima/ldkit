@@ -5,7 +5,8 @@
     "fmt:check": "deno fmt --check library/ tests/ www/ docs/",
     "lint": "deno lint library/ tests/ www/ docs/",
     "test": "deno test -A ./tests -- --nolog",
-    "dnt": "deno run -A --importmap ./scripts/dnt_import_map.json ./scripts/dnt.ts"
+    "dnt": "deno run -A --importmap ./scripts/dnt_import_map.json ./scripts/dnt.ts",
+    "generate_api": "deno run -A ./scripts/generate_api.ts"
   },
   "compilerOptions": {
     "jsx": "react-jsx",

@@ -16,7 +16,30 @@ const nativeToRdfHandlers = new Map<
  * Registers a data type handler for translating between RDF literals and JavaScript values.
  *
  * In order to register a custom data type handler, the custom data type TypeScript mapping needs
- * to be added to the `CustomDataTypes` interface using module augmentation.
+ * to be added to the {@link CustomDataTypes} interface using module augmentation.
+ *
+ * Two handlers are required:
+ * 1) A function to translate from RDF literal value (string) to JavaScript value.
+ * 2) A function to translate from JavaScript value to RDF literal value (string).
+ *
+ * @example
+ * ```typescript
+ * import { registerDataHandler } from "ldkit";
+ *
+ * const customNumberDataType = "http://example.org/number";
+ *
+ * declare module "ldkit" {
+ *   interface CustomDataTypes {
+ *     [customNumberDataType]: number;
+ *   }
+ * }
+ *
+ * registerDataHandler(
+ *   customNumberDataType,
+ *   (literalValue: string) => parseInt(literalValue),
+ *   (nativeValue: number) => nativeValue.toString(),
+ * );
+ * ```
  *
  * @param dataType - The data type to register.
  * @param translateFromRDF - Function to translate from RDF literal to JavaScript value.
