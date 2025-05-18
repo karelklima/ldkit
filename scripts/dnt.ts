@@ -1,4 +1,4 @@
-import { build, emptyDir } from "https://deno.land/x/dnt@0.33.1/mod.ts";
+import { build, emptyDir } from "jsr:@deno/dnt@0.42.1/";
 
 await emptyDir("./npm");
 
@@ -12,21 +12,26 @@ await build({
   entryPoints: [
     "./mod.ts",
     ...dntExports,
+    {
+      kind: "bin",
+      name: "ldkit",
+      path: "./cli.ts",
+    },
   ],
   outDir: "./npm",
-  importMap: "./scripts/dnt_import_map.json",
   compilerOptions: {
-    lib: ["es2021", "dom"],
+    lib: ["ESNext", "DOM"],
     //target: "ES5",
   },
   shims: {
     // see JS docs for overview and more options
-    // deno: true,
+    // deno: "dev",
     // undici: true,
   },
   test: false,
-  typeCheck: true,
-  declaration: true,
+  rootTestDir: "./tests",
+  typeCheck: "single",
+  declaration: "inline",
   package: {
     // package.json properties
     name: "ldkit",
@@ -44,23 +49,25 @@ await build({
       url: "https://github.com/karelklima/ldkit/issues",
     },
   },
+  postBuild() {
+    console.log("Copying LICENSE and README.md");
+    Deno.copyFileSync("LICENSE", "npm/LICENSE");
+    Deno.copyFileSync("README.md", "npm/README.md");
+
+    console.info("Creating legacy node exports");
+    for (const e of exports) {
+      const packageContents = {
+        main: `../script/${e}.js`,
+        module: `../esm/${e}.js`,
+        types: `../types/${e}.d.ts`,
+      };
+      Deno.mkdirSync(`npm/${e}`);
+      Deno.writeTextFileSync(
+        `npm/${e}/package.json`,
+        JSON.stringify(packageContents),
+      );
+    }
+
+    console.info("Post build finished");
+  },
 });
-
-console.info("Creating legacy node exports");
-for (const e of exports) {
-  const packageContents = {
-    main: `../script/${e}.js`,
-    module: `../esm/${e}.js`,
-    types: `../types/${e}.d.ts`,
-  };
-  Deno.mkdirSync(`npm/${e}`);
-  Deno.writeTextFileSync(
-    `npm/${e}/package.json`,
-    JSON.stringify(packageContents),
-  );
-}
-console.info("Done creating legacy node exports");
-
-// post build steps
-Deno.copyFileSync("LICENSE", "npm/LICENSE");
-Deno.copyFileSync("README.md", "npm/README.md");
