@@ -14,7 +14,7 @@ The usual task of working with Linked Data comprises of these protocols:
   to query data.
 - Optionally, you can tweak the [Query Engine](./components/query-engine).
 
-As an added bonus, LDkit provides several low-level
-[power tools](./components/power-tools) in case you need to work with RDF
-directly, create SPARQL queries or transform data from and to RDF using a
-[Schema](./components/schema).
+As an added bonus, LDkit provides several
+[schema generators](./components/schema-generators) that help creating LDkit
+[Schema](./components/schema) from JSON-LD contexts, ShEx shapes, or SHACL
+shapes.
