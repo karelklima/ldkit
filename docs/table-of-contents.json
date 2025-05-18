@@ -13,7 +13,7 @@
       ["options", "Options"],
       ["namespaces", "Namespaces"],
       ["query-engine", "Query Engine"],
-      ["power-tools", "Power Tools"]
+      ["schema-generators", "Schema generators"]
     ]
   },
   "features": {
