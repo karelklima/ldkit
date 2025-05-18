@@ -193,6 +193,10 @@ Deno.test("Scripts / Schema To Script / Property basics", () => {
         id: "http://schema.org/age",
         type: "http://www.w3.org/2001/XMLSchema#integer",
       },
+      depiction: {
+        id: "http://schema.org/depiction",
+        type: "@id",
+      },
       custom: {
         id: "http://example.com/custom",
         type: "http://example.com/customType",
@@ -201,7 +205,7 @@ Deno.test("Scripts / Schema To Script / Property basics", () => {
   };
 
   const script = s`
-    import { schema, xsd } from "ldkit/namespaces";
+    import { ldkit, schema, xsd } from "ldkit/namespaces";
 
     export const TheSchema = {
       givenName: schema.givenName,
@@ -209,6 +213,10 @@ Deno.test("Scripts / Schema To Script / Property basics", () => {
       age: {
         "@id": schema.age,
         "@type": xsd.integer,
+      },
+      depiction: {
+        "@id": schema.depiction,
+        "@type": ldkit.IRI,
       },
       custom: {
         "@id": "http://example.com/custom",

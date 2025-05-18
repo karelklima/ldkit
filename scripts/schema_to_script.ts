@@ -135,6 +135,10 @@ class SchemaPrinter {
   }
 
   private extractNamespace(value: string): void {
+    if (value === "@id") {
+      this.usedNamespaces.add(this.printPrefix(ldkit));
+      return;
+    }
     for (const namespace of NAMESPACES) {
       if (value.startsWith(namespace.$iri)) {
         this.usedNamespaces.add(this.printPrefix(namespace));
@@ -260,6 +264,9 @@ class SchemaPrinter {
   }
 
   private printPrefixed(value: string): string {
+    if (value === "@id") {
+      return `${this.printPrefix(ldkit)}.IRI`;
+    }
     for (const namespace of NAMESPACES) {
       if (value.startsWith(namespace.$iri)) {
         return `${this.printPrefix(namespace)}.${
