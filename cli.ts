@@ -88,7 +88,6 @@ program.command("shexj-to-schema")
   .action(async (method, input) => {
     try {
       const resolvedInput = await resolve(method, input);
-      console.log("RESOLVED INPUT", resolvedInput);
       const schema = shexjToSchema(JSON.parse(resolvedInput));
       console.log(schemaToScript(schema));
     } catch (error: unknown) {
