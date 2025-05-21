@@ -1,0 +1,105 @@
+{
+  "type": "Schema",
+  "start": "PersonShape",
+  "shapes": [
+    {
+      "id": "PersonShape",
+      "type": "ShapeDecl",
+      "shapeExpr": {
+        "type": "Shape",
+        "expression": {
+          "type": "EachOf",
+          "expressions": [
+            {
+              "type": "TripleConstraint",
+              "predicate": "http://schema.org/name",
+              "valueExpr": {
+                "type": "NodeConstraint",
+                "datatype": "http://www.w3.org/2001/XMLSchema#string"
+              }
+            },
+            {
+              "type": "TripleConstraint",
+              "predicate": "http://schema.org/birthDate",
+              "valueExpr": {
+                "type": "NodeConstraint",
+                "datatype": "http://www.w3.org/2001/XMLSchema#date"
+              }
+            },
+            {
+              "type": "TripleConstraint",
+              "predicate": "http://schema.org/url",
+              "valueExpr": {
+                "type": "NodeConstraint",
+                "nodeKind": "iri"
+              },
+              "min": 1,
+              "max": -1
+            },
+            {
+              "type": "TripleConstraint",
+              "predicate": "http://schema.org/address",
+              "valueExpr": "PostalAddressShape"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "PostalAddressShape",
+      "type": "ShapeDecl",
+      "shapeExpr": {
+        "type": "Shape",
+        "expression": {
+          "type": "EachOf",
+          "expressions": [
+            {
+              "type": "TripleConstraint",
+              "predicate": "http://schema.org/streetAddress",
+              "valueExpr": {
+                "type": "NodeConstraint",
+                "datatype": "http://www.w3.org/2001/XMLSchema#string"
+              }
+            },
+            {
+              "type": "TripleConstraint",
+              "predicate": "http://schema.org/addressLocality",
+              "valueExpr": {
+                "type": "NodeConstraint",
+                "datatype": "http://www.w3.org/2001/XMLSchema#string"
+              },
+              "min": 0,
+              "max": 1
+            },
+            {
+              "type": "TripleConstraint",
+              "predicate": "http://schema.org/addressRegion",
+              "valueExpr": {
+                "type": "NodeConstraint",
+                "datatype": "http://www.w3.org/2001/XMLSchema#string"
+              },
+              "min": 0,
+              "max": 1
+            },
+            {
+              "type": "TripleConstraint",
+              "predicate": "http://schema.org/postalCode",
+              "valueExpr": {
+                "type": "NodeConstraint",
+                "datatype": "http://www.w3.org/2001/XMLSchema#integer"
+              }
+            },
+            {
+              "type": "TripleConstraint",
+              "predicate": "http://schema.org/addressCountry",
+              "valueExpr": {
+                "type": "NodeConstraint",
+                "datatype": "http://www.w3.org/2001/XMLSchema#string"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

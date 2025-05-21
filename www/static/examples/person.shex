@@ -1,0 +1,19 @@
+PREFIX schema: <http://schema.org/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+start = @<PersonShape>
+
+<PersonShape> {
+  schema:name xsd:string ;
+  schema:birthDate xsd:date ;
+  schema:url IRI+ ;
+  schema:address @<PostalAddressShape> ;
+}
+
+<PostalAddressShape> {
+  schema:streetAddress xsd:string ;
+  schema:addressLocality xsd:string? ;
+  schema:addressRegion xsd:string? ;
+  schema:postalCode xsd:integer ;
+  schema:addressCountry xsd:string ;
+}

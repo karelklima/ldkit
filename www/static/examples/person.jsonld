@@ -1,0 +1,30 @@
+{
+  "@context": {
+    "schema": "http://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+
+    "name": "schema:name",
+    "birthDate": {
+      "@id": "schema:birthDate",
+      "@type": "xsd:date"
+    },
+    "website": {
+      "@id": "schema:url",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "address": {
+      "@id": "schema:address",
+      "@context": {
+        "streetAddress": "schema:streetAddress",
+        "addressLocality": "schema:addressLocality",
+        "addressRegion": "schema:addressRegion",
+        "postalCode": {
+          "@id": "schema:postalCode",
+          "@type": "xsd:integer"
+        },
+        "addressCountry": "schema:addressCountry"
+      }
+    }
+  }
+}
