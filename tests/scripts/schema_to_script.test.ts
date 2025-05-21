@@ -177,6 +177,44 @@ Deno.test("Scripts / Schema To Script / Schema with implicit subschemas", () => 
   test([schema], script);
 });
 
+Deno.test("Scripts / Schema To Script / Property name escaping", () => {
+  const schema = {
+    name: "TheSchema",
+    type: [],
+    properties: {
+      name: {
+        id: "http://schema.org/name",
+      },
+      givenName: {
+        id: "http://schema.org/givenName",
+      },
+      "country-name": {
+        id: "http://example.com/country-name",
+      },
+      "postal-code:": {
+        id: "http://example.com/postal-code",
+        type: "http://www.w3.org/2001/XMLSchema#integer",
+      },
+    },
+  };
+
+  const script = s`
+    import { schema, xsd } from "ldkit/namespaces";
+
+    export const TheSchema = {
+      name: schema.name,
+      givenName: schema.givenName,
+      "country-name": "http://example.com/country-name",
+      "postal-code:": {
+        "@id": "http://example.com/postal-code",
+        "@type": xsd.integer,
+      },
+    } as const;
+  `;
+
+  test([schema], script);
+});
+
 Deno.test("Scripts / Schema To Script / Property basics", () => {
   const schema = {
     name: "TheSchema",

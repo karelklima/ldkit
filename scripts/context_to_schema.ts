@@ -9,10 +9,6 @@ type JsonComposite = JsonArray | JsonObject;
 type Json = JsonPrimative | JsonComposite;
 export type JsonSpec = JsonComposite;
 
-export function run() {
-  console.log("Running context to schema conversion");
-}
-
 export async function contextToSchema(json: JsonSpec): Promise<SchemaSpec[]> {
   const converter = new ContextConverter();
   const schemas = await converter.process(json);

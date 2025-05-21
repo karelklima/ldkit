@@ -3,8 +3,8 @@
 LDkit provides experimental schema generators that help you convert existing
 Linked Data definitions into TypeScript schemas compatible with LDkit. These
 tools are available via the LDkit CLI and support generating code directly from
-[JSON-LD Contexts](https://www.w3.org/TR/json-ld11/), [ShEx](https://shex.io/),
-and [SHACL](https://www.w3.org/TR/shacl/).
+[JSON-LD contexts](https://www.w3.org/TR/json-ld11/), or
+[ShEx shapes](https://shex.io/).
 
 > ⚠️ **Note:** These generators are experimental and currently support only a
 > subset of the respective technologies. Manual review and adjustments of the
@@ -30,23 +30,35 @@ require manual adjustment.
 #### Example:
 
 ```bash
-npx ldkit context-to-schema url https://json-ld.org/contexts/person.jsonld
+npx ldkit context-to-schema url https://ldkit.io/examples/person.jsonld
 ```
 
-### 2. `shex-to-schema`
+### 2. `shexc-to-schema`
 
-Converts a ShEx schema into an LDkit TypeScript schema.
+Converts a ShExC schema into an LDkit TypeScript schema.
+
+Supported ShEx features:
+
+- explicit property types
+- property types inferred from enumerations (value sets)
+- property cardinalities represented as optional and/or array properties
+- expression choices represented as optional properties
+- inverse properties
+- nested shapes (both explicit and anonymous)
+- simplified AND / OR shapes logic
+- reuse of named triple expressions
 
 ```bash
-npx ldkit shex-to-schema file ./schema.shex
+npx ldkit shexc-to-schema url https://ldkit.io/examples/person.shex
 ```
 
-### 3. `shacl-to-schema`
+### 3. `shexj-to-schema`
 
-Converts a SHACL shape into an LDkit TypeScript schema.
+Converts a ShExJ schema into an LDkit TypeScript schema. Supported ShExJ
+features are the same as for ShExC.
 
 ```bash
-npx ldkit shacl-to-schema arg 'ex:PersonShape a sh:NodeShape; ...'
+npx ldkit shexj-to-schema url https://ldkit.io/examples/person.shex.jsonld
 ```
 
 ## Command Syntax
@@ -101,9 +113,9 @@ ldkit context-to-schema file ./person.jsonld > person.ts
 
 ## Limitations
 
-The generators do not fully cover all features of JSON-LD, ShEx, or SHACL.
-Complex validation rules, advanced constraints, and some specialized constructs
-may be omitted or simplified.
+The generators do not fully cover all features of JSON-LD or ShEx. Complex
+validation rules, advanced constraints, and some specialized constructs may be
+omitted or simplified.
 
 Manual post-processing of the generated schemas may be necessary for production
 use.
