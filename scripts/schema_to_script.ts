@@ -212,11 +212,11 @@ class SchemaPrinter {
       !prop.multilang && !prop.inverse &&
       (!prop.type || prop.type === xsd.string)
     ) {
-      return `${key}: ${this.printPrefixed(prop.id)},`;
+      return `${this.printKey(key)}: ${this.printPrefixed(prop.id)},`;
     }
 
     const builder: string[] = [
-      `${key}: {`,
+      `${this.printKey(key)}: {`,
       this.indent(`"@id": ${this.printPrefixed(prop.id)},`),
     ];
 
@@ -275,6 +275,13 @@ class SchemaPrinter {
       }
     }
     return `"${value}"`;
+  }
+
+  private printKey(key: string): string {
+    if (key.match(/^[a-zA-Z0-9_]+$/)) {
+      return key;
+    }
+    return `"${key}"`;
   }
 
   private indent<T extends string | null>(text: T): T {
