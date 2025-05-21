@@ -25,7 +25,6 @@ export function shexjToSchema(shexj: ShexSchema): SchemaSpec[] {
 
 export function shexcToSchema(shexc: string): SchemaSpec[] {
   const shexj = shexcToShexj(shexc);
-  console.log("shexj", JSON.stringify(shexj, null, 2));
   return shexjToSchema(shexj);
 }
 
@@ -115,7 +114,9 @@ class ShexConverter {
             schema,
           });
         } else {
-          this.visit(node.expression, context);
+          const schema = context.schema ??
+            this.createSchema((node as unknown as ShapeDecl).id);
+          this.visit(node.expression, { ...context, schema });
         }
         break;
       case "ShapeAnd": {

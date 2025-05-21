@@ -40,17 +40,6 @@ const test = (shexc: string, schemas: SchemaSpec | SchemaSpec[]) => {
   assertEquals(result, Array.isArray(schemas) ? schemas : [schemas]);
 };
 
-const testProperties = (
-  shexc: string,
-  properties: SchemaSpec["properties"],
-) => {
-  return test(shexc, {
-    "name": "TheSchema",
-    "type": [],
-    properties,
-  });
-};
-
 Deno.test("Scripts / Shex to Schema / Default schema name", () => {
   const input = `
     ex:ThingShape {

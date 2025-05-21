@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 import { Argument, Command } from "npm:commander@^13.1.0";
 
 import { contextToSchema } from "./scripts/context_to_schema.ts";
+import { shexcToSchema, shexjToSchema } from "./scripts/shex_to_schema.ts";
 import { schemaToScript } from "./scripts/schema_to_script.ts";
 
 const asciiArt = String.raw`
@@ -48,6 +49,47 @@ program.command("context-to-schema")
     try {
       const resolvedInput = await resolve(method, input);
       const schema = await contextToSchema(JSON.parse(resolvedInput));
+      console.log(schemaToScript(schema));
+    } catch (error: unknown) {
+      console.error(styleText("red", `${(error as Error).message}`));
+    }
+  });
+
+program.command("shexc-to-schema")
+  .description("Convert a ShExC schema from a file or URL to a LDkit schema")
+  .addArgument(
+    new Argument("<method>", "type of input").choices([
+      "url",
+      "file",
+      "arg",
+    ]),
+  )
+  .argument("<input>", "input ShExC schema - file, URL, or string")
+  .action(async (method, input) => {
+    try {
+      const resolvedInput = await resolve(method, input);
+      const schema = shexcToSchema(resolvedInput);
+      console.log(schemaToScript(schema));
+    } catch (error: unknown) {
+      console.error(styleText("red", `${(error as Error).message}`));
+    }
+  });
+
+program.command("shexj-to-schema")
+  .description("Convert a ShExJ schema from a file or URL to a LDkit schema")
+  .addArgument(
+    new Argument("<method>", "type of input").choices([
+      "url",
+      "file",
+      "arg",
+    ]),
+  )
+  .argument("<input>", "input ShExJ schema - file, URL, or string")
+  .action(async (method, input) => {
+    try {
+      const resolvedInput = await resolve(method, input);
+      console.log("RESOLVED INPUT", resolvedInput);
+      const schema = shexjToSchema(JSON.parse(resolvedInput));
       console.log(schemaToScript(schema));
     } catch (error: unknown) {
       console.error(styleText("red", `${(error as Error).message}`));
