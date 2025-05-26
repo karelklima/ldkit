@@ -23,12 +23,22 @@ interface Page extends TableOfContentsEntry {
 export const handler: Handlers<Data> = {
   async GET(_req, ctx) {
     const slug = ctx.params.slug !== undefined ? ctx.params.slug : "";
-    if (slug === "") {
-      return new Response("", {
-        status: 307,
-        headers: { location: "/docs/about-ldkit" },
-      });
+
+    const redirects = {
+      "": "/docs/about-ldkit",
+      "how-to/query-with-comunica": "features/query-with-comunica",
+    };
+
+    for (const [oldSlug, newSlug] of Object.entries(redirects)) {
+      if (slug === oldSlug) {
+        // Redirect to the new URL
+        return new Response("", {
+          status: 301,
+          headers: { location: `/docs/${newSlug}` },
+        });
+      }
     }
+
     const entry = TABLE_OF_CONTENTS[slug];
     if (!entry) {
       return ctx.renderNotFound();

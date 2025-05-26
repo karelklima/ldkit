@@ -47,7 +47,7 @@ engine, it needs to implement `StringSparqlQueryable` interface from the
 
 For advanced federated querying over multiple datasources you can also use
 Comunica, or a custom engine derived from that - see
-[Query with Comunica](../advanced/query-with-comunica).
+[Query with Comunica](../features/query-with-comunica).
 
 ## Setting default query engine
 
