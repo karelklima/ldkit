@@ -25,7 +25,7 @@ export const handler: Handlers<Data> = {
     const slug = ctx.params.slug !== undefined ? ctx.params.slug : "";
 
     const redirects = {
-      "": "/docs/about-ldkit",
+      "": "about-ldkit",
       "how-to/query-with-comunica": "features/query-with-comunica",
     };
 
