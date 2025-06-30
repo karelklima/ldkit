@@ -110,6 +110,12 @@ Persons.delete("http://dbpedia.org/resource/Alan_Turing");
 
 More complex examples can be found in [documentation](https://ldkit.io/docs).
 
+## Minimum software requirements
+
+- TypeScript v5.5 or newer
+- Node.js v20.19.3 or newer
+- Deno v2.1 or newer
+
 ## Specification Compliance
 
 LDkit complies with the following specifications:
@@ -119,6 +125,25 @@ LDkit complies with the following specifications:
 - [SPARQL 1.1 Query Language](https://www.w3.org/TR/sparql11-query/)
 - [SPARQL 1.1 Update](https://www.w3.org/TR/2013/REC-sparql11-update-20130321/)
 - [SPARQL 1.1 Protocol](https://www.w3.org/TR/2013/REC-sparql11-protocol-20130321/)
+
+## Citation
+
+If you are using LDkit in a scientific publication, we would appreciate a
+citation of our work.
+
+```bibtex
+@inproceedings{klima2023ldkit,
+  title     = {LDkit: Linked Data Object Graph Mapping Toolkit for Web Applications},
+  author    = {Kl{\'\i}ma, Karel and Taelman, Ruben and Ne{\v{c}}ask{\`y}, Martin},
+  booktitle = {International Semantic Web Conference},
+  pages     = {194--210},
+  year      = {2023},
+  month     = oct,
+  publisher = {Springer Nature Switzerland},
+  isbn      = {978-3-031-47243-5},
+  url       = {https://doi.org/10.1007/978-3-031-47243-5_11}
+}
+```
 
 ## License
 
