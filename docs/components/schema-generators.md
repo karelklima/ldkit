@@ -67,8 +67,8 @@ npx ldkit shexj-to-schema url https://ldkit.io/examples/person.shex.jsonld
 npx ldkit <command> <method> <input>
 ```
 
-- `<command>`: One of `context-to-schema`, `shex-to-schema`, or
-  `shacl-to-schema`.
+- `<command>`: One of `context-to-schema`, `shexc-to-schema`, or
+  `shexj-to-schema`.
 
 - `<method>`: Defines how the input is provided. Possible values:
 
