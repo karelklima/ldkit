@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the article."
+authors:
+  - family-names: "Klima"
+    given-names: "Karel"
+title: "LDkit"
+version: 2.4.0
+doi: 10.5281/zenodo.15485481
+date-released: 2025-05-21
+url: "https://ldkit.io/"
+preferred-citation:
+  type: conference-paper
+  authors:
+    - family-names: "Klíma"
+      given-names: "Karel"
+    - family-names: "Taelman"
+      given-names: "Ruben"
+    - family-names: "Nečaský"
+      given-names: "Martin"
+  doi: "10.1007/978-3-031-47243-5_11"
+  collection-title: "International Semantic Web Conference"
+  publisher:
+    name: "Springer Nature Switzerland"
+  month: 10
+  start: 194 # First page number
+  end: 210 # Last page number
+  title: "LDkit: Linked Data Object Graph Mapping Toolkit for Web Applications"
+  year: 2023
