@@ -151,7 +151,7 @@ Deno.test("Lens / Common / Count resources max", async () => {
 Deno.test("Lens / Common / Count resources where", async () => {
   const { directors } = init();
   const count = await directors.count({
-    where: { name: "Quentin Tarantino" },
+    where: { name: { $strStarts: "Quentin" } },
   });
   assertEquals(count, 1);
 });
