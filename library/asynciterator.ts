@@ -1,10 +1,10 @@
-import { AsyncIterator } from "npm:asynciterator@^3.9.0";
+import { AsyncIterator } from "npm:asynciterator@^3";
 
 export {
   ArrayIterator,
   type AsyncIterator,
   MappingIterator,
-} from "npm:asynciterator@^3.9.0";
+} from "npm:asynciterator@^3";
 
 type TreeNode<T> = {
   [property: string]: T[] | TreeNode<T>;
