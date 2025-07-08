@@ -4,8 +4,6 @@ export type { RDF };
 
 export { fromRdf, toRdf } from "npm:rdf-literal@^2.0.0";
 
-import { quadToStringQuad } from "npm:rdf-string@^2.0.0";
-
 import { DataFactory, DefaultGraph } from "npm:rdf-data-factory@^2.0.2";
 export { DataFactory, DefaultGraph };
 
@@ -21,17 +19,8 @@ export type Graph = Map<IRI, Node>;
 export const quadsToGraph = (quadStream: RDF.ResultStream<RDF.Quad>) => {
   return new Promise<Graph>((resolve, reject) => {
     const graph: Graph = new Map();
-    const included: Record<string, true> = {};
 
     quadStream.on("data", (quad) => {
-      const hash = Object.values(quadToStringQuad(quad)).join(" ");
-
-      if (included[hash]) {
-        return;
-      }
-
-      included[hash] = true;
-
       const s = quad.subject.value;
       const p = quad.predicate.value;
 
