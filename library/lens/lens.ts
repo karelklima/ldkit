@@ -110,6 +110,7 @@ export class Lens<T extends Schema> {
 
   /**
    * Returns the total number of entities corresponding to the data schema.
+   * Optionally, you can specify search criteria and a maximum number of results to count.
    *
    * @example
    * ```typescript
@@ -127,8 +128,19 @@ export class Lens<T extends Schema> {
    *
    * // Count all persons
    * const count = await Persons.count(); // number
+   *
+   * // Count all persons with name that starts with "Ada"
+   * const adaCount = await Persons.count({
+   *   where: {
+   *     name: { $strStarts: "Ada" },
+   *   },
+   * });
+   *
+   * // Count all persons, but limit the result to 100
+   * const limitedCount = await Persons.count({ max: 100 });
    * ```
    *
+   * @param options Search criteria and maximum number of results to count
    * @returns total number of entities corresponding to the data schema
    */
   async count(options: {
