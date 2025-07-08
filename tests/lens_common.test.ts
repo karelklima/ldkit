@@ -142,6 +142,28 @@ Deno.test("Lens / Common / Count resources", async () => {
   assertEquals(count, 2);
 });
 
+Deno.test("Lens / Common / Count resources max", async () => {
+  const { directors } = init();
+  const count = await directors.count({ max: 1 });
+  assertEquals(count, 1);
+});
+
+Deno.test("Lens / Common / Count resources where", async () => {
+  const { directors } = init();
+  const count = await directors.count({
+    where: { name: "Quentin Tarantino" },
+  });
+  assertEquals(count, 1);
+});
+
+Deno.test("Lens / Common / Count resources where nested", async () => {
+  const { movies } = init();
+  const count = await movies.count({
+    where: { director: { name: "Stanley Kubrick" } },
+  });
+  assertEquals(count, 2);
+});
+
 Deno.test("Lens / Common / Insert multiple resources", async () => {
   const { directors, empty, assertStore } = init();
   await empty();
