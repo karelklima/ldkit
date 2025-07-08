@@ -131,8 +131,15 @@ export class Lens<T extends Schema> {
    *
    * @returns total number of entities corresponding to the data schema
    */
-  async count(max?: number): Promise<number> {
-    const q = this.queryBuilder.countQuery(max);
+  async count(options: {
+    where?: SchemaSearchInterface<T>;
+    max?: number;
+  } = {}): Promise<number> {
+    const { where, max } = {
+      where: {},
+      ...options,
+    };
+    const q = this.queryBuilder.countQuery(where, max);
     this.log(q);
     const bindings = await this.engine.queryBindings(q);
     return parseInt(bindings[0].get("count")!.value);
