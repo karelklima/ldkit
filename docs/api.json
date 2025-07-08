@@ -1585,11 +1585,16 @@
             },
             {
               "jsDoc": {
-                "doc": "Returns the total number of entities corresponding to the data schema.\n",
+                "doc": "Returns the total number of entities corresponding to the data schema.\nOptionally, you can specify search criteria and a maximum number of results to count.\n",
                 "tags": [
                   {
                     "kind": "example",
-                    "doc": "```typescript\nimport { createLens } from \"ldkit\";\nimport { schema } from \"ldkit/namespaces\";\n\n// Create a schema\nconst PersonSchema = {\n  \"@type\": schema.Person,\n  name: schema.name,\n} as const;\n\n// Create a resource using the data schema above\nconst Persons = createLens(PersonSchema);\n\n// Count all persons\nconst count = await Persons.count(); // number\n```\n"
+                    "doc": "```typescript\nimport { createLens } from \"ldkit\";\nimport { schema } from \"ldkit/namespaces\";\n\n// Create a schema\nconst PersonSchema = {\n  \"@type\": schema.Person,\n  name: schema.name,\n} as const;\n\n// Create a resource using the data schema above\nconst Persons = createLens(PersonSchema);\n\n// Count all persons\nconst count = await Persons.count(); // number\n\n// Count all persons with name that starts with \"Ada\"\nconst adaCount = await Persons.count({\n  where: {\n    name: { $strStarts: \"Ada\" },\n  },\n});\n\n// Count all persons, but limit the result to 100\nconst limitedCount = await Persons.count({ max: 100 });\n```\n"
+                  },
+                  {
+                    "kind": "param",
+                    "name": "options",
+                    "doc": "Search criteria and maximum number of results to count"
                   },
                   {
                     "kind": "return",
@@ -1606,14 +1611,74 @@
               "functionDef": {
                 "params": [
                   {
-                    "kind": "identifier",
-                    "name": "max",
-                    "optional": true,
-                    "tsType": {
-                      "repr": "number",
-                      "kind": "keyword",
-                      "keyword": "number"
-                    }
+                    "kind": "assign",
+                    "left": {
+                      "kind": "identifier",
+                      "name": "options",
+                      "optional": false,
+                      "tsType": {
+                        "repr": "",
+                        "kind": "typeLiteral",
+                        "typeLiteral": {
+                          "constructors": [],
+                          "methods": [],
+                          "properties": [
+                            {
+                              "name": "where",
+                              "location": {
+                                "filename": "file:///C:/Users/Karel/Projekty/ldkit/library/lens/lens.ts",
+                                "line": 147,
+                                "col": 4,
+                                "byteIndex": 4617
+                              },
+                              "params": [],
+                              "computed": false,
+                              "optional": true,
+                              "tsType": {
+                                "repr": "SchemaSearchInterface",
+                                "kind": "typeRef",
+                                "typeRef": {
+                                  "typeParams": [
+                                    {
+                                      "repr": "T",
+                                      "kind": "typeRef",
+                                      "typeRef": {
+                                        "typeParams": null,
+                                        "typeName": "T"
+                                      }
+                                    }
+                                  ],
+                                  "typeName": "SchemaSearchInterface"
+                                }
+                              },
+                              "typeParams": []
+                            },
+                            {
+                              "name": "max",
+                              "location": {
+                                "filename": "file:///C:/Users/Karel/Projekty/ldkit/library/lens/lens.ts",
+                                "line": 148,
+                                "col": 4,
+                                "byteIndex": 4655
+                              },
+                              "params": [],
+                              "computed": false,
+                              "optional": true,
+                              "tsType": {
+                                "repr": "number",
+                                "kind": "keyword",
+                                "keyword": "number"
+                              },
+                              "typeParams": []
+                            }
+                          ],
+                          "callSignatures": [],
+                          "indexSignatures": []
+                        }
+                      }
+                    },
+                    "right": "[UNSUPPORTED]",
+                    "tsType": null
                   }
                 ],
                 "returnType": {
@@ -1637,9 +1702,9 @@
               },
               "location": {
                 "filename": "file:///C:/Users/Karel/Projekty/ldkit/library/lens/lens.ts",
-                "line": 134,
+                "line": 146,
                 "col": 2,
-                "byteIndex": 4122
+                "byteIndex": 4590
               }
             },
             {
@@ -1726,9 +1791,9 @@
               },
               "location": {
                 "filename": "file:///C:/Users/Karel/Projekty/ldkit/library/lens/lens.ts",
-                "line": 174,
+                "line": 193,
                 "col": 2,
-                "byteIndex": 5473
+                "byteIndex": 6082
               }
             },
             {
@@ -1775,9 +1840,9 @@
                               "name": "where",
                               "location": {
                                 "filename": "file:///C:/Users/Karel/Projekty/ldkit/library/lens/lens.ts",
-                                "line": 217,
+                                "line": 236,
                                 "col": 6,
-                                "byteIndex": 6711
+                                "byteIndex": 7320
                               },
                               "params": [],
                               "computed": false,
@@ -1828,9 +1893,9 @@
                               "name": "take",
                               "location": {
                                 "filename": "file:///C:/Users/Karel/Projekty/ldkit/library/lens/lens.ts",
-                                "line": 218,
+                                "line": 237,
                                 "col": 6,
-                                "byteIndex": 6773
+                                "byteIndex": 7382
                               },
                               "params": [],
                               "computed": false,
@@ -1846,9 +1911,9 @@
                               "name": "skip",
                               "location": {
                                 "filename": "file:///C:/Users/Karel/Projekty/ldkit/library/lens/lens.ts",
-                                "line": 219,
+                                "line": 238,
                                 "col": 6,
-                                "byteIndex": 6794
+                                "byteIndex": 7403
                               },
                               "params": [],
                               "computed": false,
@@ -1916,9 +1981,9 @@
               },
               "location": {
                 "filename": "file:///C:/Users/Karel/Projekty/ldkit/library/lens/lens.ts",
-                "line": 215,
+                "line": 234,
                 "col": 2,
-                "byteIndex": 6678
+                "byteIndex": 7287
               }
             },
             {
@@ -1979,9 +2044,9 @@
               },
               "location": {
                 "filename": "file:///C:/Users/Karel/Projekty/ldkit/library/lens/lens.ts",
-                "line": 266,
+                "line": 285,
                 "col": 2,
-                "byteIndex": 8164
+                "byteIndex": 8773
               }
             },
             {
@@ -2078,9 +2143,9 @@
               },
               "location": {
                 "filename": "file:///C:/Users/Karel/Projekty/ldkit/library/lens/lens.ts",
-                "line": 296,
+                "line": 315,
                 "col": 2,
-                "byteIndex": 9056
+                "byteIndex": 9665
               }
             },
             {
@@ -2174,9 +2239,9 @@
               },
               "location": {
                 "filename": "file:///C:/Users/Karel/Projekty/ldkit/library/lens/lens.ts",
-                "line": 330,
+                "line": 349,
                 "col": 2,
-                "byteIndex": 10121
+                "byteIndex": 10730
               }
             },
             {
@@ -2207,9 +2272,9 @@
               },
               "location": {
                 "filename": "file:///C:/Users/Karel/Projekty/ldkit/library/lens/lens.ts",
-                "line": 337,
+                "line": 356,
                 "col": 2,
-                "byteIndex": 10351
+                "byteIndex": 10960
               }
             },
             {
@@ -2300,9 +2365,9 @@
               },
               "location": {
                 "filename": "file:///C:/Users/Karel/Projekty/ldkit/library/lens/lens.ts",
-                "line": 369,
+                "line": 388,
                 "col": 2,
-                "byteIndex": 11106
+                "byteIndex": 11715
               }
             },
             {
@@ -2375,9 +2440,9 @@
               },
               "location": {
                 "filename": "file:///C:/Users/Karel/Projekty/ldkit/library/lens/lens.ts",
-                "line": 409,
+                "line": 428,
                 "col": 2,
-                "byteIndex": 12240
+                "byteIndex": 12849
               }
             },
             {
@@ -2459,9 +2524,9 @@
               },
               "location": {
                 "filename": "file:///C:/Users/Karel/Projekty/ldkit/library/lens/lens.ts",
-                "line": 441,
+                "line": 460,
                 "col": 2,
-                "byteIndex": 13052
+                "byteIndex": 13661
               }
             },
             {
@@ -2552,9 +2617,9 @@
               },
               "location": {
                 "filename": "file:///C:/Users/Karel/Projekty/ldkit/library/lens/lens.ts",
-                "line": 478,
+                "line": 497,
                 "col": 2,
-                "byteIndex": 14195
+                "byteIndex": 14804
               }
             },
             {
@@ -2627,9 +2692,9 @@
               },
               "location": {
                 "filename": "file:///C:/Users/Karel/Projekty/ldkit/library/lens/lens.ts",
-                "line": 522,
+                "line": 541,
                 "col": 2,
-                "byteIndex": 15459
+                "byteIndex": 16068
               }
             }
           ],

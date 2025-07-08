@@ -149,8 +149,11 @@ export class QueryBuilder {
     return conditions;
   }
 
-  countQuery(max?: number) {
-    const quads = this.getShape(Flags.ExcludeOptional | Flags.IncludeTypes);
+  countQuery(where: SearchSchema, max?: number) {
+    const quads = this.getShape(
+      Flags.ExcludeOptional | Flags.IncludeTypes,
+      where,
+    );
     const innerQuery = max === undefined
       ? quads
       : SELECT`?iri`.WHERE`${quads}`.LIMIT(max);
