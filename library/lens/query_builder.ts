@@ -157,7 +157,8 @@ export class QueryBuilder {
     const innerQuery = max === undefined
       ? quads
       : SELECT`?iri`.WHERE`${quads}`.LIMIT(max);
-    return SELECT`(count(?iri) as ?count)`.WHERE`${innerQuery}`.build();
+    return SELECT`(COUNT(DISTINCT ?iri) as ?count)`.WHERE`${innerQuery}`
+      .build();
   }
 
   getQuery(

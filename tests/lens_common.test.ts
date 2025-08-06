@@ -3,7 +3,7 @@ import { assert, assertEquals, equal } from "./test_deps.ts";
 import { initStore, ttl, x } from "./test_utils.ts";
 
 import { createLens } from "ldkit";
-import { rdf, xsd } from "ldkit/namespaces";
+import { ldkit, rdf, xsd } from "ldkit/namespaces";
 import { DataFactory } from "ldkit/rdf";
 
 const assertContainsEqual = (haystack: unknown[], needle: unknown) => {
@@ -28,6 +28,11 @@ const Instant = {
 const Director = {
   "@type": x.Director,
   name: x.name,
+  movies: {
+    "@id": x.movie,
+    "@type": ldkit.IRI,
+    "@array": true,
+  },
 } as const;
 
 const Movie = {
@@ -47,10 +52,12 @@ const Movie = {
 const defaultStoreContent = ttl(`
   x:StanleyKubrick
     a x:Director ;
-    x:name "Stanley Kubrick" .
+    x:name "Stanley Kubrick" ;
+    x:movie x:FullMetalJacket, x:Shining .
   x:QuentinTarantino
     a x:Director ;
-    x:name "Quentin Tarantino" .
+    x:name "Quentin Tarantino" ;
+    x:movie x:PulpFiction .
   x:FullMetalJacket
     a x:Movie;
     x:name "Full Metal Jacket" ;
@@ -65,13 +72,19 @@ const defaultStoreContent = ttl(`
     x:director x:QuentinTarantino .
 `);
 
-const createDirector = ($id: string, name: string) => ({
+const createDirector = ($id: string, name: string, movies: string[]) => ({
   $id: x[$id],
   name,
+  movies,
 });
 
-const Tarantino = createDirector("QuentinTarantino", "Quentin Tarantino");
-const Kubrick = createDirector("StanleyKubrick", "Stanley Kubrick");
+const Tarantino = createDirector("QuentinTarantino", "Quentin Tarantino", [
+  x.PulpFiction,
+]);
+const Kubrick = createDirector("StanleyKubrick", "Stanley Kubrick", [
+  x.FullMetalJacket,
+  x.Shining,
+]);
 
 const _ = new DataFactory();
 
@@ -151,7 +164,7 @@ Deno.test("Lens / Common / Count resources max", async () => {
 Deno.test("Lens / Common / Count resources where", async () => {
   const { directors } = init();
   const count = await directors.count({
-    where: { name: { $strStarts: "Quentin" } },
+    where: { name: { $strStarts: "Stanley" } },
   });
   assertEquals(count, 1);
 });
@@ -181,10 +194,12 @@ Deno.test("Lens / Common / Insert multiple resources", async () => {
   assertStore(`
       x:StanleyKubrick
         a x:Director ;
-        x:name "Stanley Kubrick" .
+        x:name "Stanley Kubrick" ;
+        x:movie x:FullMetalJacket, x:Shining .
       x:QuentinTarantino
         a x:Director ;
-        x:name "Quentin Tarantino" .
+        x:name "Quentin Tarantino" ;
+        x:movie x:PulpFiction .
     `);
 });
 
@@ -239,11 +254,17 @@ Deno.test("Lens / Common / Insert data", async () => {
       _.namedNode(x.name),
       _.literal("Christopher Nolan"),
     ),
+    _.quad(
+      _.namedNode(x.ChristopherNolan),
+      _.namedNode(x.movie),
+      _.namedNode(x.Inception),
+    ),
   );
   const result = await directors.findByIri(x.ChristopherNolan);
   assertEquals(result, {
     $id: x.ChristopherNolan,
     name: "Christopher Nolan",
+    movies: [x.Inception],
   });
 });
 
@@ -252,6 +273,7 @@ Deno.test("Lens / Common / Delete data", async () => {
   await directors.insert({
     $id: x.ChristopherNolan,
     name: "Christopher Nolan",
+    movies: [x.Inception],
   });
   await directors.deleteData(
     _.quad(
@@ -264,5 +286,6 @@ Deno.test("Lens / Common / Delete data", async () => {
   assertEquals(result, {
     $id: x.ChristopherNolan,
     name: "Christopher Nolan",
+    movies: [x.Inception],
   });
 });
