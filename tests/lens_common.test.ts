@@ -32,6 +32,7 @@ const Director = {
     "@id": x.movie,
     "@type": ldkit.IRI,
     "@array": true,
+    "@optional": true,
   },
 } as const;
 
@@ -254,17 +255,12 @@ Deno.test("Lens / Common / Insert data", async () => {
       _.namedNode(x.name),
       _.literal("Christopher Nolan"),
     ),
-    _.quad(
-      _.namedNode(x.ChristopherNolan),
-      _.namedNode(x.movie),
-      _.namedNode(x.Inception),
-    ),
   );
   const result = await directors.findByIri(x.ChristopherNolan);
   assertEquals(result, {
     $id: x.ChristopherNolan,
     name: "Christopher Nolan",
-    movies: [x.Inception],
+    movies: [],
   });
 });
 
@@ -273,7 +269,7 @@ Deno.test("Lens / Common / Delete data", async () => {
   await directors.insert({
     $id: x.ChristopherNolan,
     name: "Christopher Nolan",
-    movies: [x.Inception],
+    movies: [],
   });
   await directors.deleteData(
     _.quad(
@@ -286,6 +282,6 @@ Deno.test("Lens / Common / Delete data", async () => {
   assertEquals(result, {
     $id: x.ChristopherNolan,
     name: "Christopher Nolan",
-    movies: [x.Inception],
+    movies: [],
   });
 });
