@@ -24,7 +24,6 @@ const defaultOptions = {
   engine: new QueryEngine(),
   take: 1000,
   logQuery: () => {},
-  distinctConstruct: true, // Needed for Comunica to filter duplicate quads on CONSTRUCT queries
 };
 
 let globalOptions: Options = {};
