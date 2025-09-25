@@ -1,0 +1,14 @@
+PREFIX : <https://example.com/todo/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+# The TodoItem shape defines the structure of a resource 
+:TodoItemShape CLOSED {
+    a [ :TodoItem ] ;
+    :description xsd:string ;
+    :state @:TodoStateShape ;
+    :dueDate xsd:dateTime ?
+}
+
+:TodoStateShape CLOSED {
+    a [ :TodoState ]
+}

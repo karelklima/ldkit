@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import type { Component, ReactElement, ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export const MootButton = styled.button`
   display: block;
@@ -41,6 +41,18 @@ export const RowContent = styled.div`
   flex: 1;
   padding: 2px 15px 12px;
   font-size: 18px;
+`;
+
+export const DateView = styled.span`
+  font-size: 16px;
+  color: #666;
+`;
+
+export const DateInput = styled.input`
+  width: 22px;
+  margin-left: 10px;
+  font-size: 18px;
+  border: none;
 `;
 
 type GroupProps = {

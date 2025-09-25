@@ -2,7 +2,7 @@ import React, { KeyboardEvent, useCallback, useRef, useState } from "react";
 import styled from "@emotion/styled";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { getRandomId, Todos } from "../store";
+import { ACTIVE, getRandomId, Todos } from "../store";
 import { Button, InvisibleButton, MootButton, Row, RowContent } from "./UI";
 
 import { AddIcon, CircleIcon } from "./Icons";
@@ -49,7 +49,7 @@ export const Add: React.FC = () => {
         Todos.insert({
           $id: getRandomId(),
           description: inputValue,
-          done: false,
+          state: ACTIVE,
         }).then(() => {
           queryClient.invalidateQueries({ queryKey: ["todos"] });
         });

@@ -1,0 +1,51 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix tmo: <http://www.semanticdesktop.org/ontologies/2008/05/20/tmo/v1.1/#> .
+@prefix todo: <https://example.com/todo/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://example.com/todo/> a owl:Ontology ;
+    rdfs:label "Todo App Vocabulary" ;
+    rdfs:comment "A lightweight vocabulary for representing todo items, aligned with Task Management Ontology." ;
+    owl:imports tmo: .
+
+todo:TodoItem a owl:Class ;
+    rdfs:subClassOf tmo:Task ;
+    rdfs:label "Todo Item" ;
+    rdfs:comment "Represents a single todo item." .
+
+todo:TodoState a owl:Class ;
+    rdfs:subClassOf tmo:TaskState ;
+    rdfs:label "Todo State" ;
+    rdfs:comment "Represents the state of a todo item." .
+
+todo:TodoState_Active a todo:TodoState, owl:NamedIndividual ;
+    owl:sameAs tmo:TMO_Instance_TaskState_Running ;
+    rdfs:label "Active" ;
+    rdfs:comment "Indicates that the todo item is active." .
+
+todo:TodoState_Done a todo:TodoState, owl:NamedIndividual ;
+    owl:sameAs tmo:TMO_Instance_TaskState_Completed ;
+    rdfs:label "Done" ;
+    rdfs:comment "Indicates that the todo item is completed." .
+
+todo:description a owl:DatatypeProperty ;
+    rdfs:subPropertyOf tmo:hasDescription ;
+    rdfs:domain todo:TodoItem ;
+    rdfs:range xsd:string ;
+    rdfs:label "description" ;
+    rdfs:comment "Provides a textual description of the todo item." .
+
+todo:dueDate a owl:DatatypeProperty ;
+    rdfs:subPropertyOf tmo:hasDueDate ;
+    rdfs:domain todo:TodoItem ;
+    rdfs:range xsd:dateTime ;
+    rdfs:label "due date" ;
+    rdfs:comment "Specifies when the todo item is due." .
+
+todo:state a owl:ObjectProperty ;
+    rdfs:subPropertyOf tmo:taskState ;
+    rdfs:domain todo:TodoItem ;
+    rdfs:range todo:TodoState ;
+    rdfs:label "todo state" ;
+    rdfs:comment "Indicates the current state of the todo item." .

@@ -1,42 +1,27 @@
-import {
-  type Options,
-  createLens,
-  createNamespace,
-  type SchemaInterface,
-} from "ldkit";
-import { xsd } from "ldkit/namespaces";
+import { createLens, type Options, type SchemaInterface } from "ldkit";
 import { QueryEngine as Comunica } from "@comunica/query-sparql-rdfjs";
 
 import { N3 } from "ldkit/rdf";
 
-const t = createNamespace(
-  {
-    iri: "https://todos/",
-    prefix: "t:",
-    terms: ["Todo", "description", "done"],
-  } as const,
-);
-
-const TodoSchema = {
-  "@type": t.Todo,
-  description: t.description,
-  done: {
-    "@id": t.done,
-    "@type": xsd.boolean,
-  },
-} as const;
+import { todo, TodoItemSchema } from "../semantics/todo_schema";
 
 export const store = new N3.Store();
 
 const options: Options = {
   sources: [store],
   engine: new Comunica(),
-  logQuery: (query) => console.log(query)
+  logQuery: (query) => console.log(query),
 };
 
-export type TodoInterface = SchemaInterface<typeof TodoSchema>;
+export type TodoInterface = SchemaInterface<typeof TodoItemSchema>;
 
-export const Todos = createLens(TodoSchema, options);
+export const Todos = createLens(TodoItemSchema, options);
 
 export const getRandomId = () =>
-  `https://todos/${1000 + Math.floor(Math.random() * 1000)}`;
+  `${todo.$iri}${1000 + Math.floor(Math.random() * 1000)}`;
+
+export const isDone = (item: TodoInterface) =>
+  item.state === todo.TodoState_Done;
+
+export const DONE = todo.TodoState_Done;
+export const ACTIVE = todo.TodoState_Active;

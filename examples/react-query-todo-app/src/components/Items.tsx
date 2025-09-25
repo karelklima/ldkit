@@ -3,8 +3,8 @@ import styled from "@emotion/styled";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { TodoInterface, Todos } from "../store";
-import { Button, InvisibleButton, Row, RowContent } from "./UI";
+import { ACTIVE, DONE, isDone, TodoInterface, Todos } from "../store";
+import { Button, DateInput, DateView, Row, RowContent } from "./UI";
 import { CheckedIcon, CircleIcon, RemoveIcon } from "./Icons";
 
 const List = styled.div`
@@ -31,27 +31,49 @@ const Item: React.FC<ItemProps> = ({ item }) => {
   const handleCheckboxClicked = useCallback(() => {
     Todos.update({
       $id: item.$id,
-      done: !item.done,
+      state: isDone(item) ? ACTIVE : DONE,
     }).then(() => {
       queryClient.invalidateQueries({ queryKey: ["todos"] });
     });
   }, [item, queryClient]);
 
+  const handleDateChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const dateValue = event.target.value;
+      const dueDate = dateValue == "" ? null : new Date(dateValue);
+      console.log(dueDate);
+      Todos.update({
+        $id: item.$id,
+        dueDate,
+      }).then(() => {
+        queryClient.invalidateQueries({ queryKey: ["todos"] });
+      });
+    },
+    [item, queryClient],
+  );
+
   return (
     <Row>
       <Button onClick={handleCheckboxClicked}>
-        {item.done ? <CheckedIcon /> : <CircleIcon />}
+        {isDone(item) ? <CheckedIcon /> : <CircleIcon />}
       </Button>
       <RowContent>
-        {item.done ? <Done>{item.description}</Done> : item.description}
+        {isDone(item) ? <Done>{item.description}</Done> : item.description}
       </RowContent>
-      {item.done
+      {isDone(item)
         ? (
           <Button onClick={handleDeleteClicked}>
             <RemoveIcon />
           </Button>
         )
-        : <InvisibleButton />}
+        : (
+          <div>
+            <DateView>
+              {item.dueDate ? item.dueDate.toLocaleDateString() : null}
+            </DateView>
+            <DateInput onChange={handleDateChange} type="date" />
+          </div>
+        )}
     </Row>
   );
 };
