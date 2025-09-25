@@ -12,5 +12,10 @@
     "jsx": "react-jsx",
     "jsxImportSource": "preact"
   },
-  "lock": false
+  "lock": false,
+  "lint": {
+    "rules": {
+      "exclude": ["no-import-prefix"]
+    }
+  }
 }
