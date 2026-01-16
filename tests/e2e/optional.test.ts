@@ -60,6 +60,62 @@ Deno.test("E2E / Optional / Insert with optional properties", async () => {
   `);
 });
 
+Deno.test("E2E / Optional / Set to empty optional array property", async () => {
+  const { Entities, assertStore } = init();
+
+  await Entities.insert({
+    $id: x.Entity,
+    requiredString: "required",
+    optionalArray: [],
+  });
+
+  assertStore(`
+    x:Entity
+      a x:Entity ;
+      x:requiredString "required" .
+  `);
+
+  await Entities.update({
+    $id: x.Entity,
+    optionalArray: { $set: ["setArray"] },
+  });
+
+  assertStore(`
+    x:Entity
+      a x:Entity ;
+      x:requiredString "required" ;
+      x:optionalArray "setArray" .
+  `);
+});
+
+Deno.test("E2E / Optional / Add to empty optional array property", async () => {
+  const { Entities, assertStore } = init();
+
+  await Entities.insert({
+    $id: x.Entity,
+    requiredString: "required",
+    optionalArray: [],
+  });
+
+  assertStore(`
+    x:Entity
+      a x:Entity ;
+      x:requiredString "required" .
+  `);
+
+  await Entities.update({
+    $id: x.Entity,
+    optionalArray: { $add: ["addArray"] },
+  });
+
+  assertStore(`
+    x:Entity
+      a x:Entity ;
+      x:requiredString "required" ;
+      x:optionalArray "addArray" .
+  `);
+});
+
 Deno.test("E2E / Optional / Unset optional existing property", async () => {
   const { Entities, assertStore } = init();
 

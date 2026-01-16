@@ -51,7 +51,7 @@ export class UpdateHelper {
     }
 
     if (property["@array"]) {
-      this.processArrayProperty(entity, propertyName, value);
+      this.processArrayProperty(entity, propertyName, value, property);
     } else {
       this.processSingleProperty(entity, propertyName, value, property);
     }
@@ -93,10 +93,11 @@ export class UpdateHelper {
     entity: Entity,
     propertyName: string,
     propertyValue: unknown,
+    property: ExpandedProperty,
   ) {
     const config = this.parseArrayUpdateConfig(propertyValue);
     if (config.$set) {
-      this.processArraySet(entity, propertyName, config.$set);
+      this.processArraySet(entity, propertyName, config.$set, property);
     } else {
       this.processArrayAddRemove(
         entity,
@@ -111,6 +112,7 @@ export class UpdateHelper {
     entity: Entity,
     propertyName: string,
     propertyValue: unknown[],
+    property: ExpandedProperty,
   ) {
     const deletePattern = {
       $id: entity.$id,
@@ -118,7 +120,11 @@ export class UpdateHelper {
     };
     const quadsToDelete = this.encode(deletePattern);
     this.deleteQuads.push(...quadsToDelete);
-    this.whereQuads.push(...quadsToDelete);
+    if (property["@optional"]) {
+      this.whereQuads.push(OPTIONAL`${quadsToDelete}`);
+    } else {
+      this.whereQuads.push(...quadsToDelete);
+    }
 
     const insertPattern = {
       $id: entity.$id,
