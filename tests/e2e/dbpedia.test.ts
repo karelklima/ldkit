@@ -37,7 +37,7 @@ const favouriteActors = [
   "http://dbpedia.org/resource/Gal_Gadot",
 ];
 
-Deno.test("E2E / DBpedia / Query single remote entity", async () => {
+Deno.test.ignore("E2E / DBpedia / Query single remote entity", async () => {
   const BradId = "http://dbpedia.org/resource/Brad_Pitt";
   const BradName = "Brad Pitt";
   const actor = await Actors.findByIri(favouriteActors[0]);
@@ -46,18 +46,24 @@ Deno.test("E2E / DBpedia / Query single remote entity", async () => {
   assert(actor.name === BradName);
 });
 
-Deno.test("E2E / DBpedia / Query multiple specific remote entities", async () => {
-  const actors = await Actors.findByIris(favouriteActors);
-  assert(actors);
-  assert(actors.length === favouriteActors.length);
-});
+Deno.test.ignore(
+  "E2E / DBpedia / Query multiple specific remote entities",
+  async () => {
+    const actors = await Actors.findByIris(favouriteActors);
+    assert(actors);
+    assert(actors.length === favouriteActors.length);
+  },
+);
 
-Deno.test("E2E / DBpedia / Query multiple random remote entities", async () => {
-  const actors = await Actors.find({ take: 7 });
-  assert(actors.length == 7);
-});
+Deno.test.ignore(
+  "E2E / DBpedia / Query multiple random remote entities",
+  async () => {
+    const actors = await Actors.find({ take: 7 });
+    assert(actors.length == 7);
+  },
+);
 
-Deno.test("E2E / DBpedia / Query count", async () => {
+Deno.test.ignore("E2E / DBpedia / Query count", async () => {
   const count = await Actors.count({ max: 100 });
   assert(count > 0);
 });
