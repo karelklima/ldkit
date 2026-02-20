@@ -1,7 +1,7 @@
 import type {
   IQueryContextCommon,
   QuerySourceUnidentified,
-} from "npm:@comunica/types@^4";
+} from "npm:@comunica/types@^5";
 
 import { RDF } from "../rdf.ts";
 
