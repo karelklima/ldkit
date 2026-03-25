@@ -12,7 +12,7 @@ JSON-LD contexts can usually be easily transformed to schemas.
 ## Example of a schema
 
 Below is a simple example of a schema to retrieve persons, including their name
-and birt date.
+and birth date.
 
 ```ts
 // `schema` is `https://schema.org/` namespace
