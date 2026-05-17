@@ -14,7 +14,7 @@ import {
   xsd,
 } from "../namespaces.ts";
 
-const NAMESPACES = [
+export const NAMESPACES = [
   dbo,
   dc,
   dcterms,
@@ -49,14 +49,60 @@ export type SchemaSpec = {
   };
 };
 
-export function schemaToScript(schemas: SchemaSpec[]): string {
-  const printer = new SchemaPrinter();
+export type ExtraNamespace = {
+  iri: string;
+  prefix: string;
+};
+
+export type PrinterOptions = {
+  schemaLocations?: Map<string, string>;
+  currentFile?: string;
+  extraNamespaceFiles?: Map<string, string>;
+  extraNamespaceTermsOverride?: Map<string, Set<string>>;
+  extraNamespacesImportFrom?: string;
+};
+
+export function schemaToScript(
+  schemas: SchemaSpec[],
+  extraNamespaces: ExtraNamespace[] = [],
+  options: PrinterOptions = {},
+): string {
+  const printer = new SchemaPrinter(extraNamespaces, options);
   return printer.print(schemas);
 }
 
 class SchemaPrinter {
   private usedNamespaces = new Set<string>();
   private space = "  ";
+  // Sorted by IRI length desc so longer prefixes match before shorter ones.
+  private extraNamespaces: ExtraNamespace[];
+  private extraNamespaceTerms = new Map<string, Set<string>>();
+  private readonly shadowedBuiltins: Set<string>;
+  private readonly schemaLocations: Map<string, string>;
+  private readonly currentFile: string | undefined;
+  private readonly extraNamespaceFiles: Map<string, string>;
+  private readonly extraNamespaceTermsOverride:
+    | Map<string, Set<string>>
+    | undefined;
+  private readonly extraNamespacesImportFrom: string | undefined;
+  private readonly crossFileImports = new Map<string, Set<string>>();
+
+  constructor(
+    extraNamespaces: ExtraNamespace[] = [],
+    options: PrinterOptions = {},
+  ) {
+    this.extraNamespaces = [...extraNamespaces].sort(
+      (a, b) => b.iri.length - a.iri.length,
+    );
+    this.shadowedBuiltins = new Set(
+      this.extraNamespaces.map((ns) => ns.prefix),
+    );
+    this.schemaLocations = options.schemaLocations ?? new Map();
+    this.currentFile = options.currentFile;
+    this.extraNamespaceFiles = options.extraNamespaceFiles ?? new Map();
+    this.extraNamespaceTermsOverride = options.extraNamespaceTermsOverride;
+    this.extraNamespacesImportFrom = options.extraNamespacesImportFrom;
+  }
 
   public print(schemas: SchemaSpec[]): string {
     const orderedSchemas = this.orderSchemasByDependencies(schemas);
@@ -69,8 +115,9 @@ class SchemaPrinter {
       printedSchemas.push(printedSchema);
     }
 
-    if (this.usedNamespaces.size > 0) {
-      printedSchemas.unshift(this.printImports());
+    const header = this.printHeader();
+    if (header) {
+      printedSchemas.unshift(header);
     }
 
     return printedSchemas.join("\n");
@@ -79,11 +126,14 @@ class SchemaPrinter {
   private orderSchemasByDependencies(schemas: SchemaSpec[]): SchemaSpec[] {
     const orderedSchemas: SchemaSpec[] = [];
     const processedSchemas = new Set<string>();
+    const localNames = new Set(schemas.map((s) => s.name));
 
     const dependencies = schemas.map((schema) => {
       return {
         schemaName: schema.name,
-        dependencies: this.getSchemaDependencies(schema),
+        dependencies: this.getSchemaDependencies(schema).filter((dep) =>
+          localNames.has(dep)
+        ),
       };
     });
 
@@ -139,9 +189,25 @@ class SchemaPrinter {
       this.usedNamespaces.add(this.printPrefix(ldkit));
       return;
     }
+    for (const ns of this.extraNamespaces) {
+      if (value.startsWith(ns.iri)) {
+        const localPart = value.substring(ns.iri.length);
+        let terms = this.extraNamespaceTerms.get(ns.prefix);
+        if (!terms) {
+          terms = new Set<string>();
+          this.extraNamespaceTerms.set(ns.prefix, terms);
+        }
+        terms.add(localPart);
+        return;
+      }
+    }
     for (const namespace of NAMESPACES) {
       if (value.startsWith(namespace.$iri)) {
-        this.usedNamespaces.add(this.printPrefix(namespace));
+        const name = this.printPrefix(namespace);
+        if (this.shadowedBuiltins.has(name)) {
+          return;
+        }
+        this.usedNamespaces.add(name);
         return;
       }
     }
@@ -163,12 +229,100 @@ class SchemaPrinter {
     }
   }
 
-  private printImports(): string {
-    const namespacesString = Array.from(this.usedNamespaces)
-      .toSorted()
-      .join(", ");
+  private trackCrossFileRef(schemaRef: string): void {
+    if (!this.currentFile) return;
+    const refFile = this.schemaLocations.get(schemaRef);
+    if (!refFile || refFile === this.currentFile) return;
+    let names = this.crossFileImports.get(refFile);
+    if (!names) {
+      names = new Set();
+      this.crossFileImports.set(refFile, names);
+    }
+    names.add(schemaRef);
+  }
 
-    return `import { ${namespacesString} } from "ldkit/namespaces";\n`;
+  private printHeader(): string {
+    const lines: string[] = [];
+
+    const usedPrefixes = new Set(this.extraNamespaces.map((ns) => ns.prefix))
+      .intersection(new Set(this.extraNamespaceTerms.keys()));
+    const usedExtras = this.extraNamespaces.filter((ns) =>
+      usedPrefixes.has(ns.prefix)
+    );
+
+    const declaredExtras: ExtraNamespace[] = [];
+    const importedByFile = new Map<string, Set<string>>();
+    if (this.extraNamespacesImportFrom !== undefined) {
+      if (usedExtras.length > 0) {
+        importedByFile.set(
+          this.extraNamespacesImportFrom,
+          new Set(usedExtras.map((ns) => ns.prefix)),
+        );
+      }
+    } else {
+      for (const ns of usedExtras) {
+        const home = this.extraNamespaceFiles.get(ns.prefix);
+        if (!home || !this.currentFile || home === this.currentFile) {
+          declaredExtras.push(ns);
+          continue;
+        }
+        let names = importedByFile.get(home);
+        if (!names) {
+          names = new Set();
+          importedByFile.set(home, names);
+        }
+        names.add(ns.prefix);
+      }
+    }
+
+    if (declaredExtras.length > 0) {
+      lines.push(`import { createNamespace } from "ldkit";`);
+    }
+
+    if (this.usedNamespaces.size > 0) {
+      const namespacesString = Array.from(this.usedNamespaces)
+        .toSorted()
+        .join(", ");
+      lines.push(`import { ${namespacesString} } from "ldkit/namespaces";`);
+    }
+
+    const crossFileEntries = [...this.crossFileImports.entries()]
+      .toSorted(([a], [b]) => a.localeCompare(b));
+    for (const [file, names] of crossFileEntries) {
+      const sortedNames = [...names].toSorted().join(", ");
+      lines.push(`import { ${sortedNames} } from "./${file}";`);
+    }
+
+    const importedExtraEntries = [...importedByFile.entries()]
+      .toSorted(([a], [b]) => a.localeCompare(b));
+    for (const [file, prefixes] of importedExtraEntries) {
+      const sortedPrefixes = [...prefixes].toSorted().join(", ");
+      lines.push(`import { ${sortedPrefixes} } from "./${file}";`);
+    }
+
+    if (lines.length > 0) {
+      lines.push("");
+    }
+
+    for (const ns of declaredExtras) {
+      const termSet = this.extraNamespaceTermsOverride?.get(ns.prefix) ??
+        this.extraNamespaceTerms.get(ns.prefix)!;
+      const terms = Array.from(termSet).toSorted();
+      lines.push(`export const ${ns.prefix} = createNamespace(`);
+      lines.push(`  {`);
+      lines.push(`    iri: ${JSON.stringify(ns.iri)},`);
+      lines.push(`    prefix: ${JSON.stringify(`${ns.prefix}:`)},`);
+      lines.push(`    terms: [`);
+      for (const term of terms) {
+        lines.push(`      ${JSON.stringify(term)},`);
+      }
+      lines.push(`    ],`);
+      lines.push(`  } as const,`);
+      lines.push(`);`);
+      lines.push("");
+    }
+
+    return lines.join("\n");
   }
 
   private printSchema(schema: SchemaSpec): string {
@@ -228,6 +382,7 @@ class SchemaPrinter {
       const subSchema = this.printSubSchema(prop.schema);
       builder.push(this.indent(subSchema));
     } else if (prop.schemaRef) {
+      this.trackCrossFileRef(prop.schemaRef);
       builder.push(this.indent(`"@schema": ${prop.schemaRef},`));
     }
 
@@ -267,14 +422,29 @@ class SchemaPrinter {
     if (value === "@id") {
       return `${this.printPrefix(ldkit)}.IRI`;
     }
+    for (const ns of this.extraNamespaces) {
+      if (value.startsWith(ns.iri)) {
+        const localPart = value.substring(ns.iri.length);
+        return this.formatNamespaceAccess(ns.prefix, localPart);
+      }
+    }
     for (const namespace of NAMESPACES) {
       if (value.startsWith(namespace.$iri)) {
-        return `${this.printPrefix(namespace)}.${
-          value.substring(namespace.$iri.length)
-        }`;
+        const name = this.printPrefix(namespace);
+        if (this.shadowedBuiltins.has(name)) {
+          return `"${value}"`;
+        }
+        return `${name}.${value.substring(namespace.$iri.length)}`;
       }
     }
     return `"${value}"`;
+  }
+
+  private formatNamespaceAccess(prefix: string, localPart: string): string {
+    if (/^[A-Za-z_$]\w*$/.test(localPart)) {
+      return `${prefix}.${localPart}`;
+    }
+    return `${prefix}["${localPart}"]`;
   }
 
   private printKey(key: string): string {
