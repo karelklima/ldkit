@@ -43,7 +43,7 @@ const outputFile = `${inputFile}.ts`;
 
 const outputTerms = sortedTerms.map((i) => `      "${i}",`).join("\n");
 
-const output = `import { createNamespace } from "ldkit";
+const output = `import { createNamespace } from "ldkit/namespaces";
 
 export default createNamespace(
   {

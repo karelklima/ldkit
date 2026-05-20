@@ -334,7 +334,7 @@ Deno.test("Scripts / Schema To Script / Extra namespace emits createNamespace bl
   ];
 
   const script = s`
-    import { createNamespace } from "ldkit";
+    import { createNamespace } from "ldkit/namespaces";
     import { xsd } from "ldkit/namespaces";
 
     export const ex = createNamespace(
@@ -378,7 +378,7 @@ Deno.test("Scripts / Schema To Script / Extra namespace bracket access for non-i
   ];
 
   const script = s`
-    import { createNamespace } from "ldkit";
+    import { createNamespace } from "ldkit/namespaces";
 
     export const ex = createNamespace(
       {
@@ -419,7 +419,7 @@ Deno.test("Scripts / Schema To Script / Extra namespaces sorted by IRI length de
   ];
 
   const script = s`
-    import { createNamespace } from "ldkit";
+    import { createNamespace } from "ldkit/namespaces";
 
     export const exsub = createNamespace(
       {
@@ -496,7 +496,7 @@ Deno.test("Scripts / Schema To Script / Extra namespace shadowing a built-in: bu
   ];
 
   const script = s`
-    import { createNamespace } from "ldkit";
+    import { createNamespace } from "ldkit/namespaces";
 
     export const schema = createNamespace(
       {

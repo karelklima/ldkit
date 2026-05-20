@@ -285,7 +285,11 @@ class ShaclConverter {
       }
     }
 
-    return properties;
+    // Sort by key so re-runs against the same SHACL produce diff-free output.
+    // n3 Store quad iteration order is not guaranteed stable across parses.
+    return Object.fromEntries(
+      Object.entries(properties).toSorted(([a], [b]) => a.localeCompare(b)),
+    );
   }
 
   // SHACL conjoins multiple property shapes on the same path (AND). LDkit's

@@ -76,7 +76,7 @@ function buildNamespacesFile(
   extras: ExtraNamespace[],
   termsByPrefix: Map<string, Set<string>>,
 ): string {
-  const lines: string[] = [`import { createNamespace } from "ldkit";`, ""];
+  const lines: string[] = [`import { createNamespace } from "ldkit/namespaces";`, ""];
   const sorted = [...extras].sort((a, b) => a.prefix.localeCompare(b.prefix));
   for (const ns of sorted) {
     const terms = [...(termsByPrefix.get(ns.prefix) ?? new Set<string>())]

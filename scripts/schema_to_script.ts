@@ -276,7 +276,7 @@ class SchemaPrinter {
     }
 
     if (declaredExtras.length > 0) {
-      lines.push(`import { createNamespace } from "ldkit";`);
+      lines.push(`import { createNamespace } from "ldkit/namespaces";`);
     }
 
     if (this.usedNamespaces.size > 0) {

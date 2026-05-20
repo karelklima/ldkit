@@ -1070,3 +1070,25 @@ ex:CustomerShape a sh:NodeShape ;
     }
   },
 );
+
+Deno.test(
+  "Scripts / SHACL to Schema / Properties emitted in deterministic (alphabetical) order regardless of source order",
+  () => {
+    // Re-running the codegen against the same SHACL input must produce zero
+    // diff. n3 Store quad iteration order is not guaranteed stable across
+    // parses, so we sort property keys before returning the schema spec.
+    const input = `${PREFIXES}
+ex:ThingShape a sh:NodeShape ;
+  sh:targetClass ex:Thing ;
+  sh:property [ sh:path ex:zeta ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path ex:alpha ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path ex:mu ; sh:datatype xsd:integer ] ;
+  sh:property [ sh:path ex:beta ; sh:datatype xsd:string ] .
+`;
+
+    const result = shaclToSchema(input);
+    const keys = Object.keys(result.schemas[0].properties);
+
+    assertEquals(keys, ["alpha", "beta", "mu", "zeta"]);
+  },
+);
