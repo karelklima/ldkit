@@ -279,3 +279,76 @@ Deno.test("E2E / Search / $id and property", async () => {
   assertEquals(results[0].movies.length, 1);
   assertEquals(results[0].movies[0], "The Shining");
 });
+
+// Regression tests for issue #170: a search filter on an @optional property
+// must actually constrain the result set. Previously the filter was emitted
+// inside the OPTIONAL block, so it was silently ignored and every resource was
+// returned. Steven Spielberg has no nickname, which exercises unbound values.
+const NicknamedDirector = {
+  name: x.name,
+  nickname: {
+    "@id": x.nickname,
+    "@optional": true,
+  },
+} as const;
+
+const nicknameStoreContent = ttl(`
+  x:QuentinTarantino x:name "Quentin Tarantino" ; x:nickname "QT" .
+  x:StanleyKubrick x:name "Stanley Kubrick" ; x:nickname "SK" .
+  x:StevenSpielberg x:name "Steven Spielberg" .
+  `);
+
+const initNickname = () => {
+  const { store, options } = initStore();
+  store.addQuads(nicknameStoreContent);
+  return { Directors: createLens(NicknamedDirector, options) };
+};
+
+Deno.test("E2E / Search / $equals on @optional property", async () => {
+  const { Directors } = initNickname();
+
+  const results = await Directors.find({
+    where: { nickname: "QT" },
+  });
+
+  // Only Quentin matches; the filter is not ignored (would be 3 with the bug).
+  assertEquals(results.length, 1);
+  assertEquals(results[0].name, "Quentin Tarantino");
+});
+
+Deno.test("E2E / Search / $equals on @optional property excludes unbound", async () => {
+  const { Directors } = initNickname();
+
+  // No resource has this nickname; Steven (no nickname) must not leak through.
+  const results = await Directors.find({
+    where: { nickname: "unknown" },
+  });
+
+  assertEquals(results.length, 0);
+});
+
+Deno.test("E2E / Search / $not on @optional property keeps unbound", async () => {
+  const { Directors } = initNickname();
+
+  const results = await Directors.find({
+    where: { nickname: { $not: "QT" } },
+  });
+
+  // Stanley (nickname "SK") and Steven (no nickname) — a negative filter keeps
+  // resources without the value. Sorted by IRI: Stanley before Steven.
+  assertEquals(results.length, 2);
+  assertEquals(results[0].name, "Stanley Kubrick");
+  assertEquals(results[1].name, "Steven Spielberg");
+});
+
+Deno.test("E2E / Search / $notIn on @optional property keeps unbound", async () => {
+  const { Directors } = initNickname();
+
+  const results = await Directors.find({
+    where: { nickname: { $notIn: ["QT", "SK"] } },
+  });
+
+  // Only Steven, whose nickname is absent, survives excluding QT and SK.
+  assertEquals(results.length, 1);
+  assertEquals(results[0].name, "Steven Spielberg");
+});

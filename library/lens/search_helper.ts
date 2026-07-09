@@ -9,6 +9,7 @@ export class SearchHelper {
   private readonly propertyType: string;
   private readonly varName: string;
   private readonly searchSchema: SearchSchema;
+  private readonly optional: boolean;
 
   private df: DataFactory = new DataFactory({
     blankNodePrefix: "b",
@@ -20,6 +21,7 @@ export class SearchHelper {
     property: ExpandedProperty,
     varName: string,
     searchSchema: SearchSchema,
+    optional = false,
   ) {
     this.property = property;
     this.propertyType = property["@type"] ? property["@type"] : xsd.string;
@@ -27,6 +29,9 @@ export class SearchHelper {
     this.searchSchema = this.isPlainObject(searchSchema)
       ? searchSchema
       : { $equals: searchSchema };
+    // When true, the FILTER is emitted outside an OPTIONAL block by the query
+    // builder, so negative operators must tolerate an unbound value.
+    this.optional = optional;
   }
 
   public process() {
@@ -56,6 +61,7 @@ export class SearchHelper {
 
       this.addFilter(
         $`${this.df.variable(this.varName)} ${operator} ${this.encode(value)}`,
+        key === "$not",
       );
     }
   }
@@ -118,6 +124,7 @@ export class SearchHelper {
       const values = (value as unknown[]).map((v) => $`${this.encode(v)}`);
       this.addFilter(
         $`${this.df.variable(this.varName)} ${func} (${values.join(", ")})`,
+        key === "$notIn",
       );
     }
   }
@@ -131,8 +138,17 @@ export class SearchHelper {
     this.addFilter(stringified.replace("?value", `?${this.varName}`));
   }
 
-  private addFilter(filter: SparqlValue) {
-    this.sparqlValues.push($`FILTER (${filter}) .`);
+  private addFilter(filter: SparqlValue, negatable = false) {
+    // An optional property is matched inside an OPTIONAL block, so its value
+    // may be unbound. Negative operators ($not, $notIn) must keep the rows
+    // where the property is absent — otherwise "not equal to X" would also
+    // drop resources that simply have no value. Positive operators are left
+    // bare: an unbound value makes the comparison an error, which correctly
+    // excludes the row (a resource without the value cannot match "equals X").
+    const guarded = this.optional && negatable
+      ? $`!BOUND(${this.df.variable(this.varName)}) || (${filter})`
+      : filter;
+    this.sparqlValues.push($`FILTER (${guarded}) .`);
   }
 
   private encode(value: unknown) {
