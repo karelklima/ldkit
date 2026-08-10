@@ -70,11 +70,12 @@ export class QueryBuilder {
       property: ExpandedProperty,
       varName: string,
       search?: SearchSchema,
+      optional = false,
     ) => {
       if (search === undefined) {
         return;
       }
-      const helper = new SearchHelper(property, varName, search);
+      const helper = new SearchHelper(property, varName, search, optional);
       helper.process();
       conditions.push(helper.sparqlValues);
     };
@@ -106,7 +107,8 @@ export class QueryBuilder {
         if (!includeOptional && isOptional && propertySchema === undefined) {
           return;
         }
-        if (wrapOptional && isOptional) {
+        const wrapped = wrapOptional && isOptional;
+        if (wrapped) {
           conditions.push($`\nOPTIONAL {`);
         }
         const isInverse = property["@inverse"];
@@ -118,11 +120,17 @@ export class QueryBuilder {
               this.df.variable!(`${varPrefix}_${index}`),
             ),
           );
-          populateSearchConditions(
-            property,
-            `${varPrefix}_${index}`,
-            propertySchema,
-          );
+          // A required property is filtered here, at the top level. An optional
+          // property is filtered AFTER the OPTIONAL block closes (see below) —
+          // a FILTER inside OPTIONAL only unbinds the value, it never removes
+          // the row, so the filter would be silently ignored (issue #170).
+          if (!wrapped) {
+            populateSearchConditions(
+              property,
+              `${varPrefix}_${index}`,
+              propertySchema,
+            );
+          }
         } else {
           conditions.push(
             this.df.quad(
@@ -139,8 +147,19 @@ export class QueryBuilder {
             propertySchema,
           );
         }
-        if (wrapOptional && isOptional) {
+        if (wrapped) {
           conditions.push($`\n}\n`);
+          // Emit the search FILTER for an optional property outside the
+          // OPTIONAL block so it constrains the result set. SearchHelper
+          // guards unbound values for negative operators ($not, $notIn).
+          if (ignoreInverse || !isInverse) {
+            populateSearchConditions(
+              property,
+              `${varPrefix}_${index}`,
+              propertySchema,
+              true,
+            );
+          }
         }
       });
     };
