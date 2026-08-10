@@ -9,4 +9,4 @@ export {
 
 export { assert as assertTypeSafe, type Equals } from "npm:tsafe@^1.8.5";
 
-export { QueryEngine as Comunica } from "npm:@comunica/query-sparql-rdfjs@^5";
+export { QueryEngine as Comunica } from "npm:@comunica/query-sparql-rdfjs-lite@^5";
