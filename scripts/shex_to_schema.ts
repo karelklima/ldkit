@@ -1,3 +1,5 @@
+// esm.sh runtime exposes a default export, but the generated d.ts does not.
+// @ts-expect-error TS1192: no default export in d.ts (runtime default exists)
 import ShexParser from "https://esm.sh/@shexjs/parser@1.0.0-alpha.28";
 
 import { PropertySpec, SchemaSpec } from "./schema_to_script.ts";
