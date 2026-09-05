@@ -726,7 +726,7 @@ ex:PersonShape a sh:NodeShape ;
 });
 
 Deno.test(
-  "Scripts / SHACL to Schema / sh:in with string values yields default string type",
+  "Scripts / SHACL to Schema / sh:in with string values yields default string type and enumValues",
   () => {
     const input = `${PREFIXES}
 ex:TaskShape a sh:NodeShape ;
@@ -743,7 +743,10 @@ ex:TaskShape a sh:NodeShape ;
       name: "ExTaskSchema",
       type: ["http://example.org/Task"],
       properties: {
-        status: { id: "http://example.org/status" },
+        status: {
+          id: "http://example.org/status",
+          enumValues: ["active", "paused", "deleted"],
+        },
       },
     };
 

@@ -543,3 +543,57 @@ Deno.test("Scripts / Schema To Script / IRI not under any namespace falls back t
 
   testWithExtras([schema], extras, script);
 });
+
+Deno.test("Scripts / Schema To Script / Property with enumValues emits @enum", () => {
+  const schema: SchemaSpec = {
+    name: "TaskSchema",
+    type: [],
+    properties: {
+      status: {
+        id: "http://schema.org/status",
+        enumValues: ["active", "paused", "deleted"],
+      },
+    },
+  };
+
+  const script = s`
+    import { schema } from "ldkit/namespaces";
+
+    export const TaskSchema = {
+      status: {
+        "@id": schema.status,
+        "@enum": ["active", "paused", "deleted"] as const,
+      },
+    } as const;
+  `;
+
+  test([schema], script);
+});
+
+Deno.test("Scripts / Schema To Script / Enum with optional flag", () => {
+  const schema: SchemaSpec = {
+    name: "TaskSchema",
+    type: [],
+    properties: {
+      priority: {
+        id: "http://schema.org/priority",
+        enumValues: ["low", "high"],
+        optional: true,
+      },
+    },
+  };
+
+  const script = s`
+    import { schema } from "ldkit/namespaces";
+
+    export const TaskSchema = {
+      priority: {
+        "@id": schema.priority,
+        "@enum": ["low", "high"] as const,
+        "@optional": true,
+      },
+    } as const;
+  `;
+
+  test([schema], script);
+});

@@ -39,6 +39,7 @@ export type PropertySpec = {
   array?: boolean;
   multilang?: boolean;
   inverse?: boolean;
+  enumValues?: string[];
 };
 
 export type SchemaSpec = {
@@ -364,6 +365,7 @@ class SchemaPrinter {
       !prop.schema && !prop.schemaRef &&
       !prop.optional && !prop.array &&
       !prop.multilang && !prop.inverse &&
+      !prop.enumValues &&
       (!prop.type || prop.type === xsd.string)
     ) {
       return `${this.printKey(key)}: ${this.printPrefixed(prop.id)},`;
@@ -384,6 +386,11 @@ class SchemaPrinter {
     } else if (prop.schemaRef) {
       this.trackCrossFileRef(prop.schemaRef);
       builder.push(this.indent(`"@schema": ${prop.schemaRef},`));
+    }
+
+    if (prop.enumValues) {
+      const values = prop.enumValues.map((v) => JSON.stringify(v)).join(", ");
+      builder.push(this.indent(`"@enum": [${values}] as const,`));
     }
 
     const flags = ["optional", "array", "multilang", "inverse"];

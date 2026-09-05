@@ -64,6 +64,7 @@ type Constraints = {
   refClass?: string;
   uniqueLang?: boolean;
   inFirstType?: string;
+  inValues?: string[];
 };
 
 type ReducedOr =
@@ -307,6 +308,8 @@ class ShaclConverter {
     if (a.array && b.array) merged.array = true;
     if (a.multilang || b.multilang) merged.multilang = true;
     if (a.inverse || b.inverse) merged.inverse = true;
+    const ev = b.enumValues ?? a.enumValues;
+    if (ev) merged.enumValues = ev;
     return merged;
   }
 
@@ -354,6 +357,10 @@ class ShaclConverter {
       } else if (reduced.kind === "iri") {
         spec.type = "@id";
       }
+    }
+
+    if (direct.inValues && direct.inValues.length > 0) {
+      spec.enumValues = direct.inValues;
     }
 
     const minCount = this.getObjectInteger(propertyNode, SH_MIN_COUNT);
@@ -412,6 +419,10 @@ class ShaclConverter {
           (first as { datatype?: { value: string } }).datatype?.value ??
             XSD_STRING;
         c.inFirstType = dt;
+
+        if (dt === XSD_STRING && items.every((i) => i.termType === "Literal")) {
+          c.inValues = items.map((i) => i.value);
+        }
       }
     }
 
@@ -425,6 +436,7 @@ class ShaclConverter {
         if (sub.refClass !== undefined) c.refClass = sub.refClass;
         if (sub.uniqueLang !== undefined) c.uniqueLang = sub.uniqueLang;
         if (sub.inFirstType !== undefined) c.inFirstType = sub.inFirstType;
+        if (sub.inValues !== undefined) c.inValues = sub.inValues;
       }
     }
 

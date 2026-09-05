@@ -28,14 +28,20 @@ type IsInverse<T extends Property> = T extends {
 
 type ValidPropertyDefinition = Property | string;
 
-type ConvertPropertyType<T extends Property> = T extends { "@type": unknown }
+type ResolveBaseType<T extends Property> = T extends { "@type": unknown }
   ? T["@type"] extends keyof SupportedDataTypes
-    // type is built-int
+    // type is built-in
     ? SupportedDataTypes[T["@type"]]
     // type is invalid
   : never
   // no type -> defaults to string
   : string;
+
+type ConvertPropertyType<T extends Property> = IsMultilang<T> extends true
+  ? ResolveBaseType<T>
+  : T extends { "@enum": readonly string[] }
+  ? T["@enum"][number]
+  : ResolveBaseType<T>;
 
 type ConvertPropertySchema<T extends Property> = T extends { "@schema": Schema }
   ? Unite<SchemaInterface<T["@schema"]>>

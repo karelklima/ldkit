@@ -648,3 +648,88 @@ Deno.test("Schema / should throw if two properties with the same @id are defined
     expandSchema(schema);
   });
 });
+
+Deno.test("Schema / Enum narrows string to literal union", () => {
+  const Prototype = {
+    status: {
+      "@id": x.status,
+      "@enum": ["active", "paused", "deleted"] as const,
+    },
+  } as const;
+
+  type PrototypeInterface = {
+    $id: string;
+    status: "active" | "paused" | "deleted";
+  };
+
+  type PrototypeUpdateInterface = {
+    $id: string;
+    status?: "active" | "paused" | "deleted";
+  };
+
+  type PrototypeSearchInterface = {
+    $id?: IRI | IRI[];
+    status?: PropertySearch<"active" | "paused" | "deleted">;
+  };
+
+  const PrototypeSchema: ExpandedSchema = {
+    "@type": [],
+    status: {
+      "@id": x.status,
+      "@type": xsd.string,
+      "@enum": ["active", "paused", "deleted"],
+    },
+  };
+
+  type I = SchemaInterface<typeof Prototype>;
+  type U = SchemaUpdateInterface<typeof Prototype>;
+  type S = SchemaSearchInterface<typeof Prototype>;
+
+  assertTypeSafe<Equals<I, PrototypeInterface>>();
+  assertTypeSafe<Equals<U, PrototypeUpdateInterface>>();
+  assertTypeSafe<Equals<S, PrototypeSearchInterface>>();
+
+  assertEquals(expandSchema(Prototype), PrototypeSchema);
+});
+
+Deno.test("Schema / Enum with optional and array", () => {
+  const Prototype = {
+    optionalStatus: {
+      "@id": x.optionalStatus,
+      "@enum": ["on", "off"] as const,
+      "@optional": true,
+    },
+    statuses: {
+      "@id": x.statuses,
+      "@enum": ["a", "b"] as const,
+      "@array": true,
+    },
+  } as const;
+
+  type PrototypeInterface = {
+    $id: string;
+    optionalStatus: "on" | "off" | null;
+    statuses: ("a" | "b")[];
+  };
+
+  type I = SchemaInterface<typeof Prototype>;
+  assertTypeSafe<Equals<I, PrototypeInterface>>();
+});
+
+Deno.test("Schema / Enum is ignored when @multilang is set", () => {
+  const Prototype = {
+    label: {
+      "@id": x.label,
+      "@multilang": true,
+      "@enum": ["x", "y"] as const,
+    },
+  } as const;
+
+  type PrototypeInterface = {
+    $id: string;
+    label: Record<string, string>;
+  };
+
+  type I = SchemaInterface<typeof Prototype>;
+  assertTypeSafe<Equals<I, PrototypeInterface>>();
+});

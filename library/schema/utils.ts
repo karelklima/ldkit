@@ -57,6 +57,7 @@ export const expandSchema = (schemaPrototype: Schema) => {
       "@optional",
       "@multilang",
       "@inverse",
+      "@enum",
     ] as const;
 
     const baseProperty: Record<string, unknown> = {
