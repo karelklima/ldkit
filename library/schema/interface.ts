@@ -39,8 +39,7 @@ type ResolveBaseType<T extends Property> = T extends { "@type": unknown }
 
 type ConvertPropertyType<T extends Property> = IsMultilang<T> extends true
   ? ResolveBaseType<T>
-  : T extends { "@enum": readonly string[] }
-  ? T["@enum"][number]
+  : T extends { "@enum": readonly string[] } ? T["@enum"][number]
   : ResolveBaseType<T>;
 
 type ConvertPropertySchema<T extends Property> = T extends { "@schema": Schema }
