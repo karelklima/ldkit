@@ -23,14 +23,15 @@ changes - just pass the Comunica context as LDkit options.
 
 ## LDkit Options properties
 
-| Key          | Type                          | Description                                                                                                                     |
-| ------------ | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| **engine**   | `IQueryEngine`                | Query engine to process SPARQL queries. LDkit uses the default query engine, unless specified otherwise.                        |
-| **sources**  | `string[]` or `IDataSource[]` | List of RDF sources. The default query engine included in LDkit accepts only a single source, and it must be a SPARQL endpoint. |
-| **fetch**    | `typeof fetch`                | Custom fetch function.                                                                                                          |
-| **language** | `string`                      | Preferred data language - for cases when you query multilingual data.                                                           |
-| **take**     | `number`                      | Number of resources to return by default by the Lens object. The `LIMIT` property of a `SELECT` query.                          |
-| **logQuery** | `(query: string) => void`     | Function that is called every time a query is processed by the query engine. Useful for logging purposes.                       |
+| Key              | Type                          | Description                                                                                                                     |
+| ---------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| **engine**       | `IQueryEngine`                | Query engine to process SPARQL queries. LDkit uses the default query engine, unless specified otherwise.                        |
+| **sources**      | `string[]` or `IDataSource[]` | List of RDF sources. The default query engine included in LDkit accepts only a single source, and it must be a SPARQL endpoint. |
+| **fetch**        | `typeof fetch`                | Custom fetch function.                                                                                                          |
+| **language**     | `string`                      | Preferred data language - for cases when you query multilingual data.                                                           |
+| **defaultGraph** | `string`                      | IRI of the default graph. If specified, this graph will be targeted by the generated SPARQL queries.                            |
+| **take**         | `number`                      | Number of resources to return by default by the Lens object. The `LIMIT` property of a `SELECT` query.                          |
+| **logQuery**     | `(query: string) => void`     | Function that is called every time a query is processed by the query engine. Useful for logging purposes.                       |
 
 ## Setting default Options
 

@@ -11,12 +11,14 @@ import {
  * - `engine` - a query engine to use for querying data sources
  * - `language` - a preferred language for literals
  * - `take` - a default number of results to take (limit of SELECT queries)
+ * - `defaultGraph` - a named graph IRI used as the default graph for reads and writes
  * - `logQuery` - a function that will be called for each SPARQL query
  */
 export type Options = {
   engine?: IQueryEngine;
   language?: string;
   take?: number;
+  defaultGraph?: string;
   logQuery?: (query: string) => void;
 } & Partial<QueryContext>;
 
@@ -36,6 +38,7 @@ let globalOptions: Options = {};
  * - `engine` - a query engine to use for querying data sources
  * - `language` - a preferred language for literals
  * - `take` - a default number of results to take (limit of SELECT queries)
+ * - `defaultGraph` - a named graph IRI used as the default graph for reads and writes
  * - `logQuery` - a function that will be called for each SPARQL query
  *
  * Default values for these options are:
@@ -63,8 +66,13 @@ export function resolveOptions(options: Options = {}) {
 }
 
 export function resolveQueryContext(options: Options): QueryContext {
-  const { engine: _engine, language: _language, take: _take, ...context } =
-    options;
+  const {
+    engine: _engine,
+    language: _language,
+    take: _take,
+    defaultGraph: _defaultGraph,
+    ...context
+  } = options;
 
   if (context.source !== undefined && context.sources === undefined) {
     context.sources = [context.source];

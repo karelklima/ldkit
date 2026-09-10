@@ -12,8 +12,9 @@ import {
   SELECT,
   sparql as $,
   type SparqlValue,
+  WITH,
 } from "../sparql/mod.ts";
-import { DataFactory, type IRI, type RDF } from "../rdf.ts";
+import { DataFactory, DefaultGraph, type IRI, type RDF } from "../rdf.ts";
 import { ldkit } from "../../namespaces/ldkit.ts";
 import { rdf } from "../../namespaces/rdf.ts";
 
@@ -55,6 +56,27 @@ export class QueryBuilder {
       encode(entity, this.schema, this.options)
     );
     return ([] as RDF.Quad[]).concat(...quadArrays);
+  }
+
+  private inDefaultGraph(...parts: SparqlValue[]): SparqlValue {
+    const { defaultGraph } = this.options;
+    if (defaultGraph === undefined) {
+      return parts;
+    }
+    return $`GRAPH ${this.df.namedNode(defaultGraph)} {\n${parts}\n}`;
+  }
+
+  private inDefaultGraphQuads(quads: RDF.Quad[]): RDF.Quad[] {
+    const { defaultGraph } = this.options;
+    if (defaultGraph === undefined) {
+      return quads;
+    }
+    const graphNode = this.df.namedNode(defaultGraph);
+    return quads.map((quad) =>
+      quad.graph.equals(DefaultGraph.INSTANCE)
+        ? this.df.quad(quad.subject, quad.predicate, quad.object, graphNode)
+        : quad
+    );
   }
 
   private getShape(flags: Flags, searchSchema?: SearchSchema) {
@@ -176,7 +198,9 @@ export class QueryBuilder {
     const innerQuery = max === undefined
       ? quads
       : SELECT`?iri`.WHERE`${quads}`.LIMIT(max);
-    return SELECT`(COUNT(DISTINCT ?iri) as ?count)`.WHERE`${innerQuery}`
+    return SELECT`(COUNT(DISTINCT ?iri) as ?count)`.WHERE`${
+      this.inDefaultGraph(innerQuery)
+    }`
       .build();
   }
 
@@ -188,7 +212,7 @@ export class QueryBuilder {
     const selectSubQuery = SELECT.DISTINCT`
       ${this.df.variable!("iri")}
     `.WHERE`
-      ${this.getShape(Flags.ExcludeOptional | Flags.IncludeTypes)} 
+      ${this.getShape(Flags.ExcludeOptional | Flags.IncludeTypes)}
       ${where}
     `.LIMIT(limit).OFFSET(offset).build();
 
@@ -196,10 +220,9 @@ export class QueryBuilder {
       ${this.getResourceSignature()}
       ${this.getShape(Flags.UnwrapOptional | Flags.IgnoreInverse)}
     `.WHERE`
-      {
-        ${selectSubQuery}
-      }
-      ${this.getShape(Flags.None)}
+      ${
+      this.inDefaultGraph($`{\n${selectSubQuery}\n}`, this.getShape(Flags.None))
+    }
     `.build();
 
     return query;
@@ -214,17 +237,19 @@ export class QueryBuilder {
     const selectSubQuery = SELECT.DISTINCT`
       ${this.df.variable!("iri")}
     `.WHERE`
-      ${this.getShape(Flags.ExcludeOptional | Flags.IncludeTypes, where)} 
+      ${this.getShape(Flags.ExcludeOptional | Flags.IncludeTypes, where)}
     `.LIMIT(limit).OFFSET(offset).build();
 
     const query = CONSTRUCT`
       ${this.getResourceSignature()}
       ${this.getShape(Flags.UnwrapOptional | Flags.IgnoreInverse)}
     `.WHERE`
-      {
-        ${selectSubQuery}
-      }
-      ${this.getShape(Flags.None, where)}
+      ${
+      this.inDefaultGraph(
+        $`{\n${selectSubQuery}\n}`,
+        this.getShape(Flags.None, where),
+      )
+    }
     `.build();
 
     return query;
@@ -235,10 +260,12 @@ export class QueryBuilder {
       ${this.getResourceSignature()}
       ${this.getShape(Flags.UnwrapOptional | Flags.IgnoreInverse)}
     `.WHERE`
-      VALUES ?iri {
-        ${iris.map(this.df.namedNode)}
-      }
-      ${this.getShape(Flags.IncludeTypes, where)}
+      ${
+      this.inDefaultGraph(
+        $`VALUES ?iri {\n${iris.map(this.df.namedNode)}\n}`,
+        this.getShape(Flags.IncludeTypes, where),
+      )
+    }
     `.build();
 
     return query;
@@ -250,11 +277,21 @@ export class QueryBuilder {
   }
 
   insertDataQuery(quads: RDF.Quad[]) {
-    return INSERT.DATA`${quads}`.build();
+    return INSERT.DATA`${this.inDefaultGraphQuads(quads)}`.build();
+  }
+
+  private deleteBuilder() {
+    const { defaultGraph } = this.options;
+    if (defaultGraph === undefined) {
+      return DELETE;
+    }
+    const withGraph = WITH(this.df.namedNode(defaultGraph));
+    return (strings: TemplateStringsArray, ...values: SparqlValue[]) =>
+      withGraph.DELETE(strings, ...values);
   }
 
   deleteQuery = (iris: IRI[]) => {
-    return DELETE`
+    return this.deleteBuilder()`
       ?s ?p ?o
     `.WHERE`
       ?s ?p ?o .
@@ -263,7 +300,7 @@ export class QueryBuilder {
   };
 
   deleteDataQuery(quads: RDF.Quad[]) {
-    return DELETE.DATA`${quads}`.build();
+    return DELETE.DATA`${this.inDefaultGraphQuads(quads)}`.build();
   }
 
   updateQuery(entities: Entity[]) {
@@ -273,7 +310,8 @@ export class QueryBuilder {
       helper.process(entity);
     }
 
-    return DELETE`${helper.deleteQuads}`.INSERT`${helper.insertQuads}`
+    return this.deleteBuilder()`${helper.deleteQuads}`
+      .INSERT`${helper.insertQuads}`
       .WHERE`${helper.whereQuads}`.build();
   }
 }
