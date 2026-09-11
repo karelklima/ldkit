@@ -597,3 +597,26 @@ Deno.test("Scripts / Schema To Script / Enum with optional flag", () => {
 
   test([schema], script);
 });
+
+Deno.test("Scripts / Schema To Script / Empty enumValues emits no @enum", () => {
+  const schema: SchemaSpec = {
+    name: "TaskSchema",
+    type: [],
+    properties: {
+      status: {
+        id: "http://schema.org/status",
+        enumValues: [],
+      },
+    },
+  };
+
+  const script = s`
+    import { schema } from "ldkit/namespaces";
+
+    export const TaskSchema = {
+      status: schema.status,
+    } as const;
+  `;
+
+  test([schema], script);
+});

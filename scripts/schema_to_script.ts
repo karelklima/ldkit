@@ -361,11 +361,13 @@ class SchemaPrinter {
   }
 
   private printProperty(key: string, prop: PropertySpec): string {
+    const enumValues = prop.enumValues?.length ? prop.enumValues : undefined;
+
     if (
       !prop.schema && !prop.schemaRef &&
       !prop.optional && !prop.array &&
       !prop.multilang && !prop.inverse &&
-      !prop.enumValues &&
+      !enumValues &&
       (!prop.type || prop.type === xsd.string)
     ) {
       return `${this.printKey(key)}: ${this.printPrefixed(prop.id)},`;
@@ -388,8 +390,8 @@ class SchemaPrinter {
       builder.push(this.indent(`"@schema": ${prop.schemaRef},`));
     }
 
-    if (prop.enumValues) {
-      const values = prop.enumValues.map((v) => JSON.stringify(v)).join(", ");
+    if (enumValues) {
+      const values = enumValues.map((v) => JSON.stringify(v)).join(", ");
       builder.push(this.indent(`"@enum": [${values}] as const,`));
     }
 
