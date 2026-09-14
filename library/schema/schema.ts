@@ -13,6 +13,7 @@ export type Property = {
   "@array"?: true;
   "@multilang"?: true;
   "@inverse"?: true;
+  "@enum"?: readonly string[];
 };
 
 /**
@@ -33,6 +34,7 @@ export type ExpandedProperty = {
   "@array"?: true;
   "@multilang"?: true;
   "@inverse"?: true;
+  "@enum"?: readonly string[];
 };
 
 export type ExpandedSchema = {

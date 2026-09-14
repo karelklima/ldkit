@@ -726,7 +726,7 @@ ex:PersonShape a sh:NodeShape ;
 });
 
 Deno.test(
-  "Scripts / SHACL to Schema / sh:in with string values yields default string type",
+  "Scripts / SHACL to Schema / sh:in with string values yields default string type and enumValues",
   () => {
     const input = `${PREFIXES}
 ex:TaskShape a sh:NodeShape ;
@@ -743,7 +743,10 @@ ex:TaskShape a sh:NodeShape ;
       name: "ExTaskSchema",
       type: ["http://example.org/Task"],
       properties: {
-        status: { id: "http://example.org/status" },
+        status: {
+          id: "http://example.org/status",
+          enumValues: ["active", "paused", "deleted"],
+        },
       },
     };
 
@@ -773,6 +776,39 @@ ex:TaskShape a sh:NodeShape ;
           id: "http://example.org/state",
           type: "@id",
         },
+      },
+    };
+
+    testSchema(input, schema);
+  },
+);
+
+Deno.test(
+  "Scripts / SHACL to Schema / sh:in with non-string or language-tagged values yields no enumValues",
+  () => {
+    const input = `${PREFIXES}
+ex:TaskShape a sh:NodeShape ;
+  sh:targetClass ex:Task ;
+  sh:property [
+    sh:path ex:mixed ;
+    sh:in ( "active" 42 ) ;
+    sh:minCount 1 ;
+    sh:maxCount 1
+  ] ;
+  sh:property [
+    sh:path ex:tagged ;
+    sh:in ( "active" "actif"@fr ) ;
+    sh:minCount 1 ;
+    sh:maxCount 1
+  ] .
+`;
+
+    const schema: SchemaSpec = {
+      name: "ExTaskSchema",
+      type: ["http://example.org/Task"],
+      properties: {
+        mixed: { id: "http://example.org/mixed" },
+        tagged: { id: "http://example.org/tagged" },
       },
     };
 

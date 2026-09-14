@@ -64,6 +64,7 @@ type Constraints = {
   refClass?: string;
   uniqueLang?: boolean;
   inFirstType?: string;
+  inValues?: string[];
 };
 
 type ReducedOr =
@@ -307,6 +308,8 @@ class ShaclConverter {
     if (a.array && b.array) merged.array = true;
     if (a.multilang || b.multilang) merged.multilang = true;
     if (a.inverse || b.inverse) merged.inverse = true;
+    const ev = b.enumValues?.length ? b.enumValues : a.enumValues;
+    if (ev?.length) merged.enumValues = ev;
     return merged;
   }
 
@@ -354,6 +357,10 @@ class ShaclConverter {
       } else if (reduced.kind === "iri") {
         spec.type = "@id";
       }
+    }
+
+    if (direct.inValues && direct.inValues.length > 0) {
+      spec.enumValues = direct.inValues;
     }
 
     const minCount = this.getObjectInteger(propertyNode, SH_MIN_COUNT);
@@ -408,10 +415,16 @@ class ShaclConverter {
       if (first?.termType === "NamedNode") {
         c.inFirstType = "@id";
       } else if (first?.termType === "Literal") {
-        const dt =
-          (first as { datatype?: { value: string } }).datatype?.value ??
-            XSD_STRING;
-        c.inFirstType = dt;
+        c.inFirstType = this.getLiteralDatatype(first);
+
+        if (
+          items.every((i) =>
+            i.termType === "Literal" &&
+            this.getLiteralDatatype(i) === XSD_STRING
+          )
+        ) {
+          c.inValues = items.map((i) => i.value);
+        }
       }
     }
 
@@ -425,6 +438,7 @@ class ShaclConverter {
         if (sub.refClass !== undefined) c.refClass = sub.refClass;
         if (sub.uniqueLang !== undefined) c.uniqueLang = sub.uniqueLang;
         if (sub.inFirstType !== undefined) c.inFirstType = sub.inFirstType;
+        if (sub.inValues !== undefined) c.inValues = sub.inValues;
       }
     }
 
@@ -506,6 +520,11 @@ class ShaclConverter {
       cleaned = `_${cleaned}`;
     }
     return cleaned;
+  }
+
+  private getLiteralDatatype(term: Term): string {
+    return (term as { datatype?: { value: string } }).datatype?.value ??
+      XSD_STRING;
   }
 
   private getObjectTerm(

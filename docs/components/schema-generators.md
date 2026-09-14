@@ -96,8 +96,9 @@ Supported SHACL features:
     reference
   - `sh:or` of mixed or unrepresentable branches drops the type and the property
     is marked `@optional`
-- `sh:in` enumerations use the type of the first list element (no TypeScript
-  literal union — runtime cannot enforce it)
+- `sh:in` enumerations use the type of the first list element; a list of bare
+  string literals is also emitted as `@enum`, a compile-time literal union that
+  the runtime does not enforce
 - `sh:not` and validation-only constraints (`sh:minLength`, `sh:maxLength`,
   `sh:pattern`, `sh:hasValue`, `sh:minInclusive`, etc.) are silently ignored,
   since LDkit's schema is for querying rather than validation
