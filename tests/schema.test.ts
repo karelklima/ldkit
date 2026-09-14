@@ -716,6 +716,30 @@ Deno.test("Schema / Enum with optional and array", () => {
   assertTypeSafe<Equals<I, PrototypeInterface>>();
 });
 
+Deno.test("Schema / Enum is ignored when @type is not a string", () => {
+  const Prototype = {
+    name: {
+      "@id": x.name,
+      "@type": xsd.integer,
+      "@enum": ["Tom", "Jerry"] as const,
+    },
+    code: {
+      "@id": x.code,
+      "@type": xsd.string,
+      "@enum": ["A", "B"] as const,
+    },
+  } as const;
+
+  type PrototypeInterface = {
+    $id: string;
+    name: number;
+    code: "A" | "B";
+  };
+
+  type I = SchemaInterface<typeof Prototype>;
+  assertTypeSafe<Equals<I, PrototypeInterface>>();
+});
+
 Deno.test("Schema / Enum is ignored when @multilang is set", () => {
   const Prototype = {
     label: {

@@ -37,14 +37,16 @@ type ResolveBaseType<T extends Property> = T extends { "@type": unknown }
   // no type -> defaults to string
   : string;
 
-type ConvertPropertyType<T extends Property> = IsMultilang<T> extends true
+type ConvertPropertyEnum<T extends Property> = IsMultilang<T> extends true
   ? ResolveBaseType<T>
-  : T extends { "@enum": readonly string[] } ? T["@enum"][number]
+  : ResolveBaseType<T> extends string
+    ? T extends { "@enum": readonly string[] } ? T["@enum"][number]
+    : ResolveBaseType<T>
   : ResolveBaseType<T>;
 
 type ConvertPropertySchema<T extends Property> = T extends { "@schema": Schema }
   ? Unite<SchemaInterface<T["@schema"]>>
-  : ConvertPropertyType<T>;
+  : ConvertPropertyEnum<T>;
 
 type ConvertPropertyOptional<T extends Property> = IsOptional<T> extends true
   ? ConvertPropertySchema<T> | null
@@ -55,8 +57,8 @@ type ConvertPropertyArray<T extends Property> = IsArray<T> extends true
   : ConvertPropertyOptional<T>;
 
 type ConvertPropertyMultilang<T extends Property> = IsMultilang<T> extends true
-  ? IsArray<T> extends true ? Record<string, ConvertPropertyType<T>[]>
-  : Record<string, ConvertPropertyType<T>>
+  ? IsArray<T> extends true ? Record<string, ConvertPropertyEnum<T>[]>
+  : Record<string, ConvertPropertyEnum<T>>
   : ConvertPropertyArray<T>;
 
 type ConvertPropertyObject<T extends Property> = ConvertPropertyMultilang<T>;
@@ -86,17 +88,17 @@ export type SchemaInterface<T extends Schema> =
 
 type ConvertUpdatePropertySchema<T extends Property> = T extends
   { "@schema": Schema } ? Unite<SchemaUpdateInterface<T["@schema"]>>
-  : ConvertPropertyType<T>;
+  : ConvertPropertyEnum<T>;
 
 type ConvertUpdatePropertyOptional<T extends Property> = IsOptional<T> extends
   true ? ConvertPropertySchema<T> | null
   : ConvertUpdatePropertySchema<T>;
 
 type CreateArrayUpdateInterface<T extends Property> = {
-  $set?: ConvertPropertyType<T>[];
-  $add?: ConvertPropertyType<T>[];
-  $remove?: ConvertPropertyType<T>[];
-} | ConvertPropertyType<T>[];
+  $set?: ConvertPropertyEnum<T>[];
+  $add?: ConvertPropertyEnum<T>[];
+  $remove?: ConvertPropertyEnum<T>[];
+} | ConvertPropertyEnum<T>[];
 
 type ConvertUpdatePropertyArray<T extends Property> = IsArray<T> extends true
   ? CreateArrayUpdateInterface<T>
@@ -104,7 +106,7 @@ type ConvertUpdatePropertyArray<T extends Property> = IsArray<T> extends true
 
 type ConvertUpdatePropertyMultilang<T extends Property> = IsMultilang<T> extends
   true ? IsArray<T> extends true ? Record<string, CreateArrayUpdateInterface<T>>
-  : Record<string, ConvertPropertyType<T>>
+  : Record<string, ConvertPropertyEnum<T>>
   : ConvertUpdatePropertyArray<T>;
 
 type ConvertUpdatePropertyObject<T extends Property> =
@@ -129,7 +131,7 @@ export type SchemaUpdateInterface<T extends Schema> =
 type ConvertSearchPropertySchema<T extends Property> = T extends
   { "@schema": Schema } ? Unite<SchemaSearchInterfaceProperties<T["@schema"]>>
   : IsInverse<T> extends true ? never
-  : SearchFilters<ConvertPropertyType<T>>;
+  : SearchFilters<ConvertPropertyEnum<T>>;
 
 type ConvertSearchProperty<T extends ValidPropertyDefinition> = T extends
   Property ? ConvertSearchPropertySchema<T>
