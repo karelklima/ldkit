@@ -94,7 +94,7 @@ export const init = () => {
   store.addQuads(defaultStoreContent);
   const directors = createLens(Director, options);
   const movies = createLens(Movie, options);
-  return { directors, movies, assertStore, empty };
+  return { directors, movies, assertStore, empty, options };
 };
 
 Deno.test("Lens / Common / Get many resources", async () => {
@@ -185,6 +185,102 @@ Deno.test("Lens / Common / Count resources max where nested", async () => {
     max: 1,
   });
   assertEquals(count, 1);
+});
+
+Deno.test("Lens / Common / Count resources by ID", async () => {
+  const { directors } = init();
+
+  assertEquals(await directors.count({ where: { $id: Kubrick.$id } }), 1);
+  assertEquals(await directors.count({ where: { $id: x.Missing } }), 0);
+  assertEquals(
+    await directors.count({ where: { $id: [Kubrick.$id, x.Missing] } }),
+    1,
+  );
+  assertEquals(
+    await directors.count({ where: { $id: [Kubrick.$id, Kubrick.$id] } }),
+    1,
+  );
+  assertEquals(await directors.count({ where: { $id: [] } }), 0);
+});
+
+Deno.test("Lens / Common / Count by ID still requires the schema shape", async () => {
+  const { store, options } = initStore();
+  store.addQuads(defaultStoreContent);
+  store.addQuads(ttl("x:IncompleteMovie a x:Movie ."));
+
+  const movies = createLens(Movie, options);
+  const directorsWithoutType = createLens({ name: x.name } as const, options);
+
+  assertEquals(await movies.count({ where: { $id: x.IncompleteMovie } }), 0);
+  assertEquals(
+    await directorsWithoutType.count({ where: { $id: Kubrick.$id } }),
+    1,
+  );
+});
+
+Deno.test("Lens / Common / Count with omitted or undefined ID", async () => {
+  const { directors } = init();
+
+  assertEquals(await directors.count(), 2);
+  assertEquals(await directors.count({ where: { $id: undefined } }), 2);
+});
+
+Deno.test("Lens / Common / Count resources by ID with other criteria", async () => {
+  const { directors, movies } = init();
+
+  assertEquals(
+    await directors.count({
+      where: { $id: Kubrick.$id, name: "Stanley Kubrick" },
+    }),
+    1,
+  );
+  assertEquals(
+    await directors.count({
+      where: { $id: Kubrick.$id, name: "Quentin Tarantino" },
+    }),
+    0,
+  );
+  assertEquals(
+    await movies.count({
+      where: {
+        $id: [x.FullMetalJacket, x.PulpFiction],
+        director: { name: "Stanley Kubrick" },
+      },
+    }),
+    1,
+  );
+  assertEquals(
+    await directors.count({
+      where: {
+        $id: [Kubrick.$id, Tarantino.$id],
+        movies: { $not: x.PulpFiction },
+      },
+    }),
+    1,
+  );
+});
+
+Deno.test("Lens / Common / Count max selects distinct resources", async () => {
+  const { options } = init();
+  // The default Director schema has optional movies, which count() leaves out
+  // of the selection, so each director yields a single row. Required movies
+  // make the selection yield one row per movie, exposing duplicate rows.
+  const DirectorWithRequiredMovies = {
+    "@type": x.Director,
+    name: x.name,
+    movies: { "@id": x.movie, "@type": ldkit.IRI, "@array": true },
+  } as const;
+  const directors = createLens(DirectorWithRequiredMovies, options);
+
+  // Kubrick has two movies, so capping rows instead of entities would return 1
+  assertEquals(await directors.count({ max: 2 }), 2);
+});
+
+Deno.test("Lens / Common / Count with non-positive max", async () => {
+  const { directors } = init();
+
+  assertEquals(await directors.count({ max: 0 }), 0);
+  assertEquals(await directors.count({ max: -1 }), 0);
 });
 
 Deno.test("Lens / Common / Insert multiple resources", async () => {

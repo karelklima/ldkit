@@ -1585,11 +1585,11 @@
             },
             {
               "jsDoc": {
-                "doc": "Returns the total number of entities corresponding to the data schema.\nOptionally, you can specify search criteria and a maximum number of results to count.\n",
+                "doc": "Returns the total number of entities corresponding to the data schema.\nOptionally, you can specify search criteria and a maximum number of results to count.\nThe maximum caps the number of distinct matching entities.\n",
                 "tags": [
                   {
                     "kind": "example",
-                    "doc": "```typescript\nimport { createLens } from \"ldkit\";\nimport { schema } from \"ldkit/namespaces\";\n\n// Create a schema\nconst PersonSchema = {\n  \"@type\": schema.Person,\n  name: schema.name,\n} as const;\n\n// Create a resource using the data schema above\nconst Persons = createLens(PersonSchema);\n\n// Count all persons\nconst count = await Persons.count(); // number\n\n// Count all persons with name that starts with \"Ada\"\nconst adaCount = await Persons.count({\n  where: {\n    name: { $strStarts: \"Ada\" },\n  },\n});\n\n// Count all persons, but limit the result to 100\nconst limitedCount = await Persons.count({ max: 100 });\n```\n"
+                    "doc": "```typescript\nimport { createLens } from \"ldkit\";\nimport { schema } from \"ldkit/namespaces\";\n\n// Create a schema\nconst PersonSchema = {\n  \"@type\": schema.Person,\n  name: schema.name,\n} as const;\n\n// Create a resource using the data schema above\nconst Persons = createLens(PersonSchema);\n\n// Count all persons\nconst count = await Persons.count(); // number\n\n// Count all persons with name that starts with \"Ada\"\nconst adaCount = await Persons.count({\n  where: {\n    name: { $strStarts: \"Ada\" },\n  },\n});\n\n// Count matching persons identified by an IRI; other criteria still apply\nconst adaByIriCount = await Persons.count({\n  where: {\n    $id: \"http://example.org/Ada_Lovelace\",\n    name: { $strStarts: \"Ada\" },\n  },\n});\n\n// Count at most 100 distinct matching persons\nconst limitedCount = await Persons.count({ max: 100 });\n```\n"
                   },
                   {
                     "kind": "param",
