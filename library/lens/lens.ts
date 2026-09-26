@@ -111,6 +111,7 @@ export class Lens<T extends Schema> {
   /**
    * Returns the total number of entities corresponding to the data schema.
    * Optionally, you can specify search criteria and a maximum number of results to count.
+   * The maximum caps the number of distinct matching entities.
    *
    * @example
    * ```typescript
@@ -136,7 +137,15 @@ export class Lens<T extends Schema> {
    *   },
    * });
    *
-   * // Count all persons, but limit the result to 100
+   * // Count matching persons identified by an IRI; other criteria still apply
+   * const adaByIriCount = await Persons.count({
+   *   where: {
+   *     $id: "http://example.org/Ada_Lovelace",
+   *     name: { $strStarts: "Ada" },
+   *   },
+   * });
+   *
+   * // Count at most 100 distinct matching persons
    * const limitedCount = await Persons.count({ max: 100 });
    * ```
    *
@@ -151,6 +160,9 @@ export class Lens<T extends Schema> {
       where: {},
       ...options,
     };
+    if (max !== undefined && max <= 0) {
+      return 0;
+    }
     const q = this.queryBuilder.countQuery(where, max);
     this.log(q);
     const bindings = await this.engine.queryBindings(q);

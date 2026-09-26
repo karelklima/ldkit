@@ -89,6 +89,13 @@ Deno.test("Lens / Graph scoping / count() is scoped to the configured graph", as
 
   const inA = createLens(Item, { ...options, defaultGraph: graphA });
   assertEquals(await inA.count(), 1);
+  assertEquals(await inA.count({ where: { $id: x.ItemA } }), 1);
+  assertEquals(await inA.count({ where: { $id: x.ItemB } }), 0);
+  assertEquals(
+    await inA.count({ where: { $id: [x.ItemA, x.ItemB] }, max: 1 }),
+    1,
+  );
+  assertEquals(await inA.count({ where: { $id: [x.ItemB] }, max: 1 }), 0);
 
   const unscoped = createLens(Item, options);
   assertEquals(await unscoped.count(), 0);

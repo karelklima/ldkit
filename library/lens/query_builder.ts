@@ -191,17 +191,26 @@ export class QueryBuilder {
   }
 
   countQuery(where: SearchSchema, max?: number) {
-    const quads = this.getShape(
-      Flags.ExcludeOptional | Flags.IncludeTypes,
-      where,
-    );
+    const patterns = this.getSelectionPatterns(where);
     const innerQuery = max === undefined
-      ? quads
-      : SELECT`?iri`.WHERE`${quads}`.LIMIT(max);
+      ? patterns
+      : SELECT.DISTINCT`?iri`.WHERE`${patterns}`.LIMIT(max);
     return SELECT`(COUNT(DISTINCT ?iri) as ?count)`.WHERE`${
       this.inDefaultGraph(innerQuery)
     }`
       .build();
+  }
+
+  private getSelectionPatterns(where: SearchSchema) {
+    const patterns: SparqlValue[] = [];
+    if (where.$id !== undefined) {
+      const iris = Array.isArray(where.$id) ? where.$id : [where.$id];
+      patterns.push($`VALUES ?iri {\n${iris.map(this.df.namedNode)}\n}`);
+    }
+    patterns.push(
+      this.getShape(Flags.ExcludeOptional | Flags.IncludeTypes, where),
+    );
+    return patterns;
   }
 
   getQuery(
