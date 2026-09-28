@@ -1,6 +1,13 @@
-import type { Options } from "./options.ts";
+import { type Options, resolveOptions } from "./options.ts";
 import { DataFactory, type IRI, type RDF } from "./rdf.ts";
-import type { ExpandedProperty, ExpandedSchema } from "./schema/mod.ts";
+import {
+  type ExpandedProperty,
+  type ExpandedSchema,
+  expandSchema,
+  type Schema,
+  type SchemaInterface,
+} from "./schema/mod.ts";
+import type { Entity } from "./lens/types.ts";
 import { xsd } from "../namespaces/xsd.ts";
 import { rdf } from "../namespaces/rdf.ts";
 import { ldkit } from "../namespaces/ldkit.ts";
@@ -10,19 +17,30 @@ type DecodedNode = Record<string, unknown>;
 
 type NodeId = RDF.NamedNode | RDF.BlankNode;
 
+export const encode = (
+  node: DecodedNode,
+  schema: ExpandedSchema,
+  options: Options,
+  includeType = true,
+  variableInitCounter = 0,
+) => {
+  return Encoder.encode(
+    node,
+    schema,
+    options,
+    includeType,
+    variableInitCounter,
+  );
+};
+
 /**
- * Encodes an entity to RDF quads according to its data schema, without a data
- * source.
- *
- * The quads are the ones {@link Lens.prototype.insert} writes, except that only
- * the given options apply, not those set with {@link setGlobalOptions}, and no
- * `defaultGraph` is added. The schema needs to be expanded first with
- * {@link expandSchema}. A `null` value becomes a variable, which is how
- * {@link Lens.prototype.update} deletes a value.
+ * Encodes an entity to RDF quads according to a data schema, without a data
+ * source. The quads are the ones {@link Lens.prototype.insert} writes. Options set
+ * with {@link setGlobalOptions} apply.
  *
  * @example
  * ```typescript
- * import { encode, expandSchema } from "ldkit";
+ * import { encodeEntity } from "ldkit";
  * import { schema, xsd } from "ldkit/namespaces";
  *
  * // Create a schema
@@ -33,38 +51,23 @@ type NodeId = RDF.NamedNode | RDF.BlankNode;
  * } as const;
  *
  * // Encode a person to RDF quads
- * const quads = encode(
- *   {
- *     $id: "http://example.org/Alan_Turing",
- *     name: "Alan Turing",
- *     birthDate: new Date("1912-06-23"),
- *   },
- *   expandSchema(PersonSchema),
- * );
+ * const quads = encodeEntity(PersonSchema, {
+ *   $id: "http://example.org/Alan_Turing",
+ *   name: "Alan Turing",
+ *   birthDate: new Date("1912-06-23"),
+ * });
  * ```
  *
- * @param node Entity to encode
- * @param schema Expanded data schema, see {@link expandSchema}
- * @param options Optional {@link Options}, of which only `language` applies
- * @param includeType Whether to write the `rdf:type` quads
- * @param variableInitCounter First index of the variables `null` values become
+ * @param schema data schema which extends {@link Schema}
+ * @param entity entity to encode
  * @returns RDF quads of the entity
  */
-export const encode = (
-  node: DecodedNode,
-  schema: ExpandedSchema,
-  options: Options = {},
-  includeType = true,
-  variableInitCounter = 0,
-): RDF.Quad[] => {
-  return Encoder.encode(
-    node,
-    schema,
-    options,
-    includeType,
-    variableInitCounter,
-  );
-};
+export function encodeEntity<T extends Schema>(
+  schema: T,
+  entity: Entity<SchemaInterface<T>>,
+): RDF.Quad[] {
+  return encode(entity, expandSchema(schema), resolveOptions());
+}
 
 export const encodeValue = (
   value: unknown,
