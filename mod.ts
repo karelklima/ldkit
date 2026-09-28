@@ -13,6 +13,8 @@ export type {
 
 export { registerDataHandler } from "./library/translator.ts";
 
+export { encodeEntity } from "./library/encoder.ts";
+
 export * from "./library/lens/mod.ts";
 
 export * from "./library/namespace.ts";

@@ -1,7 +1,7 @@
 import { assertEquals } from "./test_deps.ts";
 import { ttl, x } from "./test_utils.ts";
 
-import type { Options } from "ldkit";
+import { encodeEntity, type Options, setGlobalOptions } from "ldkit";
 import { xsd } from "ldkit/namespaces";
 
 import { encode } from "../library/encoder.ts";
@@ -437,4 +437,52 @@ Deno.test("Encoder / Resource with null values", () => {
     `;
 
   evaluate(input, schema, output);
+});
+
+Deno.test("Encoder / Entity with a plain schema", () => {
+  const input = {
+    $id: x.A,
+    string: "LDKit",
+    date: new Date("2021-11-11"),
+  };
+
+  const schema = {
+    "@type": x.Item,
+    string: x.string,
+    date: { "@id": x.date, "@type": xsd.date },
+  } as const;
+
+  const output = `
+      x:A
+        a x:Item ;
+        x:string "LDKit"^^xsd:string ;
+        x:date "2021-11-11"^^xsd:date .
+    `;
+
+  assertEquals(encodeEntity(schema, input), ttl(output));
+});
+
+Deno.test("Encoder / Entity with a language set in global options", () => {
+  const input = {
+    $id: x.A,
+    language: "CS",
+  };
+
+  const schema = {
+    "@type": x.Item,
+    language: x.language,
+  } as const;
+
+  const output = `
+      x:A
+        a x:Item ;
+        x:language "CS"@cs .
+    `;
+
+  setGlobalOptions({ language: "cs" });
+  try {
+    assertEquals(encodeEntity(schema, input), ttl(output));
+  } finally {
+    setGlobalOptions({});
+  }
 });
