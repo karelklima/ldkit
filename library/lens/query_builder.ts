@@ -122,16 +122,38 @@ export class QueryBuilder {
         });
       }
 
-      Object.keys(properties).forEach((prop, index) => {
+      // Optional properties that are only fetched, not searched, each get a
+      // branch of their own in a UNION. As consecutive OPTIONALs they multiply
+      // against each other: the number of solutions is then the product of the
+      // number of values of each property, rather than their sum (issue #175).
+      const isUnionBranch = (prop: string) =>
+        wrapOptional && properties[prop]["@optional"] === true &&
+        search?.[prop] === undefined;
+      let hasUnionBranch = false;
+
+      // The branches go last, so that no other pattern ends up between them.
+      const props = Object.keys(properties);
+      [
+        ...props.filter((prop) => !isUnionBranch(prop)),
+        ...props.filter(isUnionBranch),
+      ].forEach((prop) => {
+        const index = props.indexOf(prop);
         const property = properties[prop];
         const isOptional = property["@optional"];
         const propertySchema = search?.[prop] as SearchSchema | undefined;
         if (!includeOptional && isOptional && propertySchema === undefined) {
           return;
         }
-        const wrapped = wrapOptional && isOptional;
+        const unionBranch = isUnionBranch(prop);
+        const wrapped = wrapOptional && isOptional && !unionBranch;
         if (wrapped) {
           conditions.push($`\nOPTIONAL {`);
+        }
+        if (unionBranch) {
+          // The empty group keeps the solution for an entity that has none of
+          // the optional properties.
+          conditions.push(hasUnionBranch ? $`\nUNION {` : $`\n{ }\nUNION {`);
+          hasUnionBranch = true;
         }
         const isInverse = property["@inverse"];
         if (ignoreInverse || !isInverse) {
@@ -168,6 +190,9 @@ export class QueryBuilder {
             `${varPrefix}_${index}`,
             propertySchema,
           );
+        }
+        if (unionBranch) {
+          conditions.push($`\n}\n`);
         }
         if (wrapped) {
           conditions.push($`\n}\n`);
