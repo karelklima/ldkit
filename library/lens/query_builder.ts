@@ -129,13 +129,13 @@ export class QueryBuilder {
       const isUnionBranch = (prop: string) =>
         wrapOptional && properties[prop]["@optional"] === true &&
         search?.[prop] === undefined;
-      let hasUnionBranch = false;
 
       // The branches go last, so that no other pattern ends up between them.
       const props = Object.keys(properties);
+      const unionBranches = props.filter(isUnionBranch);
       [
         ...props.filter((prop) => !isUnionBranch(prop)),
-        ...props.filter(isUnionBranch),
+        ...unionBranches,
       ].forEach((prop) => {
         const index = props.indexOf(prop);
         const property = properties[prop];
@@ -150,10 +150,12 @@ export class QueryBuilder {
           conditions.push($`\nOPTIONAL {`);
         }
         if (unionBranch) {
-          // The empty group keeps the solution for an entity that has none of
-          // the optional properties.
-          conditions.push(hasUnionBranch ? $`\nUNION {` : $`\n{ }\nUNION {`);
-          hasUnionBranch = true;
+          // The OPTIONAL around the UNION keeps the solution for an entity that
+          // has none of the optional properties. An empty branch would do that
+          // too, but adds a solution for every entity that does have them.
+          conditions.push(
+            prop === unionBranches[0] ? $`\nOPTIONAL {\n{` : $`\nUNION {`,
+          );
         }
         const isInverse = property["@inverse"];
         if (ignoreInverse || !isInverse) {
@@ -192,7 +194,9 @@ export class QueryBuilder {
           );
         }
         if (unionBranch) {
-          conditions.push($`\n}\n`);
+          conditions.push(
+            prop === unionBranches.at(-1) ? $`\n}\n}\n` : $`\n}\n`,
+          );
         }
         if (wrapped) {
           conditions.push($`\n}\n`);
