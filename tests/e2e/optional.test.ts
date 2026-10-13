@@ -331,10 +331,10 @@ Deno.test("E2E / Optional / Should not multiply the values of optional propertie
     ),
   );
 
-  // One solution for the entity by itself, and one for each value of each
-  // optional property: 1 + 3 + 3 + (1 + 2) = 10, where consecutive OPTIONALs
-  // would yield 3 * 3 * 2 = 18. Every solution repeats the two quads of the
-  // entity itself, and each solution for the child those of the child.
+  // One solution for each value of each optional property: 3 + 3 + 2 = 8,
+  // where consecutive OPTIONALs would yield 3 * 3 * 2 = 18. Every solution
+  // repeats the two quads of the entity itself, and each solution for the
+  // child those of the child.
   assertEquals(distinctQuads.size, 12);
-  assertEquals(quads.length, 10 * 2 + 3 + 3 + 3 * 2 + 2);
+  assertEquals(quads.length, 8 * 2 + 3 + 3 + 2 * 2 + 2);
 });
