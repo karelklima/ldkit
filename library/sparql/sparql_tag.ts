@@ -64,6 +64,26 @@ const isIterable = (obj: unknown): obj is Iterable<unknown> => {
 
 const df = new DataFactory();
 
+// Neither xsd:integer nor xsd:decimal allows exponents, NaN or infinities in
+// its lexical space, so such numbers are emitted as xsd:double instead.
+const numberToLiteral = (value: number): RDF.Literal => {
+  if (Number.isNaN(value)) {
+    return df.literal("NaN", df.namedNode(xsd.double));
+  }
+
+  if (!Number.isFinite(value)) {
+    return df.literal(value > 0 ? "INF" : "-INF", df.namedNode(xsd.double));
+  }
+
+  const lexical = value.toString();
+  if (lexical.includes("e")) {
+    return df.literal(lexical, df.namedNode(xsd.double));
+  }
+
+  const dataType = Number.isInteger(value) ? xsd.integer : xsd.decimal;
+  return df.literal(lexical, df.namedNode(dataType));
+};
+
 const valueToString = (value: SparqlValue): string => {
   if (typeof value === "undefined" || value === null) {
     return "";
@@ -74,10 +94,7 @@ const valueToString = (value: SparqlValue): string => {
   }
 
   if (typeof value === "number") {
-    const numberDataType = Number.isInteger(value) ? xsd.integer : xsd.decimal;
-    return stringify(
-      df.literal(value.toString(), df.namedNode(numberDataType)),
-    );
+    return stringify(numberToLiteral(value));
   }
   if (typeof value === "boolean") {
     return stringify(df.literal(value.toString(), df.namedNode(xsd.boolean)));

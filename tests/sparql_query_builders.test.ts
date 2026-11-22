@@ -17,6 +17,15 @@ Deno.test("SPARQL / Sparql builder SELECT #1", () => {
   assertEquals(query, expected);
 });
 
+Deno.test("SPARQL / Sparql builder SELECT with numbers in exponent notation", () => {
+  const double = "http://www.w3.org/2001/XMLSchema#double";
+  const expected =
+    `SELECT ?s\nWHERE {\n?s ?p ?o .\nFILTER(?o > "1e-7"^^<${double}>)\n}\n`;
+  const query = SELECT`${s}`.WHERE`${spo}\nFILTER(?o > ${1e-7})`.build();
+
+  assertEquals(query, expected);
+});
+
 Deno.test("SPARQL / Sparql builder SELECT #2", () => {
   const expected = "SELECT DISTINCT ?s\nWHERE {\n?s ?p ?o .\n}\n";
   const query = SELECT.DISTINCT`${s}`.WHERE`${spo}`.build();
