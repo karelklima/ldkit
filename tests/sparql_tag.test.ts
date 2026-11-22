@@ -34,6 +34,42 @@ Deno.test("SPARQL / Sparql tag basic types", () => {
   );
 });
 
+Deno.test("SPARQL / Sparql tag numbers", () => {
+  const typed = (lexical: string, dataType: string) =>
+    `"${lexical}"^^<${dataType}>`;
+
+  // plain notation keeps xsd:integer and xsd:decimal
+  assertEquals(sparql`${0}`, typed("0", xsd.integer));
+  assertEquals(sparql`${-0}`, typed("0", xsd.integer));
+  assertEquals(sparql`${-3}`, typed("-3", xsd.integer));
+  assertEquals(sparql`${0.5}`, typed("0.5", xsd.decimal));
+  assertEquals(sparql`${-10.5}`, typed("-10.5", xsd.decimal));
+  assertEquals(sparql`${1e-6}`, typed("0.000001", xsd.decimal));
+  assertEquals(sparql`${1e20}`, typed("100000000000000000000", xsd.integer));
+
+  // exponent notation becomes xsd:double
+  assertEquals(sparql`${1e-7}`, typed("1e-7", xsd.double));
+  assertEquals(sparql`${-1e-7}`, typed("-1e-7", xsd.double));
+  assertEquals(sparql`${-1.5e-10}`, typed("-1.5e-10", xsd.double));
+  assertEquals(sparql`${1e21}`, typed("1e+21", xsd.double));
+  assertEquals(sparql`${-1e21}`, typed("-1e+21", xsd.double));
+  assertEquals(
+    sparql`${Number.MAX_VALUE}`,
+    typed("1.7976931348623157e+308", xsd.double),
+  );
+
+  // NaN and infinities use the XSD lexical forms
+  assertEquals(sparql`${NaN}`, typed("NaN", xsd.double));
+  assertEquals(sparql`${Infinity}`, typed("INF", xsd.double));
+  assertEquals(sparql`${-Infinity}`, typed("-INF", xsd.double));
+
+  // the same literals are used in iterables
+  assertEquals(
+    sparql`${[1, 1e-7]}`,
+    `${typed("1", xsd.integer)}\n${typed("1e-7", xsd.double)}`,
+  );
+});
+
 Deno.test("SPARQL / Sparql tag literals", () => {
   // known types
   assertEquals(
