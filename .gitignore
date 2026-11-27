@@ -5,3 +5,7 @@ node_modules
 
 package-lock.json
 ontologies
+!www/package-lock.json
+
+# Local Netlify folder
+.netlify

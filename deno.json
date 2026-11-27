@@ -1,9 +1,9 @@
 {
   "importMap": ".vscode/import_map.json",
   "tasks": {
-    "fmt:fix": "deno fmt library/ tests/ www/ docs/",
-    "fmt:check": "deno fmt --check library/ tests/ www/ docs/",
-    "lint": "deno lint library/ tests/ www/ docs/",
+    "fmt:fix": "deno fmt library/ tests/ docs/",
+    "fmt:check": "deno fmt --check library/ tests/ docs/",
+    "lint": "deno lint library/ tests/ docs/",
     "test": "deno test -A --parallel --node-modules-dir=auto ./tests -- --nolog",
     "dnt": "deno run -A --importmap ./scripts/dnt_import_map.json ./scripts/dnt.ts",
     "generate_api": "deno run -A ./scripts/generate_api.ts"

@@ -1,26 +1,21 @@
 import { App } from "../components/App.tsx";
 import { Jumbo } from "../components/Jumbo.tsx";
 import { IconArrowRight } from "../components/Icons.tsx";
-import { gfm } from "../utils/markdown.ts";
+import { Markdown } from "../components/Markdown.tsx";
 
 export default function Home() {
   return (
     <App>
       <div class="flex flex-col items-center">
         <Jumbo>LDkit</Jumbo>
-        <p class="text-center text-2xl md:text-5xl font-bold leading-tight pb-7 md:pb-10">
+        <p class="text-center text-2xl md:text-5xl font-bold leading-tight md:leading-none pb-7 md:pb-10">
           <span class="text-red-800">Linked Data</span> query toolkit
           <br />
           for <span class="text-red-800">TypeScript</span> developers
         </p>
         <div class="flex flex-row">
-          <pre class="py-4 md:py-6 px-6 bg-gray-800 text-white rounded-l-lg">
-            npm i ldkit
-          </pre>
-          <a
-            href="/docs"
-            class="block bg-red-800 rounded-r-lg text-white p-4 md:p-6"
-          >
+          <pre class="py-4 md:py-6 px-6 bg-gray-800 text-white rounded-l-lg">npm i ldkit</pre>
+          <a href="/docs/about-ldkit/" class="block bg-red-800 rounded-r-lg text-white p-4 md:p-6">
             <IconArrowRight />
           </a>
         </div>
@@ -28,8 +23,8 @@ export default function Home() {
         <Steps />
         <p class="text-center pt-4 md:pt-8 pb-5 md:pb-10">
           <a
-            href="/docs"
-            class="text-l md:text-xl flex flex-row gap-4 bg-red-800 rounded text-white p-4 md:p-6"
+            href="/docs/about-ldkit/"
+            class="md:text-xl flex flex-row gap-4 bg-red-800 rounded text-white p-4 md:p-6"
           >
             <span>Read the documentation</span> <IconArrowRight />
           </a>
@@ -80,55 +75,40 @@ function Steps() {
   return (
     <div class="mt-10 md:mt-20 grid md:grid-cols-2 gap-2 md:gap-0">
       <div>
-        <h2 class="pb-5 text-2xl md:text-4xl font-black">
-          1. Create data schema
-        </h2>
-        <p class="md:mx-10 text-l md:text-xl">
-          Specify entities to retrieve and their properties. Various data types,
-          optional properties, arrays and language annotated literals are
-          supported.
+        <h2 class="pb-5 text-2xl md:text-4xl font-black">1. Create data schema</h2>
+        <p class="md:mx-10 md:text-xl">
+          Specify entities to retrieve and their properties. Various data types, optional
+          properties, arrays and language annotated literals are supported.
         </p>
       </div>
       <div class="pb-4">
-        <Markdown markdown={step2Markdown} />
+        <Code source={step2Markdown} />
       </div>
       <div>
-        <h2 class="pb-5 text-2xl md:text-4xl font-black">
-          2. Set up data source
-        </h2>
-        <p class="md:mx-10 text-l md:text-xl">
+        <h2 class="pb-5 text-2xl md:text-4xl font-black">2. Set up data source</h2>
+        <p class="md:mx-10 md:text-xl">
           Use a SPARQL query endpoint, or any other RDF data source.
         </p>
       </div>
       <div class="pb-4">
-        <Markdown markdown={step1Markdown} />
+        <Code source={step1Markdown} />
       </div>
       <div>
         <h2 class="pb-5 text-2xl md:text-4xl font-black">3. Fetch data!</h2>
-        <p class="md:mx-10 text-l md:text-xl">
-          Convert data Schema to a Lens and fetch data with one line of code.
-          Data gets transformed from RDF to native TypeScript automatically.
+        <p class="md:mx-10 md:text-xl">
+          Convert data Schema to a Lens and fetch data with one line of code. Data gets transformed
+          from RDF to native TypeScript automatically.
         </p>
       </div>
       <div class="pb-4">
-        <Markdown markdown={step3Markdown} />
+        <Code source={step3Markdown} />
       </div>
     </div>
   );
 }
 
-function Markdown({ markdown }: { markdown: string }) {
-  const preMarkdown = `\`\`\`ts${markdown}\`\`\``;
-  const html = gfm.render(preMarkdown);
-  return (
-    <div
-      class="markdown-body max-w-[90vw]"
-      data-color-mode="auto"
-      data-light-theme="light"
-      data-dark-theme="dark"
-      dangerouslySetInnerHTML={{ __html: html }}
-    />
-  );
+function Code({ source }: { source: string }) {
+  return <Markdown markdown={`\`\`\`ts${source}\`\`\``} class="max-w-[90vw]" />;
 }
 
 function Features() {

@@ -1,0 +1,27 @@
+{
+  // Used by TypeDoc to read the LDkit sources in ../library, which are written
+  // for Deno. The `paths` map Deno's `npm:` specifiers to the packages installed
+  // in www/node_modules so that external types resolve.
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "allowImportingTsExtensions": true,
+    "types": [],
+    "paths": {
+      "npm:@rdfjs/types@^2": ["./node_modules/@rdfjs/types"],
+      "npm:n3@^1": ["./node_modules/@types/n3"],
+      "npm:asynciterator@^3": ["./node_modules/asynciterator"],
+      "npm:@comunica/types@^5": ["./node_modules/@comunica/types"],
+      "npm:rdf-literal@^2": ["./node_modules/rdf-literal"],
+      "npm:rdf-string@^2": ["./node_modules/rdf-string"],
+      "npm:rdf-data-factory@^2": ["./node_modules/rdf-data-factory"],
+      "npm:readable-from-web@^1": ["./node_modules/readable-from-web"]
+    }
+  },
+  "include": ["../mod.ts", "../namespaces.ts", "../rdf.ts", "../sparql.ts"]
+}

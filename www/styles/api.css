@@ -1,0 +1,33 @@
+/*
+ * Stylesheet for the site header and footer on the TypeDoc API pages. They
+ * are rendered into shadow roots there, so this and TypeDoc's CSS can't clash.
+ */
+@import "tailwindcss" source(none);
+@source "../components/Header.tsx";
+@source "../components/Footer.tsx";
+@source "../components/Icons.tsx";
+@import "./theme.css";
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--color-gray-200);
+  }
+  /* Browsers ignore @property inside shadow roots, so set the defaults
+     Tailwind normally registers that way. */
+  *,
+  ::before,
+  ::after {
+    --tw-border-style: solid;
+  }
+  /* Text colour of the original site's page body. */
+  :host {
+    color: #000;
+  }
+  @media (prefers-color-scheme: dark) {
+    :host {
+      color: #c9d1d9;
+    }
+  }
+}

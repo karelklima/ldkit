@@ -1,0 +1,52 @@
+/* Tweaks for the TypeDoc API reference (typedoc-github-theme). TypeDoc's own
+   styles are in a cascade layer, so these unlayered rules take precedence. */
+
+/* The site header and footer (see renderApiChrome in routes.tsx) replace
+   TypeDoc's. On mobile TypeDoc's toolbar stays below the header, since it
+   holds the button that opens the navigation. */
+:root {
+  /* Height of the site footer, used by TypeDoc to size the layout. */
+  --dim-footer-height: 8rem;
+}
+.ldkit-header {
+  display: block;
+  position: relative;
+  z-index: 2;
+}
+footer {
+  padding: 0;
+  border-top: 0;
+  max-height: none;
+}
+@media (min-width: 770px) {
+  :root {
+    --dim-header-height: calc(3.5rem + 1px);
+  }
+  .ldkit-header {
+    position: sticky;
+    top: 0;
+  }
+  .tsd-page-toolbar {
+    display: none;
+  }
+}
+
+/* Same width as the documentation pages: 64rem of content (Tailwind's
+   max-w-5xl) plus the 1rem page padding on each side. */
+.container {
+  max-width: calc(64rem + 2rem);
+  padding: 0 1rem;
+}
+
+/* No right-hand column (settings, theme picker, "On This Page"): the page
+   follows the system colour scheme like the rest of the site. */
+.page-menu {
+  display: none;
+}
+@media (min-width: 770px) {
+  .container-main {
+    grid-template-columns: 16rem minmax(0, 1fr);
+    grid-template-areas: "sidebar content";
+    column-gap: 1.5rem;
+  }
+}

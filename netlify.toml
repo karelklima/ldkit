@@ -1,0 +1,42 @@
+# Netlify builds the website in www/ as a static site (see www/README.md).
+[build]
+  base = "www"
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+[[redirects]]
+  from = "/docs"
+  to = "/docs/about-ldkit/"
+  status = 301
+
+[[redirects]]
+  from = "/docs/how-to/query-with-comunica"
+  to = "/docs/features/query-with-comunica/"
+  status = 301
+
+# Old API URLs such as /api/mod.ts~Lens are redirected to their TypeDoc pages
+# by the _redirects file the website build generates (www/lib/redirects.ts).
+# Netlify applies those first; old URLs not listed there (private members,
+# non-exported types) fall back to their module's page here.
+[[redirects]]
+  from = "/api/mod.ts~*"
+  to = "/api/mod/"
+  status = 301
+
+[[redirects]]
+  from = "/api/namespaces.ts~*"
+  to = "/api/namespaces/"
+  status = 301
+
+[[redirects]]
+  from = "/api/rdf.ts~*"
+  to = "/api/rdf/"
+  status = 301
+
+[[redirects]]
+  from = "/api/sparql.ts~*"
+  to = "/api/sparql/"
+  status = 301
