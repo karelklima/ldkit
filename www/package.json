@@ -1,0 +1,44 @@
+{
+  "name": "ldkit-www",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vp build",
+    "check": "vp check",
+    "test": "vp test"
+  },
+  "dependencies": {
+    "he": "^1.2.0",
+    "marked": "^4.0.12",
+    "preact": "^11.2.0",
+    "preact-render-to-string": "^6.8.3",
+    "prismjs": "^1.27.0",
+    "sanitize-html": "^2.7.0",
+    "tailwindcss": "^4.3.5",
+    "typedoc": "^0.28.20",
+    "typescript": "^6.0.3"
+  },
+  "devDependencies": {
+    "@comunica/types": "^5.5.1",
+    "@rdfjs/types": "^2.0.1",
+    "@tailwindcss/vite": "^4.3.5",
+    "@types/he": "^1.2.3",
+    "@types/marked": "^4.3.2",
+    "@types/n3": "^1.26.6",
+    "@types/node": "^26.6.11",
+    "@types/prismjs": "^1.26.6",
+    "@types/sanitize-html": "^2.16.2",
+    "asynciterator": "^3.10.0",
+    "n3": "^1.26.0",
+    "rdf-data-factory": "^2.1.0",
+    "rdf-literal": "^2.1.0",
+    "rdf-string": "^2.0.1",
+    "readable-from-web": "^1.0.0",
+    "typedoc-github-theme": "^0.4.0",
+    "vite-plus": "^1.8.0"
+  },
+  "overrides": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@8.3.8001",
+    "vitest": "5.1.1"
+  }
+}

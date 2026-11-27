@@ -13,11 +13,10 @@ export default function OntologyResource() {
       <div class="max-w-xl m-auto markdown-body">
         <h2>Overview</h2>
         <p>
-          <code>ldkit:Resource</code>{" "}
-          is a term that is used internally in the LDkit library when building
-          entities from RDF graphs into shapes defined by data schema. Each
-          entity to be decoded from the graph must be of type{" "}
-          <code>ldkit:Resource</code> in order to be processed correctly.
+          <code>ldkit:Resource</code> is a term that is used internally in the LDkit library when
+          building entities from RDF graphs into shapes defined by data schema. Each entity to be
+          decoded from the graph must be of type <code>ldkit:Resource</code> in order to be
+          processed correctly.
         </p>
 
         <h2>Identifier</h2>

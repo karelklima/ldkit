@@ -1,0 +1,30 @@
+# This workflow checks, tests and builds the website in www/ (Vite+ on Node.js).
+# The build also generates the API reference from the library sources and fails
+# on broken internal links, so it runs for library changes too.
+
+name: Website
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  check-test-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: www
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: www/package-lock.json
+      - run: npm ci
+      - run: npx vp check
+      - run: npx vp test run
+      - run: npx vp build

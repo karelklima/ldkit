@@ -291,8 +291,8 @@ export class Lens<T extends Schema> {
    * });
    * ```
    *
-   * @param options Search criteria and pagination options
-   * @returns entities that match the given search criteria
+   * @param where Search criteria
+   * @returns the first entity that matches the given search criteria, or `null`
    */
   async findOne(where?: SchemaSearchInterface<T>) {
     const results = await this.find({ where, take: 1 });

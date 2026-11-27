@@ -1,7 +1,10 @@
 npm
 dist
 node_modules
-.parcel-cache
 
 package-lock.json
 ontologies
+!www/package-lock.json
+
+# Local Netlify folder
+.netlify

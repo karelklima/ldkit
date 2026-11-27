@@ -28,25 +28,25 @@ await Persons.find(); // returns the default set of 1000 persons maximum
 ### Setting global defaults
 
 For consistent pagination behavior across an application, you can define a
-global `take` default in the [Context](../components/context). This eliminates
+global `take` default in the [Options](../components/options). This eliminates
 the need to repeatedly set take in each find call, streamlining the development
 process. The default value for `take` is 1000.
 
 ```ts
-import { type Context, createLens, setDefaultContext } from "ldkit";
+import { createLens, type Options, setGlobalOptions } from "ldkit";
 
-const context: Context = {
+const options = {
   sources: ["https://example.com/sparql"],
   take: 100, // set the default take value to 100
-};
+} satisfies Options;
 
-setDefaultContext(context);
+setGlobalOptions(options);
 
-const customContext: Context = {
-  ...context,
+const customOptions = {
+  ...options,
   take: 10,
-};
+} satisfies Options;
 
-const First = createLens(FirstSchema); // will use the default context with take = 100
-const Second = createLens(SecondSchema, customContext); // will use custom context with take = 10
+const First = createLens(FirstSchema); // will use the global options with take = 100
+const Second = createLens(SecondSchema, customOptions); // will use custom options with take = 10
 ```

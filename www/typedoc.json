@@ -1,0 +1,18 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["../mod.ts", "../namespaces.ts", "../rdf.ts", "../sparql.ts"],
+  "tsconfig": "./tsconfig.typedoc.json",
+  "name": "LDkit",
+  "readme": "none",
+  "excludeExternals": true,
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "githubPages": false,
+  "sourceLinkTemplate": "https://github.com/karelklima/ldkit/blob/main/{path}#L{line}",
+  "titleLink": "/",
+  "customCss": "./styles/typedoc.css",
+  "favicon": "./public/favicon.ico",
+  "plugin": ["typedoc-github-theme"],
+  "hideGenerator": true,
+  "router": "structure-dir"
+}

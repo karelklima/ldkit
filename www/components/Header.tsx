@@ -1,10 +1,11 @@
 import type { ComponentChildren } from "preact";
 
 import { IconGitHub, IconLDkit } from "./Icons.tsx";
+import { usePage } from "./Page.ts";
 
 export function Header() {
   return (
-    <div class="md:sticky md:top-0 bg-white dark:bg-[#0d1117] bg-opacity-90 dark:bg-opacity-90 border-b-1 border-dark-50 dark:border-red-700 border-opacity-90">
+    <div class="md:sticky md:top-0 bg-white/90 dark:bg-[#0d1117]/90 border-b border-gray-200 dark:border-red-700/90">
       <header class="container mx-auto px-4 h-14 flex flex-row items-stretch justify-between">
         <Logo />
         <Menu />
@@ -15,11 +16,8 @@ export function Header() {
 
 function Logo() {
   return (
-    <h1 class="text-2xl flex flex-shrink-0 items-center font-black">
-      <a
-        href="/"
-        class="flex items-center hover:text-gray-700 dark:hover:text-white pr-4"
-      >
+    <h1 class="text-2xl flex shrink-0 items-center font-black">
+      <a href="/" class="flex items-center hover:text-gray-700 dark:hover:text-white pr-4">
         <IconLDkit />
         <span class="pb-1 pl-2">LDkit</span>
       </a>
@@ -29,36 +27,41 @@ function Logo() {
 
 function Menu() {
   return (
-    <ul class="flex-0-1-auto flex overflow-x-auto">
+    <ul class="flex overflow-x-auto">
       <Link url="/">Home</Link>
-      <Link url="/docs">Documentation</Link>
-      <Link url="/api">API Reference</Link>
-      <Link url="https://github.com/karelklima/ldkit">
+      <Link url="/docs/about-ldkit/" section="/docs/">
+        Documentation
+      </Link>
+      <Link url="/api/" section="/api/">
+        API Reference
+      </Link>
+      <Link url="https://github.com/karelklima/ldkit" label="GitHub">
         <IconGitHub />
       </Link>
     </ul>
   );
 }
 
-const baseLinkClass =
-  "table-cell align-middle h-14 px-4 border-b-2 hover:border-black dark:hover:border-red-700 dark:hover:text-white border-transparent";
+const linkClass =
+  "table-cell align-middle h-14 px-4 border-b-2 hover:border-black dark:hover:border-red-700 dark:hover:text-white border-transparent data-active:border-black data-active:dark:border-red-700 data-active:bg-gray-50 data-active:dark:bg-gray-800";
 
-const activeCurrentLinkClass =
-  `${baseLinkClass} [data-current]:border-black [data-current]:dark:border-red-700 [data-current]:bg-gray-50 [data-current]:dark:bg-gray-800`;
-
-const activeAncestorLinkClass =
-  `${baseLinkClass} [data-ancestor]:border-black [data-ancestor]:dark:border-red-700 [data-ancestor]:bg-gray-50 [data-ancestor]:dark:bg-gray-800`;
-
-function Link({ url, children }: {
+function Link({
+  url,
+  section,
+  label,
+  children,
+}: {
   url: string;
+  /** Path prefix for which the link is highlighted as active. */
+  section?: string;
+  label?: string;
   children: ComponentChildren;
 }) {
-  const linkClass = url === "/"
-    ? activeCurrentLinkClass
-    : activeAncestorLinkClass;
+  const { path } = usePage();
+  const active = section ? path.startsWith(section) : path === url;
   return (
     <li>
-      <a href={url} class={linkClass}>
+      <a href={url} class={linkClass} aria-label={label} data-active={active || undefined}>
         {children}
       </a>
     </li>
